@@ -2,12 +2,15 @@
 
 from __future__ import annotations
 
+import json
 from pathlib import Path
+from typing import Any
 
 from cog.torque import Graph
 
 from repograph.indexer.schema import CALLS, IN_FILE
 
+METADATA_FILENAME = "index_metadata.json"
 Triple = tuple[str, str, str]
 
 
@@ -99,6 +102,20 @@ class RepoGraph:
         all_nodes = self.g.v().all()
         return {"node_count": len(all_nodes.get("result", []))}
 
+    def load_metadata(self) -> dict[str, str | None]:
+        metadata_path = self.db_path / METADATA_FILENAME
+        if not metadata_path.exists():
+            return {"repo_path": None, "last_indexed": None}
+        try:
+            return json.loads(metadata_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError:
+            return {"repo_path": None, "last_indexed": None}
 
-def _result_ids(result: dict) -> list[str]:
+    def save_metadata(self, metadata: dict[str, str]) -> None:
+        metadata_path = self.db_path / METADATA_FILENAME
+        metadata_path.parent.mkdir(parents=True, exist_ok=True)
+        metadata_path.write_text(json.dumps(metadata, indent=2), encoding="utf-8")
+
+
+def _result_ids(result: dict[str, Any]) -> list[str]:
     return [entry["id"] for entry in result.get("result", []) if "id" in entry]

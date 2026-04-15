@@ -101,6 +101,37 @@ repograph-mcp
 
 This mode is intended for tools that speak MCP, such as agentic coding clients.
 
+## Database Backend
+
+RepoGraph uses the local `cogdb` backed store. This means all graphs are persisted as files directly on your machine.
+
+If you don't provide any configuration, RepoGraph uses `.repograph` at the root.
+
+```bash
+REPOGRAPH_DB_BACKEND=cog
+REPOGRAPH_DB_PATH=.repograph
+```
+
+### Multi-Tenant Magic (Dynamic Database)
+
+RepoGraph natively supports serving multiple isolated environments (tenants) using the same running instance of the API. This gives you the ability to index multiple different projects completely separate from one another!
+
+To do this, simply include an `X-Tenant-ID` header in your API requests. If this is present, RepoGraph dynamically generates a new database folder (`.repograph_TENANTID`) automatically! No databases to provision.
+
+Example API Call:
+```bash
+curl "http://127.0.0.1:8000/status" -H "X-Tenant-ID: ServiceA"
+```
+
+If you are using the MCP Server and want your specific AI coding tool to connect to a specific tenant directly, you just export an environment variable before starting:
+
+```bash
+set REPOGRAPH_TENANT_ID=ServiceA
+repograph-mcp
+```
+
+
+
 ## Where Data Is Stored
 
 By default RepoGraph stores graph data in:
@@ -297,7 +328,7 @@ Current non-goals in this phase:
 - no Docker or container requirement
 - no cloud dependency
 - no web UI
-- no multi-repo graph
+- no multi-repo graph (without explicitly enabling X-Tenant-ID headers)
 - no watch mode / auto reindex on file changes
 - no semantic vector search
 
