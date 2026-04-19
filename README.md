@@ -90,7 +90,7 @@ repograph
 Start the MCP stdio server:
 
 ```bash
-python -m repograph.mcp_server.server
+python -m repograph.mcp_server
 ```
 
 You can also use the installed console script:

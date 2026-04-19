@@ -11,7 +11,7 @@ from .routes import app
 
 def main() -> None:
     host = os.getenv("REPOGRAPH_HOST", "127.0.0.1")
-    port = int(os.getenv("REPOGRAPH_PORT", "8000"))
+    port = int(os.getenv("REPOGRAPH_PORT", "8001"))
     uvicorn.run(app, host=host, port=port)
 
 

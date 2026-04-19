@@ -9,7 +9,12 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
-from .schema import AT_LINE, CALLS, DEFINES, IMPORTS, IN_FILE, INHERITS
+from .enricher import extract_signature, is_entrypoint_file, resolve_service_name, risk_level
+from .enricher import _is_test_file as _test_file
+from .schema import (
+    AT_LINE, BELONGS_TO_SERVICE, CALLS, DEFINES, IMPORTS, IN_FILE, INHERITS,
+    IS_ENTRYPOINT, IS_TEST, RISK_LEVEL, SERVICE_NAME, SIGNATURE, TESTS,
+)
 
 LOGGER = logging.getLogger(__name__)
 
@@ -42,6 +47,9 @@ class ParseState:
     symbols_by_short_name: dict[str, list[str]] = field(default_factory=dict)
     class_methods: dict[str, dict[str, str]] = field(default_factory=dict)
     callables: list[CallableOwner] = field(default_factory=list)
+    is_test_file: bool = False
+    is_entrypoint_file: bool = False
+    service_name: str = "unknown"
 
     def add_triple(self, triple: Triple) -> None:
         if triple not in self._seen:
@@ -146,10 +154,26 @@ def parse_file(path: str | Path, language: str, repo_path: str | Path | None = N
         source = file_path.read_bytes()
         parser = _get_parser(language)
         tree = parser.parse(source)
-        state = ParseState(module_name=module_name, relative_file=relative_file)
+        is_test = _test_file(relative_file)
+        is_entry = is_entrypoint_file(relative_file)
+        service = resolve_service_name(relative_file)
+        state = ParseState(
+            module_name=module_name,
+            relative_file=relative_file,
+            is_test_file=is_test,
+            is_entrypoint_file=is_entry,
+            service_name=service,
+        )
         state.add_triple((module_name, IN_FILE, relative_file))
+        state.add_triple((module_name, SERVICE_NAME, service))
+        state.add_triple((module_name, BELONGS_TO_SERVICE, service))
+        if is_test:
+            state.add_triple((module_name, IS_TEST, "true"))
+        if is_entry:
+            state.add_triple((module_name, IS_ENTRYPOINT, "true"))
         _collect_nodes(tree.root_node, source, state, profile, owner_symbol=module_name, class_symbol=None)
         _collect_callable_edges(source, state, profile)
+        _collect_test_edges(state)
         return state.triples
     except Exception as exc:
         LOGGER.warning("Failed to parse %s: %s", file_path, exc)
@@ -189,7 +213,7 @@ def _collect_nodes(
         class_name = _extract_definition_name(node, source)
         if class_name:
             symbol = f"{owner_symbol}.{class_name}" if owner_symbol else class_name
-            _index_definition(state, owner_symbol, symbol, class_name, node)
+            _index_definition(state, owner_symbol, symbol, class_name, node, source)
             for base_name in _extract_inheritance(node, source):
                 state.add_triple((symbol, INHERITS, _resolve_reference(base_name, state, class_symbol)))
             for child in node.named_children:
@@ -200,7 +224,7 @@ def _collect_nodes(
         function_name = _extract_definition_name(node, source)
         if function_name:
             symbol = f"{owner_symbol}.{function_name}" if owner_symbol else function_name
-            _index_definition(state, owner_symbol, symbol, function_name, node)
+            _index_definition(state, owner_symbol, symbol, function_name, node, source)
             if class_symbol:
                 state.class_methods.setdefault(class_symbol, {})[function_name] = symbol
             state.callables.append(CallableOwner(symbol=symbol, node=node, class_symbol=class_symbol))
@@ -238,11 +262,38 @@ def _walk_calls(
         _walk_calls(child, source, state, profile, callable_owner)
 
 
-def _index_definition(state: ParseState, owner_symbol: str, symbol: str, short_name: str, node: Any) -> None:
+def _index_definition(
+    state: ParseState, owner_symbol: str, symbol: str, short_name: str, node: Any, source: bytes
+) -> None:
     state.index_symbol(short_name, symbol)
     state.add_triple((owner_symbol, DEFINES, symbol))
     state.add_triple((symbol, IN_FILE, state.relative_file))
     state.add_triple((symbol, AT_LINE, str(node.start_point[0] + 1)))
+    state.add_triple((symbol, SERVICE_NAME, state.service_name))
+    state.add_triple((symbol, BELONGS_TO_SERVICE, state.service_name))
+    if state.is_test_file:
+        state.add_triple((symbol, IS_TEST, "true"))
+    if state.is_entrypoint_file:
+        state.add_triple((symbol, IS_ENTRYPOINT, "true"))
+    rl = risk_level(symbol, state.is_test_file, state.is_entrypoint_file)
+    state.add_triple((symbol, RISK_LEVEL, rl))
+    sig = extract_signature(node, source)
+    if sig:
+        state.add_triple((symbol, SIGNATURE, sig))
+
+
+def _collect_test_edges(state: ParseState) -> None:
+    """Emit TESTS edges from test symbols to their likely targets via import analysis."""
+    if not state.is_test_file:
+        return
+    imported_modules = {obj for _, pred, obj in state.triples if pred == "IMPORTS"}
+    for _, pred, symbol in state.triples:
+        if pred == DEFINES:
+            short = symbol.rsplit(".", 1)[-1]
+            if short.startswith("test_"):
+                # Emit TESTS edge to each imported module (best-effort)
+                for mod in imported_modules:
+                    state.add_triple((symbol, TESTS, mod))
 
 
 def _extract_definition_name(node: Any, source: bytes) -> str | None:
