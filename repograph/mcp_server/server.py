@@ -199,6 +199,131 @@ def multi_stage_retrieve(
     )
 
 
+@mcp.tool(name="prepare_task_context")
+def prepare_task_context(
+    repo_path: str,
+    query: str,
+    task_hint: str | None = None,
+    output_profile: str = "small",
+    target_context: int = 4096,
+    consumer: str = "generic",
+    include_debug: bool = False,
+) -> dict[str, Any]:
+    """Full shared retrieval: classify → retrieve → pack. Returns consumer-ready prompt + working_set."""
+    from repograph.shared_retrieval import SharedRetrievalRequest, prepare_task_context as _prepare
+    from repograph.shared_retrieval.adapters import format_for_consumer
+    from repograph.graph import get_graph_store
+    store = get_graph_store(backend=os.getenv("REPOGRAPH_DB_BACKEND", "cog"), db_path=os.getenv("REPOGRAPH_DB_PATH", ".repograph"))
+    req = SharedRetrievalRequest(
+        repo_path=repo_path, query=query, task_hint=task_hint,
+        output_profile=output_profile, target_context=target_context,
+        consumer=consumer, include_debug=include_debug,
+        tenant_id=TENANT_ID or "default",
+    )
+    response = _prepare(req, store)
+    return format_for_consumer(response, consumer)
+
+
+@mcp.tool(name="build_prompt_pack")
+def build_prompt_pack(
+    repo_path: str,
+    query: str,
+    output_profile: str = "small",
+    target_context: int = 4096,
+) -> dict[str, Any]:
+    """Build a PromptPack from a query. Returns preamble, objective, context_blocks, and token estimate."""
+    from repograph.shared_retrieval import SharedRetrievalRequest, prepare_task_context as _prepare
+    from repograph.graph import get_graph_store
+    store = get_graph_store(backend=os.getenv("REPOGRAPH_DB_BACKEND", "cog"), db_path=os.getenv("REPOGRAPH_DB_PATH", ".repograph"))
+    req = SharedRetrievalRequest(
+        repo_path=repo_path, query=query,
+        output_profile=output_profile, target_context=target_context,
+        tenant_id=TENANT_ID or "default",
+    )
+    response = _prepare(req, store)
+    return response.prompt_pack.model_dump()
+
+
+@mcp.tool(name="build_retry_pack")
+def build_retry_pack(
+    repo_path: str,
+    query: str,
+    failure_reason: str,
+    previous_diff: str | None = None,
+    target_context: int = 4096,
+) -> dict[str, Any]:
+    """Pack context for a retry after verification failure. Prepends failure reason + diff to patch_first context."""
+    from repograph.shared_retrieval import SharedRetrievalRequest, prepare_task_context as _prepare
+    from repograph.shared_retrieval.profiles import get_profile
+    from repograph.shared_retrieval.prompt_packer import pack
+    from repograph.working_set.builder import build as build_ws
+    from repograph.graph import get_graph_store
+    store = get_graph_store(backend=os.getenv("REPOGRAPH_DB_BACKEND", "cog"), db_path=os.getenv("REPOGRAPH_DB_PATH", ".repograph"))
+    req = SharedRetrievalRequest(
+        repo_path=repo_path, query=query, target_context=target_context,
+        output_profile="patch", tenant_id=TENANT_ID or "default",
+    )
+    ws = build_ws(query=query, store=store, token_budget=target_context)
+    profile = get_profile("patch")
+    retry_pack = pack(ws, profile, failure_reason=failure_reason, previous_diff=previous_diff)
+    return retry_pack.model_dump()
+
+
+@mcp.tool(name="get_repo_summary")
+def get_repo_summary() -> dict[str, Any]:
+    """Return the stored repo-level summary (L0)."""
+    from repograph.api.routes import _get_store
+    store = _get_store(TENANT_ID)
+    from repograph.indexer.schema import REPO_SUMMARY
+    summary = store.first_outgoing("__repo__", REPO_SUMMARY)
+    return {"summary": summary}
+
+
+@mcp.tool(name="get_service_summary")
+def get_service_summary(service: str) -> dict[str, Any]:
+    """Return the stored service-level summary."""
+    from repograph.api.routes import _get_store
+    store = _get_store(TENANT_ID)
+    from repograph.indexer.schema import SERVICE_SUMMARY
+    summary = store.first_outgoing(f"service:{service}", SERVICE_SUMMARY)
+    return {"service": service, "summary": summary}
+
+
+@mcp.tool(name="get_task_memory")
+def get_task_memory(task_id: str) -> dict[str, Any]:
+    """Retrieve TaskMemory record for a task_id."""
+    from repograph.api.routes import _get_store
+    from repograph.memory.store import load as memory_load
+    store = _get_store(TENANT_ID)
+    record = memory_load(store, task_id)
+    return record.model_dump() if record else {"task_id": task_id, "found": False}
+
+
+@mcp.tool(name="update_task_memory")
+def update_task_memory(task_id: str, patch: dict) -> dict[str, Any]:
+    """Update TaskMemory with new fields (e.g. after a patch attempt)."""
+    from repograph.api.routes import _get_store
+    from repograph.memory.store import load as memory_load, save as memory_save
+    store = _get_store(TENANT_ID)
+    record = memory_load(store, task_id)
+    if record is None:
+        return {"error": f"task {task_id} not found"}
+    updated = record.model_copy(update=patch)
+    memory_save(store, updated)
+    return updated.model_dump()
+
+
+@mcp.tool(name="invalidate_context_cache")
+def invalidate_context_cache(repo_path: str) -> dict[str, Any]:
+    """Invalidate all Redis cached entries for a repo (force fresh retrieval on next call)."""
+    from repograph.cache import redis as redis_layer
+    from repograph.cache import keys as cache_keys
+    tenant = TENANT_ID or "default"
+    prefix = cache_keys._repo_prefix(tenant, repo_path)
+    deleted = redis_layer.delete_pattern(f"{prefix}:*")
+    return {"deleted_keys": deleted, "prefix": prefix}
+
+
 def main() -> None:
     mcp.run(transport="stdio")
 

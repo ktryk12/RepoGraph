@@ -921,6 +921,95 @@ def summary_input_repo(x_tenant_id: Annotated[str | None, Header()] = None) -> d
     }
 
 
+@router.post("/shared-retrieval/prepare")
+def shared_retrieval_prepare(
+    body: dict,
+    x_tenant_id: Annotated[str | None, Header()] = None,
+) -> dict[str, Any]:
+    from repograph.shared_retrieval import SharedRetrievalRequest, prepare_task_context
+    from repograph.shared_retrieval.adapters import format_for_consumer
+    if x_tenant_id:
+        body.setdefault("tenant_id", x_tenant_id)
+    req = SharedRetrievalRequest(**body)
+    store = _get_store(req.tenant_id if req.tenant_id != "default" else x_tenant_id)
+    response = prepare_task_context(req, store)
+    consumer = req.consumer
+    return format_for_consumer(response, consumer)
+
+
+@router.post("/shared-retrieval/working-set")
+def shared_retrieval_working_set(
+    body: dict,
+    x_tenant_id: Annotated[str | None, Header()] = None,
+) -> dict[str, Any]:
+    from repograph.shared_retrieval import SharedRetrievalRequest, prepare_task_context
+    if x_tenant_id:
+        body.setdefault("tenant_id", x_tenant_id)
+    req = SharedRetrievalRequest(**body)
+    store = _get_store(req.tenant_id if req.tenant_id != "default" else x_tenant_id)
+    response = prepare_task_context(req, store)
+    return response.working_set
+
+
+@router.post("/shared-retrieval/prompt-pack")
+def shared_retrieval_prompt_pack(
+    body: dict,
+    x_tenant_id: Annotated[str | None, Header()] = None,
+) -> dict[str, Any]:
+    from repograph.shared_retrieval import SharedRetrievalRequest, prepare_task_context
+    if x_tenant_id:
+        body.setdefault("tenant_id", x_tenant_id)
+    req = SharedRetrievalRequest(**body)
+    store = _get_store(req.tenant_id if req.tenant_id != "default" else x_tenant_id)
+    response = prepare_task_context(req, store)
+    return response.prompt_pack.model_dump()
+
+
+@router.post("/shared-retrieval/retry-pack")
+def shared_retrieval_retry_pack(
+    body: dict,
+    x_tenant_id: Annotated[str | None, Header()] = None,
+) -> dict[str, Any]:
+    from repograph.shared_retrieval import SharedRetrievalRequest, prepare_task_context
+    from repograph.shared_retrieval.profiles import get_profile
+    from repograph.shared_retrieval.prompt_packer import pack
+    if x_tenant_id:
+        body.setdefault("tenant_id", x_tenant_id)
+    failure_reason = body.pop("failure_reason", "")
+    previous_diff = body.pop("previous_diff", None)
+    req = SharedRetrievalRequest(**body)
+    store = _get_store(req.tenant_id if req.tenant_id != "default" else x_tenant_id)
+    response = prepare_task_context(req, store)
+    profile = get_profile(req.output_profile)
+    from repograph.working_set.builder import build as build_ws
+    ws = build_ws(query=req.query, store=store, task_hint=req.task_hint, token_budget=req.target_context)
+    retry_pack = pack(ws, profile, failure_reason=failure_reason, previous_diff=previous_diff)
+    return retry_pack.model_dump()
+
+
+@router.post("/cache/invalidate")
+def cache_invalidate(body: dict, x_tenant_id: Annotated[str | None, Header()] = None) -> dict[str, Any]:
+    from repograph.cache import redis as redis_layer
+    from repograph.cache import keys as cache_keys
+    tenant = x_tenant_id or body.get("tenant_id", "default")
+    repo_path = body.get("repo_path", "")
+    if not repo_path:
+        raise HTTPException(status_code=400, detail="repo_path required")
+    prefix = cache_keys._repo_prefix(tenant, repo_path)
+    deleted = redis_layer.delete_pattern(f"{prefix}:*")
+    return {"deleted_keys": deleted, "prefix": prefix}
+
+
+@router.get("/shared-retrieval/status")
+def shared_retrieval_status() -> dict[str, Any]:
+    from repograph.cache import redis as redis_layer
+    return {
+        "cache": redis_layer.status(),
+        "profiles": ["tiny", "small", "medium", "patch", "review"],
+        "strategies": ["summary_first", "symbol_first", "patch_first", "test_first", "retry"],
+    }
+
+
 def _get_store(tenant_id: str | None = None) -> GraphStore:
     db_path = DEFAULT_DB_PATH
     if tenant_id and DEFAULT_DB_BACKEND == "cog":
