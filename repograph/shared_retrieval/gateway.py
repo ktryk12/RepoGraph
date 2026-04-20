@@ -8,8 +8,10 @@ import uuid
 from repograph.cache import keys as cache_keys
 from repograph.cache import redis as redis_layer
 from repograph.graph.factory import GraphStore
+from repograph.postgres import tracer as pg_tracer
 from repograph.working_set.builder import build as build_working_set
 
+from .compressor import compress
 from .models import (
     CacheInfo,
     SharedRetrievalRequest,
@@ -48,6 +50,14 @@ def prepare_task_context(
         token_budget=req.target_context,
     )
 
+    # Compress to budget (structural, no LLM)
+    compressed = compress(ws, profile.target_context)
+    ws = ws.model_copy(update={
+        "symbols": compressed.symbols,
+        "token_estimate": compressed.post_compress_tokens,
+        "compression": compressed.strategy_applied,
+    })
+
     # Pack context blocks
     prompt_pack = pack(ws, profile)
 
@@ -59,6 +69,20 @@ def prepare_task_context(
 
     duration_ms = int((time.perf_counter() - t0) * 1000)
 
+    pg_tracer.log_retrieval_trace(
+        retrieval_id=ws.retrieval_id,
+        tenant_id=req.tenant_id,
+        query=req.query,
+        task_family=ws.task_family,
+        token_budget=req.target_context,
+        token_estimate=compressed.post_compress_tokens,
+        duration_ms=duration_ms,
+        consumer=req.consumer,
+        compressor_strategy=compressed.strategy_applied,
+        pre_compress_tokens=compressed.pre_compress_tokens,
+        post_compress_tokens=compressed.post_compress_tokens,
+    )
+
     debug = {}
     if req.include_debug:
         debug = {
@@ -67,6 +91,9 @@ def prepare_task_context(
             "ws_symbols": len(ws.symbols),
             "ws_files": len(ws.files),
             "compression": ws.compression,
+            "pre_compress_tokens": compressed.pre_compress_tokens,
+            "post_compress_tokens": compressed.post_compress_tokens,
+            "compressor_strategy": compressed.strategy_applied,
         }
 
     response = SharedRetrievalResponse(

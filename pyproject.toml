@@ -31,7 +31,11 @@ dev = [
 cache = [
     "redis>=5.0.0",
 ]
+postgres = [
+    "psycopg2-binary>=2.9.0",
+]
 
 [project.scripts]
 repograph = "repograph.api.app:main"
 repograph-mcp = "repograph.mcp_server.server:main"
+repograph-migrate = "repograph.postgres.migrate:run"

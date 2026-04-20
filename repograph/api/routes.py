@@ -535,8 +535,13 @@ class TestFailureRequest(BaseModel):
 @router.post("/memory/task")
 def create_task_memory(req: TaskMemoryCreateRequest, x_tenant_id: Annotated[str | None, Header()] = None) -> dict[str, Any]:
     from repograph.memory import store
+    tenant = x_tenant_id or "default"
     s = _get_store(x_tenant_id)
     record = store.create(s, req.query, req.task_family, req.working_set_id, req.retrieval_id)
+    # dual-write to Postgres
+    _pg_task_memory().create(
+        req.query, req.task_family, req.working_set_id, req.retrieval_id, tenant_id=tenant
+    )
     return record.model_dump()
 
 
@@ -546,6 +551,7 @@ def update_task_memory(req: TaskMemoryUpdateRequest, x_tenant_id: Annotated[str 
     from repograph.memory import store
     from repograph.memory.models import PrecisionSignals
     s = _get_store(x_tenant_id)
+    pg = _pg_task_memory()
     if req.consumer_accepted is not None or req.patch_applied is not None or req.verification_passed is not None:
         signals = PrecisionSignals(
             consumer_accepted=req.consumer_accepted,
@@ -553,10 +559,12 @@ def update_task_memory(req: TaskMemoryUpdateRequest, x_tenant_id: Annotated[str 
             verification_passed=req.verification_passed,
         )
         record = store.update_signals(s, req.task_id, signals)
+        pg.update_signals(req.task_id, signals)
     else:
         record = store.get(s, req.task_id)
     if record and req.status:
         record = store.set_status(s, req.task_id, req.status)
+        pg.set_status(req.task_id, req.status)
     if not record:
         raise HTTPException(status_code=404, detail=f"Task not found: {req.task_id}")
     return record.model_dump()
@@ -565,19 +573,28 @@ def update_task_memory(req: TaskMemoryUpdateRequest, x_tenant_id: Annotated[str 
 @router.get("/memory/task")
 def list_task_memory(limit: int = 20, x_tenant_id: Annotated[str | None, Header()] = None) -> dict[str, Any]:
     from repograph.memory import store
+    tenant = x_tenant_id or "default"
+    pg = _pg_task_memory()
+    pg_records = pg.list_recent(tenant_id=tenant, limit=limit)
+    if pg_records:
+        return {"tasks": [r.model_dump() for r in pg_records], "count": len(pg_records), "source": "postgres"}
     s = _get_store(x_tenant_id)
     records = store.list_recent(s, limit=limit)
-    return {"tasks": [r.model_dump() for r in records], "count": len(records)}
+    return {"tasks": [r.model_dump() for r in records], "count": len(records), "source": "graph"}
 
 
 @router.get("/memory/task/{task_id}")
 def get_task_memory(task_id: str, x_tenant_id: Annotated[str | None, Header()] = None) -> dict[str, Any]:
     from repograph.memory import store
+    pg = _pg_task_memory()
+    record = pg.get(task_id)
+    if record:
+        return {**record.model_dump(), "source": "postgres"}
     s = _get_store(x_tenant_id)
     record = store.get(s, task_id)
     if not record:
         raise HTTPException(status_code=404, detail=f"Task not found: {task_id}")
-    return record.model_dump()
+    return {**record.model_dump(), "source": "graph"}
 
 
 @router.post("/memory/task/{task_id}/patch")
@@ -586,6 +603,7 @@ def record_patch(task_id: str, req: PatchRecordRequest, x_tenant_id: Annotated[s
     from repograph.memory.models import PatchRecord
     import uuid
     from datetime import datetime, timezone
+    tenant = x_tenant_id or "default"
     s = _get_store(x_tenant_id)
     patch = PatchRecord(
         patch_id=f"patch:{uuid.uuid4()}",
@@ -596,6 +614,7 @@ def record_patch(task_id: str, req: PatchRecordRequest, x_tenant_id: Annotated[s
         failure_reason=req.failure_reason,
     )
     record = store.add_patch(s, task_id, patch)
+    _pg_task_memory().add_patch(task_id, patch, tenant_id=tenant)
     if not record:
         raise HTTPException(status_code=404, detail=f"Task not found: {task_id}")
     return {"task_id": task_id, "patch_id": patch.patch_id, "patches_total": record.patches_attempted}
@@ -606,6 +625,7 @@ def record_test_failure(task_id: str, req: TestFailureRequest, x_tenant_id: Anno
     from repograph.memory import store
     from repograph.memory.models import TestFailureRecord
     from datetime import datetime, timezone
+    tenant = x_tenant_id or "default"
     s = _get_store(x_tenant_id)
     failure = TestFailureRecord(
         test_symbol=req.test_symbol,
@@ -613,6 +633,7 @@ def record_test_failure(task_id: str, req: TestFailureRequest, x_tenant_id: Anno
         recorded_at=datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z"),
     )
     record = store.add_test_failure(s, task_id, failure)
+    _pg_task_memory().add_test_failure(task_id, failure, tenant_id=tenant)
     if not record:
         raise HTTPException(status_code=404, detail=f"Task not found: {task_id}")
     return {"task_id": task_id, "test_failures_total": len(record.test_failures)}
@@ -760,61 +781,109 @@ class SummaryWriteRequest(BaseModel):
 @router.put("/summary/symbol/{symbol_path}")
 def write_symbol_summary(symbol_path: str, req: SummaryWriteRequest, x_tenant_id: Annotated[str | None, Header()] = None) -> dict[str, str]:
     from repograph.indexer.schema import SHORT_SUMMARY
+    from repograph.cache import redis as rcache, keys as rkeys
+    tenant = x_tenant_id or "default"
     store = _get_store(x_tenant_id)
     store.put_triple(symbol_path, SHORT_SUMMARY, req.text)
+    rcache.delete(rkeys.summary_symbol(tenant, _repo_path(store), symbol_path))
     return {"symbol": symbol_path, "status": "ok"}
 
 
 @router.put("/summary/file/{filepath:path}")
 def write_file_summary(filepath: str, req: SummaryWriteRequest, x_tenant_id: Annotated[str | None, Header()] = None) -> dict[str, str]:
     from repograph.indexer.schema import FILE_SUMMARY
+    from repograph.cache import redis as rcache, keys as rkeys
+    tenant = x_tenant_id or "default"
     store = _get_store(x_tenant_id)
     store.put_triple(f"file:{filepath}", FILE_SUMMARY, req.text)
+    rcache.delete(rkeys.summary_file(tenant, _repo_path(store), filepath))
     return {"filepath": filepath, "status": "ok"}
 
 
 @router.put("/summary/service/{service_name}")
 def write_service_summary(service_name: str, req: SummaryWriteRequest, x_tenant_id: Annotated[str | None, Header()] = None) -> dict[str, str]:
     from repograph.indexer.schema import SERVICE_SUMMARY
+    from repograph.cache import redis as rcache, keys as rkeys
+    tenant = x_tenant_id or "default"
     store = _get_store(x_tenant_id)
     store.put_triple(f"service:{service_name}", SERVICE_SUMMARY, req.text)
+    rcache.delete(rkeys.summary_service(tenant, _repo_path(store), service_name))
     return {"service": service_name, "status": "ok"}
 
 
 @router.put("/summary/repo")
 def write_repo_summary(req: SummaryWriteRequest, x_tenant_id: Annotated[str | None, Header()] = None) -> dict[str, str]:
     from repograph.indexer.schema import REPO_NODE, REPO_SUMMARY
+    from repograph.cache import redis as rcache, keys as rkeys
+    tenant = x_tenant_id or "default"
     store = _get_store(x_tenant_id)
     store.put_triple(REPO_NODE, REPO_SUMMARY, req.text)
+    rcache.delete(rkeys.summary_l0(tenant, _repo_path(store)))
     return {"status": "ok"}
 
 
 @router.get("/summary/symbol/{symbol_path}")
 def read_symbol_summary(symbol_path: str, x_tenant_id: Annotated[str | None, Header()] = None) -> dict[str, Any]:
     from repograph.indexer.schema import SHORT_SUMMARY
+    from repograph.cache import redis as rcache, keys as rkeys
+    tenant = x_tenant_id or "default"
     store = _get_store(x_tenant_id)
-    return {"symbol": symbol_path, "summary": store.first_outgoing(symbol_path, SHORT_SUMMARY)}
+    key = rkeys.summary_symbol(tenant, _repo_path(store), symbol_path)
+    cached = rcache.get(key)
+    if cached is not None:
+        return {"symbol": symbol_path, "summary": cached, "cache": "hit"}
+    summary = store.first_outgoing(symbol_path, SHORT_SUMMARY)
+    if summary:
+        rcache.set(key, summary)
+    return {"symbol": symbol_path, "summary": summary, "cache": "miss"}
 
 
 @router.get("/summary/file/{filepath:path}")
 def read_file_summary(filepath: str, x_tenant_id: Annotated[str | None, Header()] = None) -> dict[str, Any]:
     from repograph.indexer.schema import FILE_SUMMARY
+    from repograph.cache import redis as rcache, keys as rkeys
+    tenant = x_tenant_id or "default"
     store = _get_store(x_tenant_id)
-    return {"filepath": filepath, "summary": store.first_outgoing(f"file:{filepath}", FILE_SUMMARY)}
+    key = rkeys.summary_file(tenant, _repo_path(store), filepath)
+    cached = rcache.get(key)
+    if cached is not None:
+        return {"filepath": filepath, "summary": cached, "cache": "hit"}
+    summary = store.first_outgoing(f"file:{filepath}", FILE_SUMMARY)
+    if summary:
+        rcache.set(key, summary)
+    return {"filepath": filepath, "summary": summary, "cache": "miss"}
 
 
 @router.get("/summary/service/{service_name}")
 def read_service_summary(service_name: str, x_tenant_id: Annotated[str | None, Header()] = None) -> dict[str, Any]:
     from repograph.indexer.schema import SERVICE_SUMMARY
+    from repograph.cache import redis as rcache, keys as rkeys
+    tenant = x_tenant_id or "default"
     store = _get_store(x_tenant_id)
-    return {"service": service_name, "summary": store.first_outgoing(f"service:{service_name}", SERVICE_SUMMARY)}
+    key = rkeys.summary_service(tenant, _repo_path(store), service_name)
+    cached = rcache.get(key)
+    if cached is not None:
+        return {"service": service_name, "summary": cached, "cache": "hit"}
+    summary = store.first_outgoing(f"service:{service_name}", SERVICE_SUMMARY)
+    if summary:
+        rcache.set(key, summary)
+    return {"service": service_name, "summary": summary, "cache": "miss"}
 
 
 @router.get("/summary/repo")
 def read_repo_summary(x_tenant_id: Annotated[str | None, Header()] = None) -> dict[str, Any]:
     from repograph.indexer.schema import REPO_NODE, REPO_SUMMARY
+    from repograph.cache import redis as rcache, keys as rkeys
+    tenant = x_tenant_id or "default"
     store = _get_store(x_tenant_id)
-    return {"summary": store.first_outgoing(REPO_NODE, REPO_SUMMARY)}
+    key = rkeys.summary_l0(tenant, _repo_path(store))
+    cached = rcache.get(key)
+    if cached is not None:
+        return {"summary": cached, "cache": "hit"}
+    summary = store.first_outgoing(REPO_NODE, REPO_SUMMARY)
+    if summary:
+        rcache.set(key, summary)
+    return {"summary": summary, "cache": "miss"}
 
 
 @router.get("/summary-input/file/{filepath:path}")
@@ -1003,11 +1072,46 @@ def cache_invalidate(body: dict, x_tenant_id: Annotated[str | None, Header()] = 
 @router.get("/shared-retrieval/status")
 def shared_retrieval_status() -> dict[str, Any]:
     from repograph.cache import redis as redis_layer
+    from repograph.postgres import tracer as pg_tracer
     return {
         "cache": redis_layer.status(),
+        "postgres": pg_tracer.status(),
         "profiles": ["tiny", "small", "medium", "patch", "review"],
         "strategies": ["summary_first", "symbol_first", "patch_first", "test_first", "retry"],
+        "compressor_passes": ["none", "drop_calls", "drop_low_summaries", "drop_low_risk"],
     }
+
+
+@router.get("/postgres/status")
+def postgres_status() -> dict[str, Any]:
+    from repograph.postgres import tracer as pg_tracer
+    return pg_tracer.status()
+
+
+@router.post("/postgres/migrate")
+def postgres_migrate() -> dict[str, Any]:
+    from repograph.postgres.migrate import run as run_migrations
+    import io, logging
+    buf = io.StringIO()
+    handler = logging.StreamHandler(buf)
+    logging.getLogger("repograph.postgres.migrate").addHandler(handler)
+    try:
+        run_migrations()
+        return {"ok": True, "log": buf.getvalue()}
+    except SystemExit as exc:
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+    finally:
+        logging.getLogger("repograph.postgres.migrate").removeHandler(handler)
+
+
+def _repo_path(store: GraphStore) -> str:
+    meta = store.load_metadata()
+    return meta.get("repo_path") or ""
+
+
+def _pg_task_memory():
+    from repograph.postgres.repositories.task_memory import TaskMemoryRepository
+    return TaskMemoryRepository()
 
 
 def _get_store(tenant_id: str | None = None) -> GraphStore:

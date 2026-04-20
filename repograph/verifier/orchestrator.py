@@ -84,7 +84,25 @@ def verify(
     if store and task_id:
         _feedback_to_memory(store, task_id, result)
 
+    _log_to_postgres(result, task_id)
+
     return result
+
+
+def _log_to_postgres(result: VerificationResult, task_id: str | None) -> None:
+    try:
+        from repograph.postgres.repositories.verifier_runs import VerifierRunRepository
+        VerifierRunRepository().log(
+            tenant_id="default",
+            task_id=task_id,
+            repo_path=result.repo_path,
+            steps=[s.name for s in result.steps],
+            passed=result.overall_status == "pass",
+            result_json=result.model_dump(exclude={"steps"}),
+            duration_ms=result.duration_ms,
+        )
+    except Exception:
+        pass
 
 
 def _compute_overall(steps) -> str:
