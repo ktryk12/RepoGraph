@@ -227,6 +227,8 @@
 | `POST /verify/patch-plan` | POST | Pre-execution verifikation |
 | `POST /memory/task/update` | POST | TaskMemory-opdatering |
 
+For `POST /shared-retrieval/prepare` med `consumer="claude_code"` må response gerne indeholde et fladt `prompt`, men den må ikke miste `prompt_pack`, `working_set`, `verification_plan`, `retrieval_trace_id` eller `cache`. Det flade `prompt` er kun et kompatibilitetslag oven på den fulde envelope.
+
 ---
 
 ## 4. MCP tools

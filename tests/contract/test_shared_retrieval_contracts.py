@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 
 from repograph.mcp_server import server as mcp_server
+from repograph.shared_retrieval.adapters import format_for_consumer
 from repograph.shared_retrieval import SharedRetrievalRequest, prepare_task_context
 
 from tests.fixtures.builders import make_working_set
@@ -128,3 +129,53 @@ def test_backward_compatibility_for_existing_shared_retrieval_endpoints(api_clie
     assert "retrieval_trace_id" in prepare_response.json()
     assert "token_budget" in ws_response.json()
     assert "context_blocks" in prompt_response.json()
+
+
+def test_claude_code_consumer_contract_preserves_flat_prompt_and_full_envelope(
+    api_client,
+    fake_store,
+    fake_redis,
+    fake_tracer,
+    monkeypatch,
+) -> None:
+    req = SharedRetrievalRequest(
+        repo_path="/repo",
+        query="Preserve the RepoGraph envelope for Claude Code",
+        consumer="claude_code",
+        output_profile="patch",
+        target_context=6000,
+    )
+    monkeypatch.setattr(
+        "repograph.shared_retrieval.gateway.build_working_set",
+        lambda **_: make_working_set(symbol_count=12, token_budget=req.target_context),
+    )
+
+    response = prepare_task_context(req, fake_store)
+    payload = format_for_consumer(response, "claude_code")
+
+    assert payload["prompt"]
+    assert payload["prompt_pack"] == response.prompt_pack.model_dump()
+    assert payload["working_set"] == response.working_set
+    assert payload["verification_plan"] == response.verification_plan.model_dump()
+    assert payload["retrieval_trace_id"] == response.retrieval_trace_id
+    assert payload["cache"] == response.cache.model_dump()
+
+    api_response = api_client.post(
+        "/shared-retrieval/prepare",
+        json={
+            "repo_path": "/repo",
+            "query": "Preserve the RepoGraph envelope for Claude Code",
+            "consumer": "claude_code",
+            "output_profile": "patch",
+            "target_context": 6000,
+        },
+    )
+
+    assert api_response.status_code == 200
+    api_payload = api_response.json()
+    assert api_payload["prompt"]
+    assert "prompt_pack" in api_payload
+    assert "working_set" in api_payload
+    assert "verification_plan" in api_payload
+    assert "retrieval_trace_id" in api_payload
+    assert "cache" in api_payload

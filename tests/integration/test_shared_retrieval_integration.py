@@ -135,7 +135,9 @@ def test_multiple_consumers_get_expected_shapes(
     assert "prompt" in claude
     assert "prompt_pack" in claude
     assert "working_set" in claude
+    assert "verification_plan" in claude
     assert claude["retrieval_trace_id"] == response.retrieval_trace_id
+    assert claude["cache"] == response.cache.model_dump()
     assert "messages" in codex
     assert "working_set" in babyai
     assert "prompt_pack" in generic

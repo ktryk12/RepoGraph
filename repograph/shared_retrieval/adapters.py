@@ -30,10 +30,13 @@ def _claude_code(r: SharedRetrievalResponse) -> dict:
     for block in r.prompt_pack.context_blocks:
         sections.append(f"### {block.label}\n{block.content}")
     payload = r.model_dump()
-    payload.update({
-        "prompt": "\n\n".join(s for s in sections if s),
-        "token_estimate": r.prompt_pack.total_tokens,
-    })
+    payload["prompt"] = "\n\n".join(section for section in sections if section)
+    payload["prompt_pack"] = r.prompt_pack.model_dump()
+    payload["working_set"] = dict(r.working_set)
+    payload["verification_plan"] = r.verification_plan.model_dump()
+    payload["retrieval_trace_id"] = r.retrieval_trace_id
+    payload["cache"] = r.cache.model_dump()
+    payload["token_estimate"] = r.prompt_pack.total_tokens
     return payload
 
 
