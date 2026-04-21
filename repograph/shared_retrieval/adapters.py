@@ -25,17 +25,16 @@ def format_for_consumer(response: SharedRetrievalResponse, consumer: str) -> dic
 # ---------------------------------------------------------------------------
 
 def _claude_code(r: SharedRetrievalResponse) -> dict:
-    """Claude Code expects a flat prompt string + metadata."""
+    """Claude Code keeps a flat prompt, but must preserve the full envelope."""
     sections = [r.prompt_pack.preamble, r.prompt_pack.objective]
     for block in r.prompt_pack.context_blocks:
         sections.append(f"### {block.label}\n{block.content}")
-    return {
+    payload = r.model_dump()
+    payload.update({
         "prompt": "\n\n".join(s for s in sections if s),
-        "task_id": r.task_id,
-        "task_family": r.task_family,
         "token_estimate": r.prompt_pack.total_tokens,
-        "verification_plan": r.verification_plan.model_dump(),
-    }
+    })
+    return payload
 
 
 def _codex(r: SharedRetrievalResponse) -> dict:

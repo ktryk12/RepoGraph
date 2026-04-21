@@ -152,6 +152,8 @@ curl -X PUT http://localhost:8001/summary/file/src/auth.py \
 | `POST` | `/shared-retrieval/retry-pack` | Pack til retry efter verificeringsfejl |
 | `GET` | `/shared-retrieval/status` | Status for cache, Postgres og profiler |
 
+`consumer="claude_code"` returnerer stadig et fladt `prompt`, men response-envelope bevarer ogsÃ¥ `prompt_pack`, `working_set`, `verification_plan`, `retrieval_trace_id` og cache-metadata, sÃ¥ samme payload kan sendes videre til `llm-server` uden rekonstruktion.
+
 ### Task Memory
 | Method | Endpoint | Beskrivelse |
 |---|---|---|

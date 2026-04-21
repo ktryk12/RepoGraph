@@ -127,10 +127,15 @@ def test_multiple_consumers_get_expected_shapes(
     )
     response = prepare_task_context(req, fake_store)
 
+    claude = format_for_consumer(response, "claude_code")
     codex = format_for_consumer(response, "codex")
     babyai = format_for_consumer(response, "babyai_agent")
     generic = format_for_consumer(response, "generic")
 
+    assert "prompt" in claude
+    assert "prompt_pack" in claude
+    assert "working_set" in claude
+    assert claude["retrieval_trace_id"] == response.retrieval_trace_id
     assert "messages" in codex
     assert "working_set" in babyai
     assert "prompt_pack" in generic
