@@ -1,354 +1,277 @@
 # RepoGraph
 
-RepoGraph is a local code intelligence engine for source repositories.
+RepoGraph er en lokal code intelligence-platform til AI-kodningsagenter.
 
-It scans a codebase, parses source files into a persistent graph, and exposes that graph through:
+Den analyserer et repository med Tree-sitter, bygger en persistent vidensgraf og eksponerer grafen via REST API og MCP-server. Consumers som Claude Code, Codex, babyAI og NewModel henter strukturel kontekst fra RepoGraph — uden at RepoGraph nogensinde kalder en LLM selv.
 
-- a REST API
-- an MCP server for AI coding tools
+---
 
-The goal is simple: give coding agents architectural context before they edit code.
+## Arkitektur
 
-## What RepoGraph Can Do
+```
+Consumer (Claude Code / Codex / babyAI / NewModel)
+  │
+  ▼
+RepoGraph MCP / REST API
+  │
+  ├─ Shared Retrieval Gateway
+  │    ├─ Redis (hot cache — summaries, working sets, prompt packs)
+  │    ├─ Context Compressor (LongCodeZip-inspireret, ingen LLM)
+  │    └─ Prompt Packer (5 strategier)
+  │
+  ├─ Graph Store / CogDB (strukturel sandhed)
+  │    ├─ Symboler, filer, relationer (CALLS, IMPORTS, DEFINES ...)
+  │    ├─ Enrichment (risk level, signatur, service, test/entrypoint)
+  │    ├─ Summaries (L0 repo → L1 service → L2 fil → L3 symbol)
+  │    └─ Knowledge graph (docs, CODEOWNERS, CI-workflows)
+  │
+  └─ Postgres (operational store)
+       ├─ retrieval_traces (token-estimater, komprimeringsmetrics)
+       ├─ task_memory (patch-forsøg, test failures, precision signals)
+       ├─ verifier_runs (lint, typecheck, pytest resultater)
+       └─ usage_logs (model, tokens, latency)
+```
 
-RepoGraph can:
+RepoGraph er **rent strukturel retrieval** — ingen LLM-kald internt. Consumers genererer summaries og skriver dem tilbage via PUT-endpoints.
 
-- walk a repository and detect supported source files
-- respect `.gitignore` while indexing
-- parse code with Tree-sitter
-- store symbols and relationships in an embedded graph database
-- answer questions like:
-  - what symbols exist?
-  - where is this symbol defined?
-  - what does this function call?
-  - who calls this function?
-  - what is the blast radius if this symbol changes?
+---
 
-RepoGraph currently indexes these language families:
+## Hvad RepoGraph kan
 
-- Python
-- TypeScript
-- JavaScript
-- Go
-- Rust
-- Java
-- C
-- C++
-- C#
-- Ruby
+- Indeksere et repository med Tree-sitter (10 sprog)
+- Respektere `.gitignore` under indeksering
+- Gemme symboler og relationer i en embedded graf (CogDB)
+- Beregne blast radius for symbolændringer
+- Berige symboler med: signatur, risk level, service-tilhørsforhold, test/entrypoint-flag
+- Bygge token-budget-styrede WorkingSets til AI-consumers
+- Komprimere kontekst strukturelt (3 passes: drop calls → drop summaries → drop low-risk)
+- Cache summaries og working sets i Redis
+- Logge retrieval traces og task memory i Postgres
+- Verificere patches via pytest, ruff, mypy, bandit
 
-## What You Need To Use It
+### Understøttede sprog
 
-You need:
+Python · TypeScript · JavaScript · Go · Rust · Java · C · C++ · C# · Ruby
 
-- Python 3.11 or newer
-- a local source repository you want to index
-- local package installation via `pip`
+---
 
-RepoGraph runs locally and stores its graph on disk. Your code does not need to leave your machine.
+## Kom i gang
 
-## Installation
-
-### For normal local use
+### Docker (anbefalet)
 
 ```bash
-pip install .
+docker compose up -d
 ```
 
-### For development
+Starter API (`:8001`), Redis og Postgres. Postgres-skema oprettes automatisk ved første opstart.
+
+### Lokal installation
 
 ```bash
-pip install -e ".[dev]"
+pip install ".[cache,postgres]"
+repograph          # REST API på http://127.0.0.1:8001
+repograph-mcp      # MCP stdio-server
+repograph-migrate  # Kør Postgres-migrationer
 ```
 
-## Start The Program
+Kun basispakken er påkrævet. Redis og Postgres er valgfrie og aktiveres via miljøvariabler.
 
-RepoGraph has two main entrypoints.
+---
 
-### 1. REST API
+## Miljøvariabler
 
-Start the local API server:
+| Variabel | Standard | Beskrivelse |
+|---|---|---|
+| `REPOGRAPH_HOST` | `127.0.0.1` | API bind-adresse |
+| `REPOGRAPH_PORT` | `8001` | API port |
+| `REPOGRAPH_DB_BACKEND` | `cog` | Graph backend |
+| `REPOGRAPH_DB_PATH` | `.repograph` | Sti til graph store |
+| `REPOGRAPH_TENANT_ID` | — | Tenant for MCP-server |
+| `REPOGRAPH_REDIS_URL` | `redis://localhost:6379/0` | Redis forbindelses-URL |
+| `REPOGRAPH_POSTGRES_DSN` | — | Postgres DSN (valgfri) |
+| `REPOGRAPH_CACHE_TTL_SUMMARY` | `3600` | Summary TTL i sekunder |
+| `REPOGRAPH_CACHE_TTL_WS` | `600` | Working set TTL i sekunder |
+
+---
+
+## Typisk workflow
 
 ```bash
-python -m repograph.api.app
+# 1. Indeksér et repository
+curl -X POST http://localhost:8001/index \
+  -H "Content-Type: application/json" \
+  -d '{"repo_path": "/path/to/repo"}'
+
+# 2. Hent kontekst til en AI-task
+curl -X POST http://localhost:8001/shared-retrieval/prepare \
+  -H "Content-Type: application/json" \
+  -d '{"repo_path": "/path/to/repo", "query": "refactor the auth module", "output_profile": "medium"}'
+
+# 3. Skriv en summary tilbage (genereret af consumer)
+curl -X PUT http://localhost:8001/summary/file/src/auth.py \
+  -H "Content-Type: application/json" \
+  -d '{"text": "Authentication module — handles JWT validation and session management."}'
 ```
 
-By default it listens on:
+---
 
-```text
-http://127.0.0.1:8000
-```
+## REST API — vigtigste endpoints
 
-You can also use the installed console script:
+### Indeksering
+| Method | Endpoint | Beskrivelse |
+|---|---|---|
+| `POST` | `/index` | Indeksér et repository |
+| `GET` | `/status` | Indexeringsstatus og statistik |
 
-```bash
-repograph
-```
+### Symboler og graf
+| Method | Endpoint | Beskrivelse |
+|---|---|---|
+| `GET` | `/symbols?q=&limit=` | Søg symboler |
+| `GET` | `/symbol/{symbol}` | Hent et symbol med relationer |
+| `GET` | `/blast-radius/{symbol}` | Blast radius-analyse |
+| `GET` | `/file/{filepath}` | Alle symboler i en fil |
 
-### 2. MCP Server
+### Summaries (Redis-cachet read-through)
+| Method | Endpoint | Beskrivelse |
+|---|---|---|
+| `GET` | `/summary/symbol/{symbol}` | Hent symbol-summary |
+| `PUT` | `/summary/symbol/{symbol}` | Skriv symbol-summary (invaliderer cache) |
+| `GET` | `/summary/file/{filepath}` | Hent fil-summary |
+| `PUT` | `/summary/file/{filepath}` | Skriv fil-summary |
+| `GET` | `/summary/service/{service}` | Hent service-summary |
+| `PUT` | `/summary/service/{service}` | Skriv service-summary |
+| `GET` | `/summary/repo` | Hent repo-summary |
+| `PUT` | `/summary/repo` | Skriv repo-summary |
 
-Start the MCP stdio server:
+### Shared Retrieval
+| Method | Endpoint | Beskrivelse |
+|---|---|---|
+| `POST` | `/shared-retrieval/prepare` | Fuld retrieval → komprimeret prompt til consumer |
+| `POST` | `/shared-retrieval/working-set` | Returnér råt WorkingSet |
+| `POST` | `/shared-retrieval/prompt-pack` | Returnér PromptPack |
+| `POST` | `/shared-retrieval/retry-pack` | Pack til retry efter verificeringsfejl |
+| `GET` | `/shared-retrieval/status` | Status for cache, Postgres og profiler |
 
-```bash
-python -m repograph.mcp_server
-```
+### Task Memory
+| Method | Endpoint | Beskrivelse |
+|---|---|---|
+| `POST` | `/memory/task` | Opret task |
+| `GET` | `/memory/task/{task_id}` | Hent task (Postgres first, graph fallback) |
+| `POST` | `/memory/task/update` | Opdatér precision signals og status |
+| `POST` | `/memory/task/{task_id}/patch` | Log patch-forsøg |
+| `POST` | `/memory/task/{task_id}/test-failure` | Log testfejl |
 
-You can also use the installed console script:
+### Verificering og infrastruktur
+| Method | Endpoint | Beskrivelse |
+|---|---|---|
+| `POST` | `/verify` | Kør lint/typecheck/pytest på ændrede filer |
+| `POST` | `/cache/invalidate` | Slet Redis-cache for et repo |
+| `GET` | `/postgres/status` | Postgres-forbindelsesstatus |
+| `POST` | `/postgres/migrate` | Kør Postgres-migrationer via API |
 
-```bash
-repograph-mcp
-```
+---
 
-This mode is intended for tools that speak MCP, such as agentic coding clients.
+## MCP Tools
 
-## Database Backend
+MCP-serveren eksponerer 23 tools til Claude Code og andre MCP-kompatible clients:
 
-RepoGraph uses the local `cogdb` backed store. This means all graphs are persisted as files directly on your machine.
+**Indeksering og søgning**
+- `index_repo` · `search_symbols` · `get_symbol` · `get_symbol_context` · `blast_radius` · `repo_status`
 
-If you don't provide any configuration, RepoGraph uses `.repograph` at the root.
+**Retrieval og kontekst**
+- `prepare_task_context` — fuld pipeline: classify → retrieve → komprimér → pak
+- `build_working_set` · `build_prompt_pack` · `build_retry_pack`
+- `find_relevant_symbols` · `classify_task` · `multi_stage_retrieve`
 
-```bash
-REPOGRAPH_DB_BACKEND=cog
-REPOGRAPH_DB_PATH=.repograph
-```
+**Summaries**
+- `get_symbol_summary` · `get_file_summary` · `get_repo_summary` · `get_service_summary`
 
-### Multi-Tenant Magic (Dynamic Database)
+**Task Memory**
+- `get_task_memory` · `update_task_memory`
 
-RepoGraph natively supports serving multiple isolated environments (tenants) using the same running instance of the API. This gives you the ability to index multiple different projects completely separate from one another!
+**Verificering og cache**
+- `verify_task_context` · `invalidate_context_cache`
 
-To do this, simply include an `X-Tenant-ID` header in your API requests. If this is present, RepoGraph dynamically generates a new database folder (`.repograph_TENANTID`) automatically! No databases to provision.
+**Notes**
+- `get_notes_for_symbol` · `search_notes`
 
-Example API Call:
-```bash
-curl "http://127.0.0.1:8000/status" -H "X-Tenant-ID: ServiceA"
-```
-
-If you are using the MCP Server and want your specific AI coding tool to connect to a specific tenant directly, you just export an environment variable before starting:
-
-```bash
-set REPOGRAPH_TENANT_ID=ServiceA
-repograph-mcp
-```
-
-
-
-## Where Data Is Stored
-
-By default RepoGraph stores graph data in:
-
-```text
-.repograph
-```
-
-You can override that location with:
-
-```bash
-REPOGRAPH_DB_PATH=/path/to/graphdb
-```
-
-For the API server you can also override host and port:
-
-```bash
-REPOGRAPH_HOST=127.0.0.1
-REPOGRAPH_PORT=8000
-```
-
-## Typical Workflow
-
-1. Start the API server.
-2. Send an index request for a repository.
-3. Query symbols, relationships, and blast radius.
-4. Optionally start the MCP server and connect it to an AI coding tool.
-
-## REST API Endpoints
-
-### Health check
-
-```http
-GET /health
-```
-
-Returns basic service status and version.
-
-### Index a repository
-
-```http
-POST /index
-```
-
-Request body:
+### MCP i Docker
 
 ```json
 {
-  "repo_path": "/abs/path/to/repo",
-  "force": false
-}
-```
-
-Behavior:
-
-- `repo_path` must point to a local repository folder
-- `force=true` clears the current graph before reindexing
-
-Response example:
-
-```json
-{
-  "status": "ok",
-  "files_indexed": 1105,
-  "triples_added": 82936,
-  "duration_ms": 35758
-}
-```
-
-### Check indexing status
-
-```http
-GET /status
-```
-
-Response example:
-
-```json
-{
-  "indexed": true,
-  "repo_path": "E:/repos/example-repo",
-  "node_count": 25372,
-  "last_indexed": "2026-03-23T20:11:27Z"
-}
-```
-
-### Search symbols
-
-```http
-GET /symbols?q=RepoGraph&limit=20
-```
-
-Response:
-
-```json
-{
-  "symbols": [
-    "repograph.graph.store.RepoGraph",
-    "repograph.graph.store.RepoGraph.put_triple"
-  ]
-}
-```
-
-### Get one symbol
-
-```http
-GET /symbol/repograph.graph.store.RepoGraph.put_triple
-```
-
-Response shape:
-
-```json
-{
-  "symbol": "repograph.graph.store.RepoGraph.put_triple",
-  "in_file": "repograph/graph/store.py",
-  "at_line": "25",
-  "calls": [],
-  "called_by": [],
-  "defines": [],
-  "defined_by": "repograph.graph.store.RepoGraph"
-}
-```
-
-### Get blast radius
-
-```http
-GET /blast-radius/repograph.graph.store.RepoGraph.put_triple?depth=3
-```
-
-Response shape:
-
-```json
-{
-  "symbol": "repograph.graph.store.RepoGraph.put_triple",
-  "depth": 3,
-  "affected": {
-    "repograph.graph.store.RepoGraph.put_triple": []
+  "mcpServers": {
+    "repograph": {
+      "command": "docker",
+      "args": ["exec", "-i", "repograph-api", "repograph-mcp"]
+    }
   }
 }
 ```
 
-### Get all symbols in a file
-
-```http
-GET /file/repograph/graph/store.py
-```
-
-Response:
-
-```json
-{
-  "filepath": "repograph/graph/store.py",
-  "symbols": [
-    "repograph.graph.store.RepoGraph",
-    "repograph.graph.store.RepoGraph.put_triple"
-  ]
-}
-```
-
-## Example: Index A Repository From The Command Line
-
-With the API running:
+### MCP lokalt
 
 ```bash
-curl -X POST http://127.0.0.1:8000/index ^
-  -H "Content-Type: application/json" ^
-  -d "{\"repo_path\":\"E:/repos/some-repo\",\"force\":true}"
+export REPOGRAPH_TENANT_ID=default
+repograph-mcp
 ```
 
-Then query it:
+---
+
+## Output Profiles
+
+Styrer token-budget og packing-strategi pr. consumer/opgave:
+
+| Profil | Token-budget | Strategi | Brug |
+|---|---|---|---|
+| `tiny` | 4.096 | summary_first | Meget lille kontekst |
+| `small` | 8.192 | summary_first | Standard |
+| `medium` | 32.768 | symbol_first | Dybe analyser |
+| `patch` | 6.000 | patch_first | Targeted patches |
+| `review` | 16.384 | symbol_first | Code review |
+
+---
+
+## Multi-tenant
+
+Alle endpoints understøtter `X-Tenant-ID`-header. Hvert tenant får sin egen isolerede graph store og Redis-namespace:
 
 ```bash
-curl "http://127.0.0.1:8000/symbols?q=RepoGraph&limit=10"
+curl http://localhost:8001/status -H "X-Tenant-ID: projectA"
+curl http://localhost:8001/status -H "X-Tenant-ID: projectB"
 ```
 
-## MCP Tools Exposed
+---
 
-The MCP server exposes these tools:
-
-- `index_repo(repo_path, force=False)`
-- `search_symbols(query, limit=20)`
-- `get_symbol(symbol)`
-- `blast_radius(symbol, depth=3)`
-- `repo_status()`
-
-These tools reuse the same underlying graph and indexing logic as the REST API.
-
-## Current Scope
-
-RepoGraph is intentionally focused.
-
-Current non-goals in this phase:
-
-- no Docker or container requirement
-- no cloud dependency
-- no web UI
-- no multi-repo graph (without explicitly enabling X-Tenant-ID headers)
-- no watch mode / auto reindex on file changes
-- no semantic vector search
-
-Cross-file name resolution is currently best-effort, not full semantic resolution.
-
-## Development
-
-Run tests:
+## Docker
 
 ```bash
+# Prod
+docker compose up -d
+
+# Dev med hot-reload
+docker compose -f docker-compose.yml -f docker-compose.dev.yml up
+
+# Kør migrationer manuelt
+docker compose run --rm migrate
+```
+
+Services: `repograph-api` · `repograph-redis` · `repograph-postgres`
+
+---
+
+## Udvikling
+
+```bash
+pip install -e ".[dev,cache,postgres]"
 python -m pytest tests -q
 ```
 
-## Summary
+---
 
-Use RepoGraph when you want a local, persistent code graph that helps humans and AI tools understand:
+## Hvad RepoGraph ikke gør
 
-- what exists in a codebase
-- how symbols relate to each other
-- where changes may have downstream impact
-
-Start the API if you want HTTP access.
-Start the MCP server if you want direct integration with an MCP-capable coding tool.
+- Ingen LLM-kald internt — consumers genererer summaries og skriver dem tilbage
+- Ingen web-UI
+- Ingen automatisk reindeksering ved filændringer
+- Ingen semantisk vector-søgning
+- Ingen cross-repo graf uden eksplicit multi-tenant opsætning

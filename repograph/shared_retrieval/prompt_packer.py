@@ -46,8 +46,10 @@ def pack(
 
     preamble = _get_preamble(ws.task_family)
     objective = _format_objective(ws.query, ws.task_family)
+    reserved_tokens = _tok(preamble) + _tok(objective)
+    blocks = _trim_to_budget(blocks, max(0, profile.target_context - reserved_tokens))
 
-    total = _tok(preamble) + _tok(objective) + sum(b.token_estimate for b in blocks)
+    total = reserved_tokens + sum(b.token_estimate for b in blocks)
 
     return PromptPack(
         preamble=preamble,

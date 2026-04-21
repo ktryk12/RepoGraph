@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 
 
 @dataclass(frozen=True)
@@ -56,6 +56,13 @@ PROFILES: dict[str, OutputProfile] = {
 
 def get_profile(name: str) -> OutputProfile:
     return PROFILES.get(name, PROFILES["small"])
+
+
+def resolve_profile(name: str, target_context: int | None = None) -> OutputProfile:
+    profile = get_profile(name)
+    if target_context is None or target_context <= 0 or target_context == profile.target_context:
+        return profile
+    return replace(profile, target_context=target_context)
 
 
 def profile_for_context(target_context: int) -> OutputProfile:

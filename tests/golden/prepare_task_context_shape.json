@@ -1,0 +1,28 @@
+{
+  "top_level": [
+    "cache",
+    "debug",
+    "duration_ms",
+    "prompt_pack",
+    "retrieval_trace_id",
+    "task_family",
+    "task_id",
+    "verification_plan",
+    "working_set",
+    "working_set_id"
+  ],
+  "prompt_pack": [
+    "context_blocks",
+    "objective",
+    "preamble",
+    "strategy",
+    "target_context",
+    "total_tokens"
+  ],
+  "verification_plan": [
+    "lint",
+    "static_analysis",
+    "tests",
+    "typecheck"
+  ]
+}

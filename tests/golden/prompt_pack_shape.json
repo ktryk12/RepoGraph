@@ -1,0 +1,17 @@
+{
+  "keys": [
+    "context_blocks",
+    "objective",
+    "preamble",
+    "strategy",
+    "target_context",
+    "total_tokens"
+  ],
+  "context_block_keys": [
+    "content",
+    "label",
+    "role",
+    "token_estimate",
+    "why_included"
+  ]
+}

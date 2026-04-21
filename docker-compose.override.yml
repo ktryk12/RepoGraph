@@ -1,0 +1,6 @@
+services:
+  api:
+    volumes:
+      - repograph_data:/data
+      - E:/Llm/llm-server:/repos/llm-server:ro
+      - E:/repos:/repos/src:ro

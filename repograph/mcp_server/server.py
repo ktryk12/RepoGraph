@@ -254,7 +254,7 @@ def build_retry_pack(
 ) -> dict[str, Any]:
     """Pack context for a retry after verification failure. Prepends failure reason + diff to patch_first context."""
     from repograph.shared_retrieval import SharedRetrievalRequest, prepare_task_context as _prepare
-    from repograph.shared_retrieval.profiles import get_profile
+    from repograph.shared_retrieval.profiles import resolve_profile
     from repograph.shared_retrieval.prompt_packer import pack
     from repograph.working_set.builder import build as build_ws
     from repograph.graph import get_graph_store
@@ -264,7 +264,7 @@ def build_retry_pack(
         output_profile="patch", tenant_id=TENANT_ID or "default",
     )
     ws = build_ws(query=query, store=store, token_budget=target_context)
-    profile = get_profile("patch")
+    profile = resolve_profile("patch", target_context)
     retry_pack = pack(ws, profile, failure_reason=failure_reason, previous_diff=previous_diff)
     return retry_pack.model_dump()
 

@@ -1040,7 +1040,7 @@ def shared_retrieval_retry_pack(
     x_tenant_id: Annotated[str | None, Header()] = None,
 ) -> dict[str, Any]:
     from repograph.shared_retrieval import SharedRetrievalRequest, prepare_task_context
-    from repograph.shared_retrieval.profiles import get_profile
+    from repograph.shared_retrieval.profiles import resolve_profile
     from repograph.shared_retrieval.prompt_packer import pack
     if x_tenant_id:
         body.setdefault("tenant_id", x_tenant_id)
@@ -1049,7 +1049,7 @@ def shared_retrieval_retry_pack(
     req = SharedRetrievalRequest(**body)
     store = _get_store(req.tenant_id if req.tenant_id != "default" else x_tenant_id)
     response = prepare_task_context(req, store)
-    profile = get_profile(req.output_profile)
+    profile = resolve_profile(req.output_profile, req.target_context)
     from repograph.working_set.builder import build as build_ws
     ws = build_ws(query=req.query, store=store, task_hint=req.task_hint, token_budget=req.target_context)
     retry_pack = pack(ws, profile, failure_reason=failure_reason, previous_diff=previous_diff)

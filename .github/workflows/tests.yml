@@ -1,0 +1,24 @@
+name: RepoGraph Tests
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e .[dev]
+
+      - name: Run shared retrieval test hierarchy
+        run: |
+          pytest tests/unit tests/contract tests/integration tests/e2e tests/regression tests/test_api.py tests/test_parser.py tests/test_store.py tests/test_walker.py

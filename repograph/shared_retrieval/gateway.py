@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import time
 import uuid
+from pathlib import PurePosixPath
 
 from repograph.cache import keys as cache_keys
 from repograph.cache import redis as redis_layer
@@ -18,7 +19,7 @@ from .models import (
     SharedRetrievalResponse,
     VerificationPlan,
 )
-from .profiles import get_profile
+from .profiles import resolve_profile
 from .prompt_packer import pack
 
 
@@ -28,7 +29,7 @@ def prepare_task_context(
 ) -> SharedRetrievalResponse:
     t0 = time.perf_counter()
 
-    profile = get_profile(req.output_profile)
+    profile = resolve_profile(req.output_profile, req.target_context)
 
     # Cache lookup
     q_hash = cache_keys.query_hash(req.query, req.output_profile, req.target_context)
@@ -39,7 +40,7 @@ def prepare_task_context(
     if not req.force_refresh:
         cached = redis_layer.get(ws_key)
         if cached is not None:
-            cache_info = CacheInfo(used=True, keys_hit=[ws_key])
+            cached["cache"] = CacheInfo(used=True, keys_hit=[ws_key]).model_dump()
             return SharedRetrievalResponse(**cached)
 
     # Build WorkingSet
@@ -118,7 +119,7 @@ def prepare_task_context(
 def _build_verification_plan(ws) -> VerificationPlan:
     test_files = [
         f.filepath for f in ws.files
-        if "test" in (f.filepath or "").lower()
+        if _is_test_file(f.filepath or "")
     ]
     has_py = any(
         (f.filepath or "").endswith(".py") for f in ws.files
@@ -129,3 +130,14 @@ def _build_verification_plan(ws) -> VerificationPlan:
         typecheck=False,
         static_analysis=False,
     )
+
+
+def _is_test_file(filepath: str) -> bool:
+    normalized = filepath.replace("\\", "/").strip("/")
+    if not normalized:
+        return False
+    path = PurePosixPath(normalized)
+    filename = path.name.lower()
+    if filename.startswith("test_") or filename.endswith("_test.py"):
+        return True
+    return any(part.lower() == "tests" for part in path.parts)
