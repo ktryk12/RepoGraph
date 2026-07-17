@@ -57,13 +57,26 @@ Python · TypeScript · JavaScript · Go · Rust · Java · C · C++ · C# · Ru
 
 ## Kom i gang
 
-### Docker (anbefalet)
+### Podman (anbefalet)
 
 ```bash
-docker compose up -d
+# Med podman-compose
+podman-compose -f podman-compose.repograph.yml up -d
+
+# Med PowerShell helper
+.\podman-repograph.ps1 up -Detached
+
+# Som Kubernetes pod
+podman play kube repograph-pod.yaml
 ```
 
 Starter API (`:8001`), Redis og Postgres. Postgres-skema oprettes automatisk ved første opstart.
+
+**Fordele ved Podman:**
+- Rootless containers (bedre sikkerhed)
+- Ingen daemon kørende konstant (færre ressourcer)
+- Kubernetes-pod-kompatibel
+- Docker-kompatible kommandoer
 
 ### Lokal installation
 
@@ -91,6 +104,8 @@ Kun basispakken er påkrævet. Redis og Postgres er valgfrie og aktiveres via mi
 | `REPOGRAPH_POSTGRES_DSN` | — | Postgres DSN (valgfri) |
 | `REPOGRAPH_CACHE_TTL_SUMMARY` | `3600` | Summary TTL i sekunder |
 | `REPOGRAPH_CACHE_TTL_WS` | `600` | Working set TTL i sekunder |
+| `REPOGRAPH_ENABLE_WRITE_TOOLS` | — | Sæt til `1` for at eksponere de 6 filsystem-write MCP-tools (fra som standard) |
+| `REPOGRAPH_API_URL` | — | Bruges af `repograph-autoindex` til at indeksere via en kørende API i stedet for in-process |
 
 ---
 
@@ -146,13 +161,22 @@ curl -X PUT http://localhost:8001/summary/file/src/auth.py \
 ### Shared Retrieval
 | Method | Endpoint | Beskrivelse |
 |---|---|---|
-| `POST` | `/shared-retrieval/prepare` | Fuld retrieval → komprimeret prompt til consumer |
+| `POST` | `/shared-retrieval/prepare` | Fuld retrieval → consumer-specifikt retrieval-pack |
+| `POST` | `/shared-retrieval/analyze-plan` | Retrieval-level breakdown af brede analyze-code forespørgsler |
 | `POST` | `/shared-retrieval/working-set` | Returnér råt WorkingSet |
 | `POST` | `/shared-retrieval/prompt-pack` | Returnér PromptPack |
 | `POST` | `/shared-retrieval/retry-pack` | Pack til retry efter verificeringsfejl |
 | `GET` | `/shared-retrieval/status` | Status for cache, Postgres og profiler |
 
+`prompt_pack` er et retrieval-/komprimerings-artifact, ikke en universel "endelig prompt". RepoGraph ejer shared retrieval og returnerer strukturerede outputs som `working_set`, `prompt_pack`, `verification_plan`, `retrieval_trace_id` og cache-metadata. Den enkelte consumer ejer derefter sin egen endelige prompt-/message-assembly.
+
 `consumer="claude_code"` returnerer stadig et fladt `prompt`, men response-envelope bevarer ogsÃ¥ `prompt_pack`, `working_set`, `verification_plan`, `retrieval_trace_id` og cache-metadata, sÃ¥ samme payload kan sendes videre til `llm-server` uden rekonstruktion. Det flade `prompt` er en convenience-view, ikke en erstatning for den strukturerede envelope.
+
+`consumer="babyai_agent"` returnerer et struktureret retrieval-pack med `payload_mode="structured_retrieval_pack"` og `prompt_assembly_owner="babyai"`. Payloadet indeholder bl.a. `task_id`, `task_family`, `preamble`, `objective`, `context_blocks`, `working_set`, `verification_plan`, `retrieval_trace_id`, cache-metadata og availability-flags som `retry_pack_available` / `verification_plan_available`. RepoGraph flatten'er ikke den endelige agent-prompt for babyAI.
+
+`consumer="newmodel"` forbliver en direkte structured consumer. Den bruger samme retrieval-pack-stil som babyAI, men markeres med `prompt_assembly_owner="newmodel"`, sÃ¥ NewModel kan konsumere RepoGraph direkte uden babyAI i loopet.
+
+Brede forespørgsler som "analyze the code", "analyze our program" eller "understand this repo" bliver ikke pakket som én stor prompt. RepoGraph laver i stedet et retrieval-level `analysis_plan` med mindre steps som repo overview, entrypoints, high-risk files og follow-up deep dive. Planen er step-decomposition, ikke fuld autonom agent-planlægning, og RepoGraph forbliver LLM-fri strukturel retrieval.
 
 ### Task Memory
 | Method | Endpoint | Beskrivelse |
@@ -175,13 +199,14 @@ curl -X PUT http://localhost:8001/summary/file/src/auth.py \
 
 ## MCP Tools
 
-MCP-serveren eksponerer 23 tools til Claude Code og andre MCP-kompatible clients:
+MCP-serveren eksponerer som standard 24 read-only tools til Claude Code og andre MCP-kompatible clients (rent strukturel retrieval, ingen skrivning):
 
 **Indeksering og søgning**
 - `index_repo` · `search_symbols` · `get_symbol` · `get_symbol_context` · `blast_radius` · `repo_status`
 
 **Retrieval og kontekst**
 - `prepare_task_context` — fuld pipeline: classify → retrieve → komprimér → pak
+- `build_analysis_plan` — retrieval-level analyze-code breakdown for brede forespørgsler
 - `build_working_set` · `build_prompt_pack` · `build_retry_pack`
 - `find_relevant_symbols` · `classify_task` · `multi_stage_retrieve`
 
@@ -197,13 +222,23 @@ MCP-serveren eksponerer 23 tools til Claude Code og andre MCP-kompatible clients
 **Notes**
 - `get_notes_for_symbol` · `search_notes`
 
-### MCP i Docker
+### Write-tools (deaktiveret som standard)
+
+Serveren indeholder desuden 6 filsystem-skrivende tools — `write_file`, `update_file`, `create_document`, `create_directory`, `save_spec`, `sync_from_project`. De bryder RepoGraphs rent-strukturelle kontrakt og er **slået fra som standard**. Aktivér dem eksplicit ved at sætte:
+
+```bash
+export REPOGRAPH_ENABLE_WRITE_TOOLS=1   # eksponerer de 6 write-tools (i alt 30)
+```
+
+Lad dem være slået fra, medmindre du bevidst vil lade en consumer skrive til disken via MCP.
+
+### MCP i Podman
 
 ```json
 {
   "mcpServers": {
     "repograph": {
-      "command": "docker",
+      "command": "podman",
       "args": ["exec", "-i", "repograph-api", "repograph-mcp"]
     }
   }
@@ -233,6 +268,39 @@ Styrer token-budget og packing-strategi pr. consumer/opgave:
 
 ---
 
+## Automatisk indeksering
+
+RepoGraph re-indekserer ikke selv ved filændringer, men `repograph-autoindex` wirer indeksering ind i de events der betyder "et repo dukkede op" eller "repoet skiftede tilstand" — clone, checkout, merge/pull, commit eller en AI-session der starter. Den beregner en billig signatur (git `HEAD`, ellers nyeste fil-mtime), sammenligner med sidste indekserede tilstand og re-indekserer **kun ved faktisk ændring** — så den er et hurtigt no-op når intet er ændret.
+
+```bash
+repograph-autoindex                 # indeksér cwd hvis den er ændret
+repograph-autoindex /path/to/repo   # indeksér et bestemt repo
+repograph-autoindex --check         # exit 1 hvis forældet (til CI-gates)
+```
+
+**Git-hooks (auto-index ved checkout/pull/commit):**
+
+```bash
+scripts/autoindex/install-git-hooks.sh /path/to/repo     # macOS/Linux/Git Bash
+scripts\autoindex\Install-GitHooks.ps1 -Repo E:\repos\my-project   # Windows
+```
+
+**Claude Code (auto-index ved session-start)** — i `.claude/settings.json`:
+
+```json
+{
+  "hooks": {
+    "SessionStart": [
+      { "hooks": [ { "type": "command", "command": "repograph-autoindex \"$CLAUDE_PROJECT_DIR\" --quiet" } ] }
+    ]
+  }
+}
+```
+
+Se [docs/AUTO_INDEXING.md](docs/AUTO_INDEXING.md) for alle wiring-opskrifter (git-templates, MCP/programmatisk, CI, containere).
+
+---
+
 ## Multi-tenant
 
 Alle endpoints understøtter `X-Tenant-ID`-header. Hvert tenant får sin egen isolerede graph store og Redis-namespace:
@@ -244,20 +312,32 @@ curl http://localhost:8001/status -H "X-Tenant-ID: projectB"
 
 ---
 
-## Docker
+## Podman
 
 ```bash
 # Prod
-docker compose up -d
+podman-compose -f podman-compose.repograph.yml up -d
+# eller med helper:
+.\podman-repograph.ps1 up -Detached
 
 # Dev med hot-reload
-docker compose -f docker-compose.yml -f docker-compose.dev.yml up
+podman-compose -f podman-compose.repograph.yml -f podman-compose.repograph.dev.yml up
+# eller:
+.\podman-repograph.ps1 up -Dev
+
+# Som Kubernetes pod
+podman play kube repograph-pod.yaml
 
 # Kør migrationer manuelt
-docker compose run --rm migrate
+podman-compose -f podman-compose.repograph.yml run --rm migrate
 ```
 
-Services: `repograph-api` · `repograph-redis` · `repograph-postgres`
+**Services:** `repograph-api` · `repograph-redis` · `repograph-postgres`
+
+**Helper kommandoer:**
+- `.\podman-repograph.ps1 status` — kontrollér at alt kører
+- `.\podman-repograph.ps1 logs` — se logs
+- `.\podman-repograph.ps1 shell` — åbn shell i API container
 
 ---
 
@@ -274,6 +354,6 @@ python -m pytest tests -q
 
 - Ingen LLM-kald internt — consumers genererer summaries og skriver dem tilbage
 - Ingen web-UI
-- Ingen automatisk reindeksering ved filændringer
+- Ingen indbygget reindeksering ved filændringer (men `repograph-autoindex` + git/session-hooks giver automatisk indeksering ved clone/checkout/pull/session-start — se ovenfor)
 - Ingen semantisk vector-søgning
 - Ingen cross-repo graf uden eksplicit multi-tenant opsætning

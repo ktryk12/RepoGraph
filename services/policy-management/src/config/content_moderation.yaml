@@ -1,0 +1,115 @@
+schema_version: 1
+version: v1
+effective_from: "2026-04-18T00:00:00Z"
+updated_at: "2026-04-18T00:00:00Z"
+domain: fact_check
+description: >
+  Definerer hvilke claims der må faktatjekkes og publiceres.
+  Alle regler håndhæves af claim_router_agent og legal_review_agent
+  før et claim må passere til evidence_gatherer_agent.
+
+rules:
+
+  # ── Hard blocks (severity 1.0 → auto-afvis) ────────────────────────────────
+
+  no_private_individuals:
+    enabled: true
+    severity: 1.0
+    hard: true
+    description: >
+      Påstande om navngivne privatpersoner der ikke er offentlige
+      figurer (politikere, erhvervsledere, celebrites) må ikke behandles.
+    rationale: GDPR Art. 9 + injurie-risiko
+    allow_override_env: FACT_CHECK_ALLOW_PRIVATE_INDIVIDUALS
+
+  no_minors:
+    enabled: true
+    severity: 1.0
+    hard: true
+    description: >
+      Claims der identificerer eller omhandler mindreårige er
+      forbudt uanset kontekst.
+    rationale: Barnets tarv, GDPR Art. 8, børnebeskyttelseslov
+
+  no_active_police_investigations:
+    enabled: true
+    severity: 1.0
+    hard: true
+    description: >
+      Claims der omhandler igangværende politiefterforskning eller
+      tiltalte inden domfældelse må ikke publiceres.
+    rationale: Formodning om uskyld, juridisk risiko
+    allow_override_env: FACT_CHECK_ALLOW_ACTIVE_CASES
+
+  no_sexual_content:
+    enabled: true
+    severity: 1.0
+    hard: true
+    description: Sexuelt indhold er forbudt i alle varianter.
+
+  no_doxxing:
+    enabled: true
+    severity: 1.0
+    hard: true
+    description: >
+      Claims der afslører personers adresse, CPR, telefon eller
+      andre personhenførbare oplysninger er forbudt.
+
+  # ── Soft gates (severity < 1.0 → kræver legal_review, blokerer ikke) ───────
+
+  requires_legal_review_if_political:
+    enabled: true
+    severity: 0.85
+    hard: false
+    description: >
+      Claims med klart politisk tilhørsforhold (partipolitik,
+      valgpåstande, politikere) kræver legal_review_agent-passage.
+    trigger_keywords:
+      - valgsvindel
+      - stemmer
+      - partipolitik
+      - regering
+      - parlament
+
+  requires_legal_review_if_medical:
+    enabled: true
+    severity: 0.85
+    hard: false
+    description: >
+      Claims om medicin, behandlinger, diagnoser eller sundhedsråd
+      kræver legal_review_agent-passage.
+    trigger_keywords:
+      - kurer
+      - behandling
+      - vaccine
+      - medicinsk
+      - bivirkninger
+      - klinisk forsøg
+
+  satire_must_be_labeled:
+    enabled: true
+    severity: 0.70
+    hard: false
+    description: >
+      Hvis claim_router_agent klassificerer kilden som satire,
+      skal verdict altid være UNVERIFIED og script-prompten skal
+      markere satire-kontekst eksplicit.
+
+  # ── Volume-limits ────────────────────────────────────────────────────────────
+
+  max_claims_per_day:
+    enabled: true
+    limit: 200
+    hard: false
+    description: >
+      Maks. 200 claims behandles per dag. Overskridelse → kø
+      uden blokering (soft cap for cost-kontrol).
+    allow_override_env: FACT_CHECK_MAX_CLAIMS_PER_DAY
+
+  max_claims_per_source_per_day:
+    enabled: true
+    limit: 20
+    hard: false
+    description: >
+      Maks. 20 claims fra samme kilde-domain per dag
+      (anti-manipulation, hindrer koordineret desinformation).

@@ -1,0 +1,147 @@
+schema_version: 1
+version: v2
+effective_from: "2026-02-16T00:00:00Z"
+updated_at: "2026-04-18T00:00:00Z"
+
+# Domain-policies loaded alongside this constitution.
+# constitution_service.py must validate these on startup.
+domain_policies:
+  - path: policy/domain/fact_check/content_moderation.yaml
+    domain: fact_check
+    required: true
+  - path: policy/domain/fact_check/source_hierarchy.yaml
+    domain: fact_check
+    required: true
+  - path: policy/domain/fact_check/verdict_thresholds.yaml
+    domain: fact_check
+    required: true
+  - path: policy/domain/fact_check/legal_review_triggers.yaml
+    domain: fact_check
+    required: true
+  - path: policy/domain/trading/risk.yaml
+    domain: trading
+    required: true
+
+rules:
+  no_unapproved_training_data:
+    enabled: true
+    approved_data_roots:
+      - eval
+      - artifacts
+      - datasets
+      - tests/fixtures
+    allow_env: AESA_ALLOW_UNAPPROVED_TRAINING
+    extra_roots_env: AESA_APPROVED_TRAINING_ROOTS
+  decision_requires_provenance:
+    enabled: true
+    require_decision_id: true
+    require_context_id: false
+  no_self_modification_without_human_approval:
+    enabled: true
+    approval_env: AESA_HUMAN_APPROVED_SELF_MOD
+    allowed_write_roots:
+      - artifacts
+      - logs
+      - models
+      - provenance
+      - outputs
+      - tmp
+      - eval
+  artifact_fingerprint_required:
+    enabled: true
+    algorithm: sha256
+    artifact_ref_prefix: artifact:sha256
+  stagnation_must_terminate:
+    enabled: true
+    repeat_window: 2
+    required_stop_reason: no_progress
+
+  # ── Fact-check domæne-regler ─────────────────────────────────────────────────
+  fact_check_verdict_requires_sources:
+    enabled: true
+    domain: fact_check
+    description: >
+      Ingen TRUE/FALSE-verdict må emitttes uden at source_validator_agent
+      har bekræftet mindst 2 uafhængige tier_1/tier_2-kilder.
+    minimum_verified_sources: 2
+    minimum_source_tier_score: 0.80
+    enforced_by: verdict_agent
+
+  fact_check_legal_gate_required:
+    enabled: true
+    domain: fact_check
+    description: >
+      Alle claims markeret som legal-review-triggers (se
+      policy/domain/fact_check/legal_review_triggers.yaml) skal
+      passere legal_review_agent inden publicering.
+    hard: true
+    enforced_by: production_router_agent
+
+  fact_check_human_review_before_publish:
+    enabled: true
+    domain: fact_check
+    description: >
+      Alle genererede videoer skal ligge i review-queue og have
+      menneskelig godkendelse inden content.publish.request emitttes.
+      Ophæves IKKE af nogen env-var de første 180 dage.
+    mandatory_days: 180
+    allow_override_after_days_env: FACT_CHECK_SKIP_HUMAN_REVIEW_AFTER_DAYS
+    hard: true
+    enforced_by: production_router_agent
+
+  fact_check_no_phantom_citations:
+    enabled: true
+    domain: fact_check
+    description: >
+      verdict_agent må aldrig citere en kilde der ikke er hentet og
+      valideret via source_validator_agent. Hallucination-guard.
+    hard: true
+    enforced_by: verdict_agent
+
+  # ── Trading domæne-regler ────────────────────────────────────────────────────
+  trading_paper_only_until_approved:
+    enabled: true
+    domain: trading
+    description: >
+      Live-handel er forbudt indtil TRADING_LIVE_APPROVED=true sættes
+      eksplicit af menneske OG validate_live_switch() godkender.
+    hard: true
+    approval_env: TRADING_LIVE_APPROVED
+    enforced_by: broker_gateway
+
+  trading_audit_first:
+    enabled: true
+    domain: trading
+    description: >
+      Alle ordre-beslutninger (inkl. afvisninger) skrives til artifact-writer
+      INDEN submission til broker. Ingen ordre må eksekveres uden audit-record.
+    hard: true
+    enforced_by: order_manager
+
+  trading_keys_never_plaintext:
+    enabled: true
+    domain: trading
+    description: >
+      BYOK API-nøgler må aldrig logges, serialiseres til database
+      eller eksponeres i environment-dumps. Vault/KMS-kryptering påkrævet.
+    hard: true
+    enforced_by: broker_gateway
+
+  trading_risk_engine_mandatory:
+    enabled: true
+    domain: trading
+    description: >
+      Enhver ordre skal passere risk-engine og modtage APPROVED-status
+      inden broker-gateway submission. Ingen bypass tilladt.
+    hard: true
+    enforced_by: order_manager
+
+  trading_kill_switch_always_available:
+    enabled: true
+    domain: trading
+    description: >
+      Global kill-switch (POST /kill-switch) og per-kunde pause
+      skal altid være tilgængelig og reagere inden 10 sekunder.
+    max_response_seconds: 10
+    hard: true
+    enforced_by: broker_gateway

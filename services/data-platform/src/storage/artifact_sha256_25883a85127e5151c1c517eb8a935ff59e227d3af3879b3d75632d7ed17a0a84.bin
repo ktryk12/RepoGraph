@@ -1,0 +1,1 @@
+{"decision_id": "7264d42d-59ca-4d72-922b-affafd3ce34e", "generated_output": {"text": "Unterscheidung: Paris.", "model_ref": "mamba-gpt-7b-Q2_K.gguf", "runner_ref": "llama.cpp", "trace": {"prompt_hash": "115049a298532be2f181edb03f766770c0db84c22aff39003fec340deaec7545", "purpose": "default", "seed": [REDACTED:phone:02729a01], "n_predict": 256}}}

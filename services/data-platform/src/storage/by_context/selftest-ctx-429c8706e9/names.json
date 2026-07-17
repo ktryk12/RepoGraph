@@ -1,0 +1,27 @@
+{
+  "decision:final": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-02-27T17:49:24.374071Z",
+      "path_context_id": "selftest-ctx-429c8706e9",
+      "raw_context_id": "selftest-ctx-429c8706e9",
+      "type": "decision"
+    },
+    "ref": "artifact:sha256:d7a5dfa59c899047e1336483da5be39a882fb3656d429a52a4c88ddcb12ed72d"
+  },
+  "task:selftest": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-02-27T17:48:46.831174Z",
+      "path_context_id": "selftest-ctx-429c8706e9",
+      "raw_context_id": "selftest-ctx-429c8706e9",
+      "self_test_run_id": "429c8706e9",
+      "type": "task"
+    },
+    "ref": "artifact:sha256:3959e7b4132d9e632b045591de1a17eb64de7486b98844f8a7f3390c219bef17"
+  }
+}

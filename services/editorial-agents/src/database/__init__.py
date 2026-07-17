@@ -1,0 +1,1 @@
+from .postgresql_editorial_store import PostgreSQLEditorialStore

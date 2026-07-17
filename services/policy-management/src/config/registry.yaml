@@ -1,0 +1,73 @@
+schema_version: 1
+version: v1
+effective_from: "2026-04-18T00:00:00Z"
+updated_at: "2026-04-18T00:00:00Z"
+domain: skills
+description: >
+  Politik for SkillRuntimeRegistry: hvilke skills må registreres,
+  validering ved bootstrap og duplicat-håndtering.
+
+# ── Bootstrap-validering ──────────────────────────────────────────────────────
+bootstrap:
+  validate_schema_on_load: true
+  fail_on_invalid: false        # Log warning, men blokér ikke boot
+  deduplicate_by: skill_id
+  description: >
+    Alle SKILL.md valideres mod skill_schema.json ved bootstrap.
+    Ugyldige skills logges som WARNING og springes over — de blokerer
+    ikke service-opstart. Duplikate skill_id'er: senest-fundne vinder.
+
+# ── Påkrævede felter ──────────────────────────────────────────────────────────
+required_manifest_fields:
+  - skill_id
+  - name
+  - version
+  - description
+  - domains
+  - expert_routing
+  - expert_routing.model
+required_fields_description: >
+  Skills der mangler disse felter afvises ved registry-registration.
+
+# ── Tilladt skill_id-format ───────────────────────────────────────────────────
+skill_id_format:
+  pattern: "^[a-z][a-z0-9-]{1,48}[a-z0-9]$"
+  reserved_prefixes:
+    - _internal
+    - _test
+  description: >
+    skill_id skal være kebab-case, 3-50 tegn. Præfikset med _ er
+    reserveret til interne/test skills og vises ikke i public /skills endpoint.
+
+# ── Domain-godkendte værdier ──────────────────────────────────────────────────
+allowed_domains:
+  - code
+  - planning
+  - architecture
+  - security
+  - compliance
+  - risk
+  - process
+  - learning
+  - quality
+  - documentation
+  - release
+  - communication
+  - debugging
+  - analysis
+  - operations
+  - business
+  - strategy
+  - education
+  - memory
+  - improvement
+allowed_domains_description: >
+  Kun godkendte domains tillades. Nye domains kræver PR + review.
+
+# ── Versioning ────────────────────────────────────────────────────────────────
+versioning:
+  format: semver
+  auto_increment_on_body_change: false
+  description: >
+    Version følger semver. Opdatering af SKILL.md uden versionsbump
+    logges som INFO. Breaking changes i interface kræver MAJOR bump.

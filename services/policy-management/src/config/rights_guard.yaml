@@ -1,0 +1,14 @@
+schema_version: 1
+version: v1
+default_policy: standard
+policies:
+  standard:
+    allow:
+      - public
+      - internal
+      - first_party
+      - open_source
+    review:
+      - partner
+      - licensed
+      - restricted

@@ -1,0 +1,17 @@
+{
+  "artifacts": [
+    {
+      "bytes": 3609,
+      "created_at_utc": "2026-03-22T13:20:00.767538Z",
+      "fingerprint_ref": "artifact:sha256:4c57f3c22a87317e92c0fadef679352ace9b1926481836b5f3233dd4c2fd6532",
+      "name": "episode_result",
+      "path": "episodes/f49beb61-5573-4ff2-b88a-04de9e9825f3/episode_result.v1.json",
+      "schema_version": 1,
+      "sha256": "4c57f3c22a87317e92c0fadef679352ace9b1926481836b5f3233dd4c2fd6532"
+    }
+  ],
+  "created_at_utc": "2026-03-22T13:20:00.767538Z",
+  "episode_id": "f49beb61-5573-4ff2-b88a-04de9e9825f3",
+  "schema_version": 1,
+  "task_id": "EVAL-DN-001"
+}

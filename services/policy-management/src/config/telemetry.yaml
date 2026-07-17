@@ -1,0 +1,72 @@
+schema_version: 1
+version: v1
+effective_from: "2026-04-18T00:00:00Z"
+updated_at: "2026-04-18T00:00:00Z"
+domain: skills
+description: >
+  Telemetri-kontrakt for skill-runtime. Definerer påkrævede felter,
+  Kafka-topics og hvad der er ikke-negotiable.
+
+# ── Primært event: skill.execution.completed ──────────────────────────────────
+execution_completed:
+  kafka_topic: skill.execution.completed
+  emit_timing: before_response_returned
+  required_fields:
+    skill_id: string
+    skill_version: string
+    model: string
+    latency_ms: integer
+    user_accepted: "boolean|null"
+    output_accepted: "boolean|null"
+    input_hash: string        # SHA256[:16] af user_input
+    output_hash: string       # SHA256[:16] af raw output
+    session_id: "string|null"
+    git_commit: "string|null"
+    timestamp_utc: string     # ISO-8601
+  optional_fields:
+    context_tokens: "integer|null"
+    context_sources: "array|null"
+    error: "string|null"
+    findings_count: "integer|null"
+  description: >
+    Alle felter i required_fields SKAL være til stede. Brug null
+    hvis værdien ikke er tilgængelig — men udelad ikke feltet.
+    Dette er ikke-negotiable og valideres ved emit-tid.
+
+# ── Feedback event: skill.user_feedback ──────────────────────────────────────
+user_feedback:
+  kafka_topic: skill.user_feedback
+  required_fields:
+    skill_id: string
+    execution_id: string
+    accepted: boolean
+    comment: "string|null"
+    timestamp_utc: string
+  description: >
+    Emitteres når bruger accepterer/afviser skill-output.
+    execution_id linker til det tilhørende execution_completed event.
+
+# ── Retention og routing ──────────────────────────────────────────────────────
+kafka_config:
+  skill_execution_completed:
+    topic: skill.execution.completed
+    partitions: 3
+    retention_ms: 2592000000   # 30 dage
+    consumers:
+      - retro-service
+      - execution-audit
+  skill_user_feedback:
+    topic: skill.user_feedback
+    partitions: 1
+    retention_ms: 7776000000   # 90 dage
+    consumers:
+      - retro-service
+
+# ── Privacy ───────────────────────────────────────────────────────────────────
+privacy:
+  never_log_plaintext_input: true
+  never_log_plaintext_output: true
+  use_hashes_only: true
+  description: >
+    Bruger-input og skill-output gemmes KUN som SHA256-hash i telemetri.
+    Ingen PII i Kafka-events. Fuld output gemmes kun lokalt via artifact-writer.

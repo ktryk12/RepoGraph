@@ -1,0 +1,29 @@
+{
+  "context_pack:root": {
+    "metadata": {
+      "case_id": "CODE-002",
+      "chunk_count": 10,
+      "context_id": "coding-local-2026-02-15T19_00-coding-CODE-002",
+      "context_plane_mode": "local",
+      "created_at": "2026-02-15T19:02:15.559322Z",
+      "doc_id": "coding-local-2026-02-15T19_00-coding-CODE-002:root",
+      "doc_version": "fdc0fdf1495547d983e8ac6c2206ac6e1ecc690b069549645b7ee53eb40ada07",
+      "namespace": "root",
+      "path_context_id": "coding-local-2026-02-15T19_00-coding-CODE-002",
+      "raw_context_id": "coding-local-2026-02-15T19_00-coding-CODE-002",
+      "request_id": "1874931a447ff563d7ab9e379038cd993f40ab9ab78abff990c106408dc01c58",
+      "run_id": "local-2026-02-15T19_00-coding",
+      "trace_id": "local-2026-02-15T19_00-coding:CODE-002:be5d27da",
+      "type": "index"
+    },
+    "ref": "artifact:sha256:ae27ac7ed557d33e3bf25bac63b37ed7bee4a6a31275c46c86a32af74737ee8b"
+  },
+  "toolrun:toolrun-fd084a32-2cd7-4a1f-9d71-7f0dfd79e891": {
+    "metadata": {
+      "created_at": "2026-02-15T19:02:15.586322Z",
+      "path_context_id": "coding-local-2026-02-15T19_00-coding-CODE-002",
+      "raw_context_id": "coding-local-2026-02-15T19_00-coding-CODE-002"
+    },
+    "ref": "artifact:sha256:342e6f264af15aa33cb8c1f4aa069cdd022af06e8af9023402593b522326e19f"
+  }
+}

@@ -1,0 +1,69 @@
+schema_version: 1
+version: v1
+effective_from: "2026-04-18T00:00:00Z"
+updated_at: "2026-04-18T00:00:00Z"
+domain: skills
+description: >
+  Guardrails for skill-output: hvad skills aldrig må producere,
+  auto-fix regler og eskalering til policy-validator.
+
+# ── Hard stops: afvis execution ───────────────────────────────────────────────
+hard_stops:
+  never_produce:
+    - type: api_key_in_output
+      pattern: "(sk-|AKIA|AIza)[A-Za-z0-9]{20,}"
+      action: block_and_redact
+    - type: private_key_in_output
+      pattern: "-----BEGIN (RSA|EC|PRIVATE) KEY-----"
+      action: block_and_alert
+    - type: direct_db_write_instruction
+      description: >
+        Skill-output må ikke indeholde SQL INSERT/UPDATE/DELETE-statements
+        rettet mod produktions-databaser.
+      action: block_and_flag
+    - type: rm_rf_command
+      pattern: "rm\\s+-rf\\s+/"
+      action: block_and_alert
+  description: >
+    Disse mønstre i skill-output resulterer i øjeblikkelig blokering.
+    Output returneres IKKE til klienten. Alert sendes til security topic.
+
+# ── Soft warnings: log men tillad ────────────────────────────────────────────
+soft_warnings:
+  - type: todo_in_output
+    pattern: "TODO|FIXME|HACK"
+    action: log_warning
+  - type: hardcoded_localhost
+    pattern: "localhost:[0-9]+"
+    action: log_info
+    description: >
+      Localhost-referencer i output er fine i dev-kontekst men logges
+      for at identificere patterns der burde parametriseres.
+
+# ── Auto-fix regler ───────────────────────────────────────────────────────────
+auto_fix:
+  enabled: true
+  max_auto_fixes_per_output: 3
+  rules:
+    - id: redact_env_var_values
+      description: Erstat ENV_VAR=aktuel_værdi med ENV_VAR=<REDACTED>
+      pattern: "([A-Z_]{4,}=)[^\\s\"']{8,}"
+      replacement: "\\1<REDACTED>"
+    - id: normalize_file_paths
+      description: Erstat absolutte stier med relative
+      pattern: "/home/[a-z]+/repos/[^/]+/"
+      replacement: "./"
+  description: >
+    Auto-fix kører på output FØR det returneres. Fixes emitteres
+    som separate felter i telemetri (auto_fixes_applied: []).
+
+# ── Policy-validator eskalering ───────────────────────────────────────────────
+escalation:
+  forward_to_policy_validator: true
+  policy_validator_topic: policy.validation.request
+  escalate_on:
+    - hard_stop_triggered
+    - 3_or_more_soft_warnings_in_output
+  description: >
+    Hard stops og output med ≥3 soft warnings forwarded til
+    policy-validator service til dybere analyse og eventuel policy-opdatering.

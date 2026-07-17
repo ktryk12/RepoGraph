@@ -1,0 +1,494 @@
+{
+  "schemas": {
+    "repo.intake.created.v1": {
+      "type": "object",
+      "properties": {
+        "event_id": {"type": "string", "format": "uuid"},
+        "event_type": {"type": "string", "const": "repo.intake.created.v1"},
+        "event_version": {"type": "string", "const": "1.0"},
+        "timestamp": {"type": "string", "format": "date-time"},
+        "source_service": {"type": "string", "const": "repo-intake-service"},
+        "correlation_id": {"type": "string", "format": "uuid"},
+        "data": {
+          "type": "object",
+          "properties": {
+            "intake_id": {"type": "string", "format": "uuid"},
+            "family_id": {"type": "string", "format": "uuid"},
+            "requested_by": {"type": "string", "format": "uuid"},
+            "github_url": {"type": "string", "format": "uri"},
+            "github_owner": {"type": "string"},
+            "github_repo": {"type": "string"},
+            "github_branch": {"type": "string", "default": "main"},
+            "priority": {"type": "integer", "minimum": 1, "maximum": 10},
+            "scan_config": {"type": "object"},
+            "created_at": {"type": "string", "format": "date-time"}
+          },
+          "required": ["intake_id", "family_id", "requested_by", "github_url", "github_owner", "github_repo"]
+        }
+      },
+      "required": ["event_id", "event_type", "event_version", "timestamp", "source_service", "data"]
+    },
+
+    "repo.intake.validated.v1": {
+      "type": "object",
+      "properties": {
+        "event_id": {"type": "string", "format": "uuid"},
+        "event_type": {"type": "string", "const": "repo.intake.validated.v1"},
+        "event_version": {"type": "string", "const": "1.0"},
+        "timestamp": {"type": "string", "format": "date-time"},
+        "source_service": {"type": "string", "const": "repo-intake-service"},
+        "correlation_id": {"type": "string", "format": "uuid"},
+        "data": {
+          "type": "object",
+          "properties": {
+            "intake_id": {"type": "string", "format": "uuid"},
+            "family_id": {"type": "string", "format": "uuid"},
+            "validation_result": {"type": "string", "enum": ["valid", "invalid"]},
+            "validation_details": {"type": "object"},
+            "github_url": {"type": "string", "format": "uri"},
+            "normalized_url": {"type": "string", "format": "uri"},
+            "error_message": {"type": "string"}
+          },
+          "required": ["intake_id", "family_id", "validation_result", "github_url"]
+        }
+      },
+      "required": ["event_id", "event_type", "event_version", "timestamp", "source_service", "data"]
+    },
+
+    "repo.artifact.created.v1": {
+      "type": "object",
+      "properties": {
+        "event_id": {"type": "string", "format": "uuid"},
+        "event_type": {"type": "string", "const": "repo.artifact.created.v1"},
+        "event_version": {"type": "string", "const": "1.0"},
+        "timestamp": {"type": "string", "format": "date-time"},
+        "source_service": {"type": "string", "const": "repo-intake-service"},
+        "correlation_id": {"type": "string", "format": "uuid"},
+        "data": {
+          "type": "object",
+          "properties": {
+            "intake_id": {"type": "string", "format": "uuid"},
+            "artifact_id": {"type": "string", "format": "uuid"},
+            "family_id": {"type": "string", "format": "uuid"},
+            "artifact_uri": {"type": "string", "format": "uri"},
+            "source_url": {"type": "string", "format": "uri"},
+            "commit_sha": {"type": "string", "pattern": "^[a-f0-9]{40}$"},
+            "branch": {"type": "string"},
+            "repo_size_bytes": {"type": "integer", "minimum": 0},
+            "file_count": {"type": "integer", "minimum": 0},
+            "languages": {"type": "array", "items": {"type": "string"}},
+            "frameworks": {"type": "array", "items": {"type": "string"}},
+            "package_managers": {"type": "array", "items": {"type": "string"}},
+            "has_dependencies": {"type": "boolean"},
+            "created_at": {"type": "string", "format": "date-time"}
+          },
+          "required": ["intake_id", "artifact_id", "family_id", "artifact_uri", "source_url", "commit_sha", "branch"]
+        }
+      },
+      "required": ["event_id", "event_type", "event_version", "timestamp", "source_service", "data"]
+    },
+
+    "security.scan.requested.v1": {
+      "type": "object",
+      "properties": {
+        "event_id": {"type": "string", "format": "uuid"},
+        "event_type": {"type": "string", "const": "security.scan.requested.v1"},
+        "event_version": {"type": "string", "const": "1.0"},
+        "timestamp": {"type": "string", "format": "date-time"},
+        "source_service": {"type": "string", "const": "repo-intake-service"},
+        "correlation_id": {"type": "string", "format": "uuid"},
+        "data": {
+          "type": "object",
+          "properties": {
+            "scan_job_id": {"type": "string", "format": "uuid"},
+            "intake_id": {"type": "string", "format": "uuid"},
+            "artifact_id": {"type": "string", "format": "uuid"},
+            "family_id": {"type": "string", "format": "uuid"},
+            "scanner_type": {
+              "type": "string",
+              "enum": ["malware-scanner", "license-checker", "cve-scanner", "content-policy-checker", "prompt-injection-detector"]
+            },
+            "priority": {"type": "integer", "minimum": 1, "maximum": 10},
+            "artifact_uri": {"type": "string", "format": "uri"},
+            "timeout_seconds": {"type": "integer", "minimum": 30, "maximum": 3600},
+            "scanner_config": {
+              "type": "object",
+              "properties": {
+                "advisory_mode": {"type": "boolean"},
+                "critical_threshold": {"type": "integer", "minimum": 1},
+                "action_on_critical": {"type": "string", "enum": ["advisory", "approval_required", "block"]}
+              },
+              "required": ["advisory_mode"]
+            },
+            "created_at": {"type": "string", "format": "date-time"}
+          },
+          "required": ["scan_job_id", "intake_id", "artifact_id", "family_id", "scanner_type", "artifact_uri", "scanner_config"]
+        }
+      },
+      "required": ["event_id", "event_type", "event_version", "timestamp", "source_service", "data"]
+    },
+
+    "security.scan.completed.v1": {
+      "type": "object",
+      "properties": {
+        "event_id": {"type": "string", "format": "uuid"},
+        "event_type": {"type": "string", "const": "security.scan.completed.v1"},
+        "event_version": {"type": "string", "const": "1.0"},
+        "timestamp": {"type": "string", "format": "date-time"},
+        "source_service": {"type": "string", "pattern": "^(malware|license|cve|content-policy|prompt-injection)-.+$"},
+        "correlation_id": {"type": "string", "format": "uuid"},
+        "data": {
+          "type": "object",
+          "properties": {
+            "scan_job_id": {"type": "string", "format": "uuid"},
+            "intake_id": {"type": "string", "format": "uuid"},
+            "artifact_id": {"type": "string", "format": "uuid"},
+            "scanner_type": {
+              "type": "string",
+              "enum": ["malware-scanner", "license-checker", "cve-scanner", "content-policy-checker", "prompt-injection-detector"]
+            },
+            "status": {"type": "string", "enum": ["clean", "findings", "error"]},
+            "severity": {"type": "string", "enum": ["info", "low", "medium", "high", "critical"]},
+            "findings_count": {"type": "integer", "minimum": 0},
+            "findings": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {"type": "string"},
+                  "severity": {"type": "string", "enum": ["info", "low", "medium", "high", "critical"]},
+                  "category": {"type": "string"},
+                  "file": {"type": "string"},
+                  "line": {"type": "integer", "minimum": 1},
+                  "column": {"type": "integer", "minimum": 1},
+                  "message": {"type": "string"},
+                  "description": {"type": "string"},
+                  "recommendation": {"type": "string"},
+                  "confidence": {"type": "number", "minimum": 0.0, "maximum": 1.0},
+                  "metadata": {"type": "object"}
+                },
+                "required": ["id", "severity", "message"]
+              }
+            },
+            "scan_metadata": {
+              "type": "object",
+              "properties": {
+                "scan_duration_ms": {"type": "integer", "minimum": 0},
+                "files_scanned": {"type": "integer", "minimum": 0},
+                "bytes_scanned": {"type": "integer", "minimum": 0},
+                "scanner_version": {"type": "string"},
+                "ruleset_version": {"type": "string"}
+              }
+            },
+            "confidence_score": {"type": "number", "minimum": 0.0, "maximum": 1.0},
+            "false_positive_risk": {"type": "string", "enum": ["low", "medium", "high"]},
+            "completed_at": {"type": "string", "format": "date-time"}
+          },
+          "required": ["scan_job_id", "intake_id", "artifact_id", "scanner_type", "status", "severity", "findings_count", "findings"]
+        }
+      },
+      "required": ["event_id", "event_type", "event_version", "timestamp", "source_service", "data"]
+    },
+
+    "security.scan.failed.v1": {
+      "type": "object",
+      "properties": {
+        "event_id": {"type": "string", "format": "uuid"},
+        "event_type": {"type": "string", "const": "security.scan.failed.v1"},
+        "event_version": {"type": "string", "const": "1.0"},
+        "timestamp": {"type": "string", "format": "date-time"},
+        "source_service": {"type": "string", "pattern": "^(malware|license|cve|content-policy|prompt-injection)-.+$"},
+        "correlation_id": {"type": "string", "format": "uuid"},
+        "data": {
+          "type": "object",
+          "properties": {
+            "scan_job_id": {"type": "string", "format": "uuid"},
+            "intake_id": {"type": "string", "format": "uuid"},
+            "artifact_id": {"type": "string", "format": "uuid"},
+            "scanner_type": {
+              "type": "string",
+              "enum": ["malware-scanner", "license-checker", "cve-scanner", "content-policy-checker", "prompt-injection-detector"]
+            },
+            "error_type": {"type": "string", "enum": ["timeout", "artifact_not_found", "scanner_error", "validation_error", "resource_limit"]},
+            "error_message": {"type": "string"},
+            "retry_count": {"type": "integer", "minimum": 0},
+            "max_retries": {"type": "integer", "minimum": 0},
+            "will_retry": {"type": "boolean"},
+            "failed_at": {"type": "string", "format": "date-time"}
+          },
+          "required": ["scan_job_id", "intake_id", "artifact_id", "scanner_type", "error_type", "error_message"]
+        }
+      },
+      "required": ["event_id", "event_type", "event_version", "timestamp", "source_service", "data"]
+    },
+
+    "security.scan.summary.ready.v1": {
+      "type": "object",
+      "properties": {
+        "event_id": {"type": "string", "format": "uuid"},
+        "event_type": {"type": "string", "const": "security.scan.summary.ready.v1"},
+        "event_version": {"type": "string", "const": "1.0"},
+        "timestamp": {"type": "string", "format": "date-time"},
+        "source_service": {"type": "string", "const": "repo-intake-service"},
+        "correlation_id": {"type": "string", "format": "uuid"},
+        "data": {
+          "type": "object",
+          "properties": {
+            "intake_id": {"type": "string", "format": "uuid"},
+            "artifact_id": {"type": "string", "format": "uuid"},
+            "family_id": {"type": "string", "format": "uuid"},
+            "overall_status": {"type": "string", "enum": ["completed", "partial", "failed"]},
+            "overall_severity": {"type": "string", "enum": ["info", "low", "medium", "high", "critical"]},
+            "action_required": {"type": "string", "enum": ["none", "advisory", "approval_required", "blocked"]},
+            "scanners_completed": {"type": "integer", "minimum": 0},
+            "scanners_failed": {"type": "integer", "minimum": 0},
+            "scanners_total": {"type": "integer", "minimum": 1},
+            "total_findings": {"type": "integer", "minimum": 0},
+            "findings_by_severity": {
+              "type": "object",
+              "properties": {
+                "critical": {"type": "integer", "minimum": 0},
+                "high": {"type": "integer", "minimum": 0},
+                "medium": {"type": "integer", "minimum": 0},
+                "low": {"type": "integer", "minimum": 0},
+                "info": {"type": "integer", "minimum": 0}
+              }
+            },
+            "scanner_summaries": {
+              "type": "object",
+              "patternProperties": {
+                "^(malware-scanner|license-checker|cve-scanner|content-policy-checker|prompt-injection-detector)$": {
+                  "type": "object",
+                  "properties": {
+                    "status": {"type": "string", "enum": ["completed", "failed"]},
+                    "findings_count": {"type": "integer", "minimum": 0},
+                    "max_severity": {"type": "string", "enum": ["info", "low", "medium", "high", "critical"]},
+                    "duration_ms": {"type": "integer", "minimum": 0}
+                  }
+                }
+              }
+            },
+            "blocking_findings": {"type": "array", "items": {"type": "object"}},
+            "recommendations": {"type": "array", "items": {"type": "string"}},
+            "scan_completed_at": {"type": "string", "format": "date-time"}
+          },
+          "required": ["intake_id", "artifact_id", "family_id", "overall_status", "overall_severity", "action_required", "scanners_completed", "scanners_total", "total_findings"]
+        }
+      },
+      "required": ["event_id", "event_type", "event_version", "timestamp", "source_service", "data"]
+    },
+
+    "adapter.draft.requested.v1": {
+      "type": "object",
+      "properties": {
+        "event_id": {"type": "string", "format": "uuid"},
+        "event_type": {"type": "string", "const": "adapter.draft.requested.v1"},
+        "event_version": {"type": "string", "const": "1.0"},
+        "timestamp": {"type": "string", "format": "date-time"},
+        "source_service": {"type": "string", "const": "repo-intake-service"},
+        "correlation_id": {"type": "string", "format": "uuid"},
+        "data": {
+          "type": "object",
+          "properties": {
+            "generation_id": {"type": "string", "format": "uuid"},
+            "intake_id": {"type": "string", "format": "uuid"},
+            "artifact_id": {"type": "string", "format": "uuid"},
+            "family_id": {"type": "string", "format": "uuid"},
+            "requested_by": {"type": "string", "format": "uuid"},
+            "github_url": {"type": "string", "format": "uri"},
+            "github_owner": {"type": "string"},
+            "github_repo": {"type": "string"},
+            "commit_sha": {"type": "string", "pattern": "^[a-f0-9]{40}$"},
+            "artifact_uri": {"type": "string", "format": "uri"},
+            "security_summary": {"type": "object"},
+            "repo_analysis": {"type": "object"},
+            "priority": {"type": "integer", "minimum": 1, "maximum": 10},
+            "requested_at": {"type": "string", "format": "date-time"}
+          },
+          "required": ["generation_id", "intake_id", "artifact_id", "family_id", "requested_by", "github_url", "github_owner", "github_repo", "commit_sha", "artifact_uri"]
+        }
+      },
+      "required": ["event_id", "event_type", "event_version", "timestamp", "source_service", "data"]
+    },
+
+    "adapter.draft.ready.v1": {
+      "type": "object",
+      "properties": {
+        "event_id": {"type": "string", "format": "uuid"},
+        "event_type": {"type": "string", "const": "adapter.draft.ready.v1"},
+        "event_version": {"type": "string", "const": "1.0"},
+        "timestamp": {"type": "string", "format": "date-time"},
+        "source_service": {"type": "string", "const": "repo-wrapper-service"},
+        "correlation_id": {"type": "string", "format": "uuid"},
+        "data": {
+          "type": "object",
+          "properties": {
+            "generation_id": {"type": "string", "format": "uuid"},
+            "intake_id": {"type": "string", "format": "uuid"},
+            "family_id": {"type": "string", "format": "uuid"},
+            "requested_by": {"type": "string", "format": "uuid"},
+            "github_owner": {"type": "string"},
+            "github_repo": {"type": "string"},
+            "system_adapter_draft": {"type": "object"},
+            "generation_method": {"type": "string"},
+            "complexity_score": {"type": "number", "minimum": 0.0, "maximum": 1.0},
+            "confidence_score": {"type": "number", "minimum": 0.0, "maximum": 1.0},
+            "template_used": {"type": "string"},
+            "draft_ready_at": {"type": "string", "format": "date-time"}
+          },
+          "required": ["generation_id", "intake_id", "family_id", "requested_by", "github_owner", "github_repo", "system_adapter_draft"]
+        }
+      },
+      "required": ["event_id", "event_type", "event_version", "timestamp", "source_service", "data"]
+    },
+
+    "adapter.approved.v1": {
+      "type": "object",
+      "properties": {
+        "event_id": {"type": "string", "format": "uuid"},
+        "event_type": {"type": "string", "const": "adapter.approved.v1"},
+        "event_version": {"type": "string", "const": "1.0"},
+        "timestamp": {"type": "string", "format": "date-time"},
+        "source_service": {"type": "string", "const": "repo-wrapper-service"},
+        "correlation_id": {"type": "string", "format": "uuid"},
+        "data": {
+          "type": "object",
+          "properties": {
+            "generation_id": {"type": "string", "format": "uuid"},
+            "intake_id": {"type": "string", "format": "uuid"},
+            "family_id": {"type": "string", "format": "uuid"},
+            "approved_by": {"type": "string", "format": "uuid"},
+            "github_owner": {"type": "string"},
+            "github_repo": {"type": "string"},
+            "final_adapter_config": {"type": "object"},
+            "user_modifications": {"type": "object"},
+            "modification_count": {"type": "integer", "minimum": 0},
+            "user_feedback": {"type": "object"},
+            "approved_at": {"type": "string", "format": "date-time"}
+          },
+          "required": ["generation_id", "intake_id", "family_id", "approved_by", "github_owner", "github_repo", "final_adapter_config"]
+        }
+      },
+      "required": ["event_id", "event_type", "event_version", "timestamp", "source_service", "data"]
+    },
+
+    "adapter.rejected.v1": {
+      "type": "object",
+      "properties": {
+        "event_id": {"type": "string", "format": "uuid"},
+        "event_type": {"type": "string", "const": "adapter.rejected.v1"},
+        "event_version": {"type": "string", "const": "1.0"},
+        "timestamp": {"type": "string", "format": "date-time"},
+        "source_service": {"type": "string", "const": "repo-wrapper-service"},
+        "correlation_id": {"type": "string", "format": "uuid"},
+        "data": {
+          "type": "object",
+          "properties": {
+            "generation_id": {"type": "string", "format": "uuid"},
+            "intake_id": {"type": "string", "format": "uuid"},
+            "family_id": {"type": "string", "format": "uuid"},
+            "rejected_by": {"type": "string", "format": "uuid"},
+            "github_owner": {"type": "string"},
+            "github_repo": {"type": "string"},
+            "rejection_reason": {"type": "string"},
+            "user_feedback": {"type": "object"},
+            "rejected_at": {"type": "string", "format": "date-time"}
+          },
+          "required": ["generation_id", "intake_id", "family_id", "rejected_by", "github_owner", "github_repo", "rejection_reason"]
+        }
+      },
+      "required": ["event_id", "event_type", "event_version", "timestamp", "source_service", "data"]
+    },
+
+    "adapter.registered.v1": {
+      "type": "object",
+      "properties": {
+        "event_id": {"type": "string", "format": "uuid"},
+        "event_type": {"type": "string", "const": "adapter.registered.v1"},
+        "event_version": {"type": "string", "const": "1.0"},
+        "timestamp": {"type": "string", "format": "date-time"},
+        "source_service": {"type": "string", "const": "repo-wrapper-service"},
+        "correlation_id": {"type": "string", "format": "uuid"},
+        "data": {
+          "type": "object",
+          "properties": {
+            "registration_id": {"type": "string", "format": "uuid"},
+            "generation_id": {"type": "string", "format": "uuid"},
+            "intake_id": {"type": "string", "format": "uuid"},
+            "family_id": {"type": "string", "format": "uuid"},
+            "adapter_name": {"type": "string"},
+            "adapter_version": {"type": "string"},
+            "adapter_namespace": {"type": "string"},
+            "source_repo_url": {"type": "string", "format": "uri"},
+            "source_commit_sha": {"type": "string", "pattern": "^[a-f0-9]{40}$"},
+            "final_adapter_config": {"type": "object"},
+            "registered_by": {"type": "string", "format": "uuid"},
+            "registration_method": {"type": "string"},
+            "security_approved": {"type": "boolean"},
+            "quality_score": {"type": "number", "minimum": 0.0, "maximum": 1.0},
+            "registered_at": {"type": "string", "format": "date-time"}
+          },
+          "required": ["registration_id", "generation_id", "intake_id", "family_id", "adapter_name", "adapter_namespace", "source_repo_url", "source_commit_sha", "final_adapter_config", "registered_by"]
+        }
+      },
+      "required": ["event_id", "event_type", "event_version", "timestamp", "source_service", "data"]
+    }
+  },
+
+  "event_routing": {
+    "topics": {
+      "repo-intake": ["repo.intake.created.v1", "repo.intake.validated.v1", "repo.artifact.created.v1"],
+      "security-scanning": ["security.scan.requested.v1", "security.scan.completed.v1", "security.scan.failed.v1", "security.scan.summary.ready.v1"],
+      "adapter-generation": ["adapter.draft.requested.v1", "adapter.draft.ready.v1", "adapter.approved.v1", "adapter.rejected.v1", "adapter.registered.v1"]
+    },
+    "producers": {
+      "repo-intake-service": ["repo.intake.created.v1", "repo.intake.validated.v1", "repo.artifact.created.v1", "security.scan.requested.v1", "security.scan.summary.ready.v1", "adapter.draft.requested.v1"],
+      "malware-scanner": ["security.scan.completed.v1", "security.scan.failed.v1"],
+      "license-checker": ["security.scan.completed.v1", "security.scan.failed.v1"],
+      "cve-scanner": ["security.scan.completed.v1", "security.scan.failed.v1"],
+      "content-policy-checker": ["security.scan.completed.v1", "security.scan.failed.v1"],
+      "prompt-injection-detector": ["security.scan.completed.v1", "security.scan.failed.v1"],
+      "repo-wrapper-service": ["adapter.draft.ready.v1", "adapter.approved.v1", "adapter.rejected.v1", "adapter.registered.v1"]
+    },
+    "consumers": {
+      "repo-intake-service": ["security.scan.completed.v1", "security.scan.failed.v1"],
+      "repo-wrapper-service": ["adapter.draft.requested.v1", "security.scan.summary.ready.v1"],
+      "ui-gateway": ["repo.intake.created.v1", "repo.artifact.created.v1", "security.scan.summary.ready.v1", "adapter.draft.ready.v1", "adapter.approved.v1", "adapter.rejected.v1", "adapter.registered.v1"],
+      "malware-scanner": ["security.scan.requested.v1"],
+      "license-checker": ["security.scan.requested.v1"],
+      "cve-scanner": ["security.scan.requested.v1"],
+      "content-policy-checker": ["security.scan.requested.v1"],
+      "prompt-injection-detector": ["security.scan.requested.v1"]
+    }
+  },
+
+  "security_thresholds": {
+    "default_config": {
+      "malware-scanner": {
+        "advisory_mode": true,
+        "critical_threshold": 1,
+        "action_on_critical": "block"
+      },
+      "cve-scanner": {
+        "advisory_mode": true,
+        "critical_threshold": 3,
+        "action_on_critical": "approval_required"
+      },
+      "license-checker": {
+        "advisory_mode": true,
+        "critical_threshold": 1,
+        "action_on_critical": "approval_required"
+      },
+      "content-policy-checker": {
+        "advisory_mode": true,
+        "critical_threshold": 1,
+        "action_on_critical": "approval_required"
+      },
+      "prompt-injection-detector": {
+        "advisory_mode": true,
+        "critical_threshold": 2,
+        "action_on_critical": "advisory"
+      }
+    }
+  }
+}

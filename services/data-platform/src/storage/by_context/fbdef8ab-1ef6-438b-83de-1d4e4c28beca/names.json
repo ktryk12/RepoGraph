@@ -1,0 +1,10 @@
+{
+  "repo_snapshot:3b184af8225df3ea573cac73775e04ec98bbb8d3b7602ff92ea17ea2cda4c768": {
+    "metadata": {
+      "created_at": "2026-02-15T20:33:40.875084Z",
+      "path_context_id": "fbdef8ab-1ef6-438b-83de-1d4e4c28beca",
+      "raw_context_id": "fbdef8ab-1ef6-438b-83de-1d4e4c28beca"
+    },
+    "ref": "artifact:sha256:7f87528bec22a2f1dbe89f865ade015b68456ad49d6712625276ff71eafa7a9b"
+  }
+}

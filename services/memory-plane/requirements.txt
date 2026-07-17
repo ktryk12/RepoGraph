@@ -1,0 +1,6 @@
+# memory-plane service dependencies
+fastapi>=0.115
+uvicorn>=0.30
+redis>=5,<6
+pydantic>=2.0
+numpy>=1.24

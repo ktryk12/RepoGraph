@@ -1,0 +1,192 @@
+{
+  "artifacts": {
+    "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+    "constitution_version": "v1",
+    "context_id": "live-discovery-e2e",
+    "log_path": "logs/episode_7264d42d-59ca-4d72-922b-affafd3ce34e.jsonl"
+  },
+  "decision": {
+    "decision_id": "7264d42d-59ca-4d72-922b-affafd3ce34e",
+    "generated_output": {
+      "model_ref": "mamba-gpt-7b-Q2_K.gguf",
+      "runner_ref": "llama.cpp",
+      "text": "Unterscheidung: Paris.",
+      "trace": {
+        "n_predict": 256,
+        "prompt_hash": "115049a298532be2f181edb03f766770c0db84c22aff39003fec340deaec7545",
+        "purpose": "default",
+        "seed": 3394307100
+      }
+    }
+  },
+  "episode_id": "7264d42d-59ca-4d72-922b-affafd3ce34e",
+  "eval_result": {
+    "errors": [],
+    "evidence": {
+      "missing_paths": [],
+      "present_paths": []
+    },
+    "must_include": {
+      "missing": [],
+      "present": []
+    },
+    "passed": false,
+    "penalties": null,
+    "scores": null
+  },
+  "knobs": {
+    "approval_auto_approve": true,
+    "approval_granted": true,
+    "approval_granted_at": "2026-03-09T17:10:55.422648Z",
+    "approval_granted_by": "request-gate:auto-approve",
+    "approval_required": true,
+    "approval_token": {
+      "approved_at": "2026-03-09T17:10:55.422648Z",
+      "approved_by": "request-gate:auto-approve",
+      "decision_id": "ui-test-6e2af4d5-d60a-4c9e-a722-7e60b703b0bd",
+      "policy_fingerprint": "0028d7452a74c47872f880471317e306fe1d475d66d789956353d20af5b82775",
+      "reason": "AUTO_APPROVE"
+    },
+    "context_id": "live-discovery-e2e",
+    "decision_id": "ui-test-6e2af4d5-d60a-4c9e-a722-7e60b703b0bd",
+    "effective_policy": {
+      "constraints": {
+        "approval_required": true,
+        "visibility": "restricted"
+      },
+      "policy_id": "restricted",
+      "policy_version": 1,
+      "quality_profile": {
+        "preset": "precision_first"
+      },
+      "safety_profile": "balanced",
+      "version": "effective_policy.v1",
+      "write_scope": {
+        "type": "policy_service"
+      }
+    },
+    "event_fingerprint": "927545e3e4aa5b21c3b09455802d02ddcb7800d4b53b3b1ef81b9f9c9d222618",
+    "execution_permit": {
+      "approved_at": "2026-03-09T17:10:55.422648Z",
+      "approved_by": "request-gate:auto-approve",
+      "decision_id": "ui-test-6e2af4d5-d60a-4c9e-a722-7e60b703b0bd",
+      "policy_fingerprint": "0028d7452a74c47872f880471317e306fe1d475d66d789956353d20af5b82775",
+      "reason": "AUTO_APPROVE"
+    },
+    "intake_artifact": {
+      "classification": "low",
+      "content_hash": "2965c601f4d0cfd3928d005dbc1863f4b7f644bdcd7a87976b0f29e499946f7f",
+      "content_size": 1397,
+      "detected_pii": false,
+      "id": "4202b25795b1e5d93db0102fd81d010e71c7a0e69c3a15d2a7b0927c2c94942d",
+      "source_type": "legacy_orchestrator"
+    },
+    "override_hash": "76ae3fa3d5624796c43e656dd56b62205d0051162ae01955ab523667b977afeb",
+    "policy_constraints": {
+      "approval_required": true,
+      "visibility": "restricted"
+    },
+    "policy_explanation": {
+      "allowed": true,
+      "if_you_change": [
+        {
+          "change": "NONE->REPO",
+          "effect": "Expands write permissions to repository paths.",
+          "field": "write_scope",
+          "requires": "approval",
+          "risk": "Higher blast radius for unintended writes."
+        },
+        {
+          "change": "strict->balanced",
+          "effect": "Allows broader execution latitude.",
+          "field": "safety_profile",
+          "requires": "approval",
+          "risk": "Reduced guard strictness."
+        }
+      ],
+      "policy_id": "restricted",
+      "preset": "restricted",
+      "reason_code": "",
+      "safety_profile": "balanced",
+      "what_it_means": {
+        "execution": "paused_for_approval",
+        "tools": "blocked_until_approval",
+        "writes": "blocked_until_approval"
+      },
+      "why": [
+        "Policy validator allowed this request.",
+        "Effective write scope is 'policy_service'.",
+        "This request requires explicit approval before execution."
+      ],
+      "write_scope": {
+        "type": "policy_service"
+      }
+    },
+    "policy_fingerprint": "0028d7452a74c47872f880471317e306fe1d475d66d789956353d20af5b82775",
+    "policy_preset": "restricted",
+    "policy_validator": {
+      "allowed": true,
+      "reason_code": null
+    },
+    "request_fingerprint": "0061afcb634cc9ad50323b3fb73a1cc1247edc4bcb77de65d21b6e4d1955ba07",
+    "task_template_id": "auto",
+    "truth_override_ref": "artifacts/truth_overrides/76ae3fa3d5624796c43e656dd56b62205d0051162ae01955ab523667b977afeb.yaml"
+  },
+  "task_id": "auto-a21d5b3c78be",
+  "telemetry": {
+    "failure_reasons": [],
+    "fixed_by_1": 0,
+    "gate_flip_count": 0,
+    "gate_flip_rate": 0.0,
+    "gate_snapshots": [],
+    "latency_ms": 929.961,
+    "model_ref": "mamba-gpt-7b-Q2_K.gguf",
+    "no_progress_stops": 0,
+    "passed": false,
+    "repairs_used": 0,
+    "runner_selected": "default",
+    "runner_used": "llama.cpp",
+    "selection_reason": "preferred",
+    "stop_reason": "spec_incomplete",
+    "tokens_used": 6,
+    "truth_pack_hash": "da65e32bfcb79f52f285d9ecebc6fab39a91e07a56af8c9ff360320b7731ef2c",
+    "wasted_repairs": 0
+  },
+  "tool_evidence_ref": null,
+  "truth_pack": {
+    "allowed_tools": [],
+    "budgets": {
+      "max_repairs": 1,
+      "max_steps": 100
+    },
+    "gates": {
+      "ci_mode": false
+    },
+    "generator": "ml.hybrid_generator:generate_decision",
+    "logging": {
+      "enabled": true,
+      "log_dir": "logs"
+    },
+    "metadata": {
+      "generated_by": "truthpack_conversation",
+      "policy_preset": "restricted"
+    },
+    "pack_hash": "da65e32bfcb79f52f285d9ecebc6fab39a91e07a56af8c9ff360320b7731ef2c",
+    "policy": {
+      "rules_path": "policy/policy_rules.yaml"
+    },
+    "retries": {
+      "backoff_seconds": 8,
+      "max_attempts": 2
+    },
+    "task": {
+      "answers": {
+        "q_8d7e2d2eff87467a": "Answer the user's original question directly: What is the capital of France?",
+        "q_a42a39643c162a2d": "Follow policy constraints and avoid unsafe or disallowed actions.",
+        "q_a5a5e197360b3050": "Answer the user's original question directly: What is the capital of France?"
+      },
+      "intent": "What is the capital of France?"
+    },
+    "version": 1
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "version": "v1",
+  "gold_set_path": "eval/judges/gold_set.json",
+  "error": "FileNotFoundError: judge gold set file not found: eval/judges/gold_set.json",
+  "enabled": false,
+  "agreement": 0.0,
+  "precision": 0.0,
+  "recall": 0.0,
+  "total": 0
+}

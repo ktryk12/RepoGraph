@@ -1,0 +1,168 @@
+{
+  "approval:94145122-35fd-408f-999f-122ee04d6696": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-02-28T15:52:48.543740Z",
+      "path_context_id": "dev",
+      "raw_context_id": "dev",
+      "type": "approval"
+    },
+    "ref": "artifact:sha256:444417e174d0720300f8971f3384025f44927ccf99e6f88cbb4b550c7a6335b8"
+  },
+  "approval:d70ca21f-918a-4490-bd60-f1a68a9e3769": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-02-28T19:48:27.998619Z",
+      "path_context_id": "dev",
+      "raw_context_id": "dev",
+      "type": "approval"
+    },
+    "ref": "artifact:sha256:609d3b32f1e2c047c1940f81a0822ec0314853983bfbfecc5e82d4053c5f4db6"
+  },
+  "auto-29b5b7ba744f": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-02-26T21:31:15.064973Z",
+      "path_context_id": "dev",
+      "raw_context_id": "dev",
+      "template": "auto",
+      "type": "task_spec"
+    },
+    "ref": "artifact:sha256:6ee6d4e561933aa6c16215bc93628268623b3acfdce13de951915f332d062934"
+  },
+  "auto-4154aa1e0417": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-02-25T17:53:55.822063Z",
+      "path_context_id": "dev",
+      "raw_context_id": "dev",
+      "template": "auto",
+      "type": "task_spec"
+    },
+    "ref": "artifact:sha256:63d87da5f3505b88589c97551b2bb9d7894323e9edc0eedf625437182f45d3d1"
+  },
+  "auto-44325d785f2c": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-02-25T20:54:33.207503Z",
+      "path_context_id": "dev",
+      "raw_context_id": "dev",
+      "template": "auto",
+      "type": "task_spec"
+    },
+    "ref": "artifact:sha256:12709605fd93edfc5770e10fc642bc86aed04dfcfa5386a8587ad4a3fa5f4139"
+  },
+  "auto-46ba0b2d2072": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-02-28T19:47:54.747275Z",
+      "path_context_id": "dev",
+      "raw_context_id": "dev",
+      "template": "auto",
+      "type": "task_spec"
+    },
+    "ref": "artifact:sha256:6e3c8aeb3185f011549034eceaa6cf3065dcae117a65b985d59688987bc37f9c"
+  },
+  "auto-7e5c952b996c": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-02-25T20:56:22.142329Z",
+      "path_context_id": "dev",
+      "raw_context_id": "dev",
+      "template": "auto",
+      "type": "task_spec"
+    },
+    "ref": "artifact:sha256:9614f81a024261b6e84c9011ea31e24711aae155d11c6c7eb03569f026e26acb"
+  },
+  "auto-a755fb8a70b9": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-02-26T19:39:46.943953Z",
+      "path_context_id": "dev",
+      "raw_context_id": "dev",
+      "template": "auto",
+      "type": "task_spec"
+    },
+    "ref": "artifact:sha256:03357e095912c37a3a674973bd828656fe1313c4ec17d3c5ea573a4462982d35"
+  },
+  "auto-bec7bd03d4fe": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-02-26T20:43:21.570346Z",
+      "path_context_id": "dev",
+      "raw_context_id": "dev",
+      "template": "auto",
+      "type": "task_spec"
+    },
+    "ref": "artifact:sha256:58f19e07a41902f192916b50f09e08182dcbb6d935737ab3b511000aaee089d1"
+  },
+  "auto-c9431863612d": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-02-25T18:31:00.976455Z",
+      "path_context_id": "dev",
+      "raw_context_id": "dev",
+      "template": "auto",
+      "type": "task_spec"
+    },
+    "ref": "artifact:sha256:73092f6dd69c1495f810f777afeea18d7a9b1af734adc5f893a321b78116b472"
+  },
+  "auto-f7f463976890": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-02-28T15:52:16.463447Z",
+      "path_context_id": "dev",
+      "raw_context_id": "dev",
+      "template": "auto",
+      "type": "task_spec"
+    },
+    "ref": "artifact:sha256:5bfd0f05987de6ab005a184d6b6e4e678ee611023e2be5c003ea6569ccec2595"
+  },
+  "decision:final": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-02-28T19:49:01.316388Z",
+      "path_context_id": "dev",
+      "raw_context_id": "dev",
+      "type": "decision"
+    },
+    "ref": "artifact:sha256:f2c67f66ab039f3667427e4c18c892dc04355f51f9441a8c2662fcb7b29efa7d"
+  },
+  "spec_fix_request": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-02-28T19:48:28.300965Z",
+      "kind": "SpecFixRequest",
+      "path_context_id": "dev",
+      "raw_context_id": "dev",
+      "status": "incomplete"
+    },
+    "ref": "artifact:sha256:2ef35cbd9b3584737229837874e016f88e548666b8ce931c488d34da02bed2ad"
+  }
+}

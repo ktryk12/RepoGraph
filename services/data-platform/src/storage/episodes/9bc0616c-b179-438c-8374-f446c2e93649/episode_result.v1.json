@@ -1,0 +1,129 @@
+{
+  "artifacts": {
+    "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+    "constitution_version": "v1",
+    "context_id": "f7605894-f139-451a-9732-c3a9e1006e23",
+    "log_path": "logs/episode_9bc0616c-b179-438c-8374-f446c2e93649.jsonl"
+  },
+  "decision": {
+    "decision_id": "9bc0616c-b179-438c-8374-f446c2e93649",
+    "generated_output": {
+      "model_ref": "mamba-gpt-7b-Q2_K.gguf",
+      "runner_ref": "llama.cpp",
+      "text": "! to the console.\n\nIf you are using a text editor like Visual Studio Code, you can create a new file with the name hello_world.py and add the following code to it:\n\n```python\nprint(\"Hello, world!\")\n```\n\nIf you are using a command line, you can create a file called hello_world.py and add the following code to it:\n\n```python\nprint(\"Hello, world!\")\n```\n\nIf you are using a terminal, you can create a file called hello_world.py and add the following code to it:\n\n```python\nprint(\"Hello, world!\")\n```\n\nIf you are using a terminal, you can create a file called hello_world.py and add the following code to it:\n\n```python\nprint(\"Hello, world!\")\n```\n\nIf you are using a terminal, you can create a file called hello_world.py and add the following code to it:\n\n```python\nprint(\"Hello, world!\")\n```\n\nIf you are using a terminal, you can create a file called hello_world.py and add the following code to it:\n\n```python",
+      "trace": {
+        "n_predict": 256,
+        "prompt_hash": "8db69fa10f94809d14e6d4385d7b9c8b744341328128a7a88d51a367c791d538",
+        "purpose": "default",
+        "seed": 1259827483
+      }
+    }
+  },
+  "episode_id": "9bc0616c-b179-438c-8374-f446c2e93649",
+  "eval_result": {
+    "errors": [],
+    "evidence": {
+      "missing_paths": [],
+      "present_paths": []
+    },
+    "must_include": {
+      "missing": [],
+      "present": []
+    },
+    "passed": false,
+    "penalties": null,
+    "scores": null
+  },
+  "knobs": {
+    "effective_policy": {
+      "constraints": {
+        "safety_mode": "relaxed",
+        "visibility": "internal"
+      },
+      "policy_id": "dev",
+      "policy_version": 1,
+      "quality_profile": {
+        "preset": "balanced"
+      },
+      "safety_profile": "balanced",
+      "version": "effective_policy.v1",
+      "write_scope": {
+        "type": "policy_service"
+      }
+    },
+    "event_fingerprint": "f64a58ba4c7b24986e4f91de6dbd5d223e28dd2286e2d76dfe1ab6eba8f27d71",
+    "intake_artifact": {
+      "classification": "low",
+      "content_hash": "443bdc410b6a7505b4d95918487d0d4eee23477df021b54cbd91145db84cacfe",
+      "content_size": 2396,
+      "detected_pii": false,
+      "id": "05d3a3f900ae95d579b8677c219731db3e4608c69cda63018121ffca82a96391",
+      "source_type": "legacy_orchestrator"
+    },
+    "override_hash": "7df7ee3f01ef7b23b89efe5e50a56777e1fa6c02674514cc3d3ecd28af32987d",
+    "policy_preset": "dev",
+    "policy_validator": {
+      "allowed": true,
+      "reason_code": null
+    },
+    "request_fingerprint": "8832af6ea203bccbb5e1cd50dbaaf94efe2186f3b064c54521042fd216433e56",
+    "truth_override_ref": "artifacts/truth_overrides/7df7ee3f01ef7b23b89efe5e50a56777e1fa6c02674514cc3d3ecd28af32987d.yaml"
+  },
+  "task_id": "auto-29b5b7ba744f",
+  "telemetry": {
+    "failure_reasons": [],
+    "fixed_by_1": 0,
+    "gate_flip_count": 0,
+    "gate_flip_rate": 0.0,
+    "gate_snapshots": [],
+    "latency_ms": 36241.035,
+    "model_ref": "mamba-gpt-7b-Q2_K.gguf",
+    "no_progress_stops": 0,
+    "passed": false,
+    "repairs_used": 0,
+    "runner_selected": "default",
+    "runner_used": "llama.cpp",
+    "selection_reason": "preferred",
+    "stop_reason": "spec_incomplete",
+    "tokens_used": 256,
+    "truth_pack_hash": "32d4af80e563aabf4fe097195bd546bcd202297c2a4cdce6b50bfd1dac308abe",
+    "wasted_repairs": 0
+  },
+  "tool_evidence_ref": null,
+  "truth_pack": {
+    "allowed_tools": [],
+    "budgets": {
+      "max_repairs": 3,
+      "max_steps": 200
+    },
+    "gates": {
+      "ci_mode": false
+    },
+    "generator": "ml.hybrid_generator:generate_decision",
+    "logging": {
+      "enabled": true,
+      "log_dir": "logs"
+    },
+    "metadata": {
+      "generated_by": "truthpack_conversation",
+      "policy_preset": "dev"
+    },
+    "pack_hash": "32d4af80e563aabf4fe097195bd546bcd202297c2a4cdce6b50bfd1dac308abe",
+    "policy": {
+      "rules_path": "policy/policy_rules.yaml"
+    },
+    "retries": {
+      "backoff_seconds": 5,
+      "max_attempts": 3
+    },
+    "task": {
+      "answers": {
+        "q_1025e7419834a8d7": "Constraints:\n\n\u2013 Ingen silent bypass af policy\n\u2013 Ingen writes uden approval\n\u2013 Ingen implicit auto-approve\n\u2013 Ingen open-ended LLM-prompts i smoke-tests\n\u2013 Ingen afh\u00e6ngighed af manuelle sleeps\n\u2013 Ingen ikke-deterministisk testadf\u00e6rd\n\nNon-goals (vigtigt):\n\n\u2013 Vi tester ikke \u201cmodellens kreativitet\u201d\n\u2013 Vi tester ikke sproglig kvalitet\n\u2013 Vi bygger ikke UI i smoke-test\n\u2013 Vi m\u00e5ler ikke performance i Hello World\n\u2013 Vi tr\u00e6ner ikke model her\n\u2013 Vi laver ikke microservice-refactor i samme PR",
+        "q_900bdde8f54a8fea": "En korrekt behandlet beslutning under korrekt policy",
+        "q_d754a051bb7879c2": "Lifecycle check\nDer findes et decision.lifecycle event med status requested.\n\nPolicy presence\nmetadata.effective_policy eksisterer og har:\n\npolicy_id\n\npreset\n\nsafety_profile\n\nfingerprint\n\nNo-write-before-approval check\nIngen artifacts eller write-events f\u00f8r approval.\n\nTerminal state\nEfter approval: lifecycle \u2192 completed eller failed.\n\nDeterministisk output\ngenerated_output.text kan parses som JSON\nJSON == {\"hello\":\"world\"}\n\nReproduc\u00e9rbarhed\nSamme input + samme seed \u2192 samme output."
+      },
+      "intent": "Create a single file hello_world.py that prints exactly Hello, world"
+    },
+    "version": 1
+  }
+}

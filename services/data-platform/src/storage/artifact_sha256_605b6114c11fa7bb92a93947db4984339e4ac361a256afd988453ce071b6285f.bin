@@ -1,0 +1,1 @@
+{"decision_id": "[REDACTED:phone:5587298e]-4e8d-8c5e-ad4bd63a162e", "generation_error": "expert_serving_http_error status=502 body={\"detail\":{\"error\":\"runner_failed\",\"message\":\"model_runner returned empty text\",\"decision_id\":\"[REDACTED:phone:5587298e]-4e8d-8c5e-ad4bd63a162e\",\"context_id\":\"live-discovery-e2e\",\"model_profile\":\"general\"}}"}

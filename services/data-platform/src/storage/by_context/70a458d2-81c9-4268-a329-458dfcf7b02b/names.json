@@ -1,0 +1,15 @@
+{
+  "spec_fix_request": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-26T16:37:15.134721Z",
+      "kind": "SpecFixRequest",
+      "path_context_id": "70a458d2-81c9-4268-a329-458dfcf7b02b",
+      "raw_context_id": "70a458d2-81c9-4268-a329-458dfcf7b02b",
+      "status": "incomplete"
+    },
+    "ref": "artifact:sha256:321b9f365018b23644d00e73a89a987b801c0c84ac9a7df6c35a2919f17c0781"
+  }
+}

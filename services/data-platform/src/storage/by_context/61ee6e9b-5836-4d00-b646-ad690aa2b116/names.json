@@ -1,0 +1,13 @@
+{
+  "repo_snapshot:fa8940ac236a54def5ccbcbaa4a971a50bd49395e2be246c1afb48ff147a6074": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-02T18:28:54.865057Z",
+      "path_context_id": "61ee6e9b-5836-4d00-b646-ad690aa2b116",
+      "raw_context_id": "61ee6e9b-5836-4d00-b646-ad690aa2b116"
+    },
+    "ref": "artifact:sha256:cf9c48c4110d07b7e535b6199f19ed865ed7c5bc851d0f3553c301c34250de02"
+  }
+}

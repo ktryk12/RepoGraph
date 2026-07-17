@@ -1,0 +1,198 @@
+{
+  "artifacts": {
+    "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+    "constitution_version": "v1",
+    "context_id": "3ce80802-745b-4a32-a86a-4926b60d4d73",
+    "log_path": "logs\\episode_c83b8a92-409d-4850-8907-d81f2f71037a.jsonl",
+    "tool_evidence_ref": "artifact:sha256:159852c6ce0b114f5e3a7c54885539c22d6b7e34c0e2fbf5b4d090728444abb2"
+  },
+  "decision": {
+    "bounded_contexts": [
+      {
+        "name": "Core",
+        "stability": "medium"
+      }
+    ],
+    "chosen_style": "modular_monolith",
+    "decision_id": "arch_EVAL-001",
+    "ops_readiness": {
+      "observability": {
+        "present": true
+      }
+    },
+    "rationale": [
+      {
+        "evidence_path": "$.constraints.team_size",
+        "reason": "Small team + limited time -> minimize operational complexity",
+        "signal": "evidence used: limited delivery capacity",
+        "weight": 0.8
+      },
+      {
+        "evidence_path": "$.constraints.time_to_mvp_days",
+        "reason": "Fallback rationale (delivery horizon noted)",
+        "signal": "evidence used: delivery horizon noted",
+        "weight": 0.7
+      },
+      {
+        "evidence_path": "$.nfr.operability.observability_level",
+        "reason": "Fallback rationale (runtime visibility expected)",
+        "signal": "evidence used: runtime visibility expected",
+        "weight": 0.7
+      }
+    ],
+    "risks": [
+      {
+        "mitigation": "Iterate generator + stronger checks",
+        "risk": "Baseline may be naive"
+      }
+    ],
+    "spec_id": "spec_2026_02_11_0001",
+    "stop_conditions": [
+      "If infra/ops overhead rises, simplify topology"
+    ],
+    "tool_evidence_ref": "artifact:sha256:159852c6ce0b114f5e3a7c54885539c22d6b7e34c0e2fbf5b4d090728444abb2",
+    "topology": {
+      "core": "modular_monolith",
+      "separated_services": []
+    },
+    "verification_plan": [
+      "perf smoke: p95 <= 500ms at target load (~50 rps)",
+      "Basic rollback strategy for deployments (fallback to last stable release)"
+    ]
+  },
+  "episode_id": "c83b8a92-409d-4850-8907-d81f2f71037a",
+  "eval_result": {
+    "errors": [],
+    "evidence": {
+      "missing_paths": [],
+      "present_paths": []
+    },
+    "must_include": {
+      "missing": [],
+      "present": []
+    },
+    "passed": true,
+    "penalties": [],
+    "scores": {
+      "architecture_fit": 1.0,
+      "functional": 1.0,
+      "security": 1.0,
+      "total": 1.0
+    }
+  },
+  "knobs": {
+    "autoloop_run_id": "local-2026-02-21T19_49-coding",
+    "data_need_scope_id": "local-2026-02-21T19_49-coding",
+    "librarian_artifact_root": "artifacts",
+    "librarian_enabled": true,
+    "librarian_registry_path": "knowledge/registry.sqlite",
+    "promote_truth_enabled": false,
+    "snapshot_ref": "artifact:sha256:c8fabf5fcc577ab1efb61d5ab1651b254c2e04c524fbc1e36460bb0c4dd31854",
+    "tool_results": [
+      {
+        "backend": "tool_runtime",
+        "cost": {
+          "bytes": 4765
+        },
+        "error": null,
+        "ok": true,
+        "output": {
+          "content_ref": "artifact:sha256:fa961881c6706ae96888bfa7769a35fe9f30ff16d429adca7a992e0af2f8369f",
+          "end_line": null,
+          "path": "bus\\event_schemas.py",
+          "start_line": null,
+          "truncated": false
+        },
+        "run_ref": {
+          "artifact_ref": "artifact:sha256:fa961881c6706ae96888bfa7769a35fe9f30ff16d429adca7a992e0af2f8369f",
+          "manifest_ref": "artifact:sha256:76ed039c608e0118d5ec116bdddd2ee5b14657065e9b92007df7fbfa03c34a8b",
+          "tool_id": "repo_reader"
+        },
+        "schema_version": 1,
+        "timing": {
+          "duration_ms": 1.712,
+          "finished_at": "2026-02-21T19:51:25.403040Z",
+          "started_at": "2026-02-21T19:51:25.401328Z"
+        },
+        "tool_id": "repo_reader",
+        "warnings": []
+      }
+    ],
+    "trace_id": "local-2026-02-21T19_49-coding:CODE-001:a8c49b21"
+  },
+  "task_id": "EVAL-001",
+  "telemetry": {
+    "failure_reasons": [],
+    "fixed_by_1": 0,
+    "gate_flip_count": 0,
+    "gate_flip_rate": 0.0,
+    "gate_snapshots": [],
+    "no_progress_stops": 0,
+    "passed": true,
+    "repairs_used": 0,
+    "runner_selected": "default",
+    "selection_reason": "preferred",
+    "stop_reason": "success",
+    "truth_pack_hash": "b2807b9731301e810d7e3e0229f885ce2c2a9a3103561ab2b13c492e1f27d292",
+    "wasted_repairs": 0
+  },
+  "tool_evidence_ref": "artifact:sha256:159852c6ce0b114f5e3a7c54885539c22d6b7e34c0e2fbf5b4d090728444abb2",
+  "truth_pack": {
+    "allowed_tools": [],
+    "baseline_hash": "cb54e5ea243549e39a3b849d2fa7656ef8ba3af7bd5db9ddac607cf61f8b7510",
+    "budgets": {
+      "max_repairs": 2,
+      "max_steps": 200
+    },
+    "gates": {
+      "ci_mode": false,
+      "schema_enforcement": "strict"
+    },
+    "generator": "ml.hybrid_generator:generate_decision",
+    "layers": {
+      "baseline": "truth\\packs\\baseline.yaml",
+      "org": "truth\\packs\\software_org.yaml",
+      "user": "truth\\packs\\user_default.yaml",
+      "versions": {
+        "baseline": "baseline_v1",
+        "org": "org_v1",
+        "user": "user_v1"
+      }
+    },
+    "logging": {
+      "enabled": true,
+      "log_dir": "logs",
+      "redact_secrets": true
+    },
+    "models": {
+      "allowed": [
+        "default",
+        "mamba_gpt_7b_q2"
+      ],
+      "by_purpose": {
+        "bootstrap": "mamba_gpt_7b_q2"
+      },
+      "fallback_order": [
+        "default",
+        "mamba_gpt_7b_q2"
+      ]
+    },
+    "pack_hash": "b2807b9731301e810d7e3e0229f885ce2c2a9a3103561ab2b13c492e1f27d292",
+    "policy": {
+      "rules_path": "policy/policy_rules.yaml"
+    },
+    "privacy": {
+      "data_retention_days": 0,
+      "pii_allowed": false
+    },
+    "redaction": {
+      "enabled": true,
+      "strategy": "mask"
+    },
+    "retries": {
+      "backoff_seconds": 5,
+      "max_attempts": 3
+    },
+    "version": "layered_default"
+  }
+}

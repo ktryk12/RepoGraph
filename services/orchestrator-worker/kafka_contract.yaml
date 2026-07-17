@@ -1,0 +1,174 @@
+# Kafka Contract for orchestrator-worker
+# ADR-0015: True Kafka-First Microservices - Phase 1
+
+contract_version: "1.0.0"
+service_name: "orchestrator-worker"
+envelope_version: "v1"
+last_updated: "2026-04-27"
+
+# Core responsibility: Evaluation orchestration and decision lifecycle management
+bounded_context: "evaluation-orchestrator"
+
+# Consumer Contracts - Events this service listens to
+consumers:
+  # Primary decision intake - migrating from legacy decision.lifecycle
+  - topic: decision.requested.v1
+    description: "Normalized decision request ready for processing"
+    schema_path: schemas/decision/requested_v1.json
+    consumer_group: "orchestrator-workers"
+    dlq_topic: decision.requested.v1.dlq
+    idempotency_strategy: "correlation_id"
+    legacy_topic: "decision.lifecycle"  # Currently consumes this
+    migration_notes: "Replace DecisionEvent.REQUESTED filtering with new schema"
+
+  # Approval completion - migrating from legacy decision.approval
+  - topic: decision.approval.completed.v1
+    description: "Approval decision made (approved/denied)"
+    schema_path: schemas/approval/completed_v1.json
+    consumer_group: "orchestrator-workers"
+    dlq_topic: decision.approval.completed.v1.dlq
+    idempotency_strategy: "correlation_id"
+    legacy_topic: "decision.approval"  # Currently consumes this
+    migration_notes: "Replace ApprovalEvent handling with new approval schema"
+
+  # Context retrieval responses
+  - topic: evaluation.context.retrieved.v1
+    description: "Context pack retrieved and ready"
+    schema_path: schemas/evaluation/context_retrieved_v1.json
+    consumer_group: "orchestrator-workers"
+    dlq_topic: evaluation.context.retrieved.v1.dlq
+    idempotency_strategy: "correlation_id"
+    phase: "1b"  # New in Phase 1
+
+  # AI inference responses
+  - topic: evaluation.inference.completed.v1
+    description: "AI inference completed"
+    schema_path: schemas/evaluation/inference_completed_v1.json
+    consumer_group: "orchestrator-workers"
+    dlq_topic: evaluation.inference.completed.v1.dlq
+    idempotency_strategy: "correlation_id"
+    phase: "1b"  # New in Phase 1
+
+  # Tool execution responses
+  - topic: evaluation.tool.completed.v1
+    description: "Tool execution completed"
+    schema_path: schemas/evaluation/tool_completed_v1.json
+    consumer_group: "orchestrator-workers"
+    dlq_topic: evaluation.tool.completed.v1.dlq
+    idempotency_strategy: "correlation_id"
+    phase: "1b"  # New in Phase 1
+
+  # Artifact writing responses
+  - topic: artifact.write.completed.v1
+    description: "Artifact write completed"
+    schema_path: schemas/artifact/write_completed_v1.json
+    consumer_group: "orchestrator-workers"
+    dlq_topic: artifact.write.completed.v1.dlq
+    idempotency_strategy: "correlation_id"
+    phase: "1b"  # New in Phase 1
+
+# Producer Contracts - Events this service publishes
+producers:
+  # Evaluation episode lifecycle
+  - topic: evaluation.started.v1
+    description: "Evaluation episode started"
+    schema_path: schemas/evaluation/started_v1.json
+    dlq_topic: evaluation.started.v1.dlq
+    legacy_equivalent: "decision.lifecycle with STARTED status"
+    migration_notes: "Replace _publish_status(STARTED) with evaluation.started event"
+
+  - topic: evaluation.context.requested.v1
+    description: "Context retrieval requested for evaluation"
+    schema_path: schemas/evaluation/context_requested_v1.json
+    dlq_topic: evaluation.context.requested.v1.dlq
+    phase: "1b"  # New in Phase 1
+    migration_notes: "Extract from current context-plane direct coupling"
+
+  - topic: evaluation.inference.requested.v1
+    description: "AI inference requested"
+    schema_path: schemas/evaluation/inference_requested_v1.json
+    dlq_topic: evaluation.inference.requested.v1.dlq
+    phase: "1b"  # New in Phase 1
+    migration_notes: "Extract from current expert-serving direct coupling"
+
+  - topic: evaluation.tool.requested.v1
+    description: "Tool execution requested"
+    schema_path: schemas/evaluation/tool_requested_v1.json
+    dlq_topic: evaluation.tool.requested.v1.dlq
+    phase: "1b"  # New in Phase 1
+    migration_notes: "Extract from current tool-runtime direct coupling"
+
+  - topic: evaluation.completed.v1
+    description: "Evaluation episode completed"
+    schema_path: schemas/evaluation/completed_v1.json
+    dlq_topic: evaluation.completed.v1.dlq
+    legacy_equivalent: "decision.lifecycle with COMPLETED status + eval.result"
+    migration_notes: "Consolidate _publish_status(COMPLETED) and _publish_eval_result"
+
+  - topic: artifact.write.requested.v1
+    description: "Artifact write requested"
+    schema_path: schemas/artifact/write_requested_v1.json
+    dlq_topic: artifact.write.requested.v1.dlq
+    phase: "1b"  # New in Phase 1
+    migration_notes: "Extract from current artifact-writer direct coupling"
+
+# Legacy Topics - Still in use during migration
+legacy_support:
+  # Keep consuming until all producers migrate
+  - topic: "policy.approved"
+    consumer_group: "orchestrator-workers"
+    phase_out: "Phase 2"
+    migration_target: "decision.approval.completed.v1"
+    notes: "Policy service migration dependency"
+
+# DLQ and Reliability Patterns
+dlq_patterns:
+  poison_message_topic: "system.dlq.poison.v1"
+  retry_topic: "system.retry.scheduled.v1"
+  max_retries: 3
+  retry_backoff: "exponential"
+  dlq_retention_hours: 168  # 7 days
+
+# Idempotency and Reliability
+reliability:
+  idempotency_key_source: "correlation_id"
+  duplicate_detection_window_hours: 24
+  message_ordering: "partition_key_based"
+  partition_key_strategy: "decision_id"
+
+# Phase 1 Migration Checklist
+migration_phase_1:
+  current_state:
+    - "✓ Consumes decision.lifecycle, decision.approval, policy.approved"
+    - "✓ Produces decision.lifecycle, eval.result events"
+    - "✓ Has DLQ handling for invalid messages"
+    - "✓ Uses DecisionEvent and ApprovalEvent schemas"
+
+  target_state:
+    - "⏳ Consume decision.requested.v1 with envelope"
+    - "⏳ Consume decision.approval.completed.v1 with envelope"
+    - "⏳ Produce evaluation.started/completed.v1 with envelope"
+    - "⏳ Implement correlation ID propagation"
+    - "⏳ Add schema validation for all new topics"
+
+# Schema Validation Requirements
+validation:
+  envelope_validation: true
+  payload_validation: true
+  schema_registry_integration: false  # Phase 2+
+  backward_compatibility: true
+
+# Observability and Monitoring
+observability:
+  correlation_id_propagation: required
+  distributed_tracing: "enabled"
+  topic_metrics: ["message_rate", "error_rate", "latency_p95"]
+  dlq_alerting: "enabled"
+
+# Phase 1 Success Criteria
+success_criteria:
+  - "Golden path test: decision.intent → evaluation.completed works end-to-end"
+  - "All events use envelope_v1 format with correlation IDs"
+  - "No message loss during migration cutover"
+  - "Legacy topic support maintains backward compatibility"
+  - "DLQ handling prevents poison message accumulation"

@@ -1,0 +1,214 @@
+# Kafka Contract for context-plane
+# ADR-0015: True Kafka-First Microservices - Phase 2: Database-per-Service
+
+contract_version: "1.0.0"
+service_name: "context-plane"
+envelope_version: "v1"
+last_updated: "2026-04-27"
+
+# Core responsibility: Context retrieval and code indexing
+bounded_context: "context-platform"
+
+# Consumer Contracts - Events this service listens to
+consumers:
+  # Context retrieval requests from orchestrator-worker
+  - topic: evaluation.context.requested.v1
+    description: "Context retrieval requested for evaluation"
+    schema_path: schemas/evaluation/context_requested_v1.json
+    consumer_group: "context-plane-workers"
+    dlq_topic: evaluation.context.requested.v1.dlq
+    idempotency_strategy: "correlation_id"
+    phase: "1"
+    migration_notes: "Already consuming from Phase 1 orchestrator-worker contract"
+
+  # Repository update notifications
+  - topic: repository.updated.v1
+    description: "Repository files updated, indexing required"
+    schema_path: schemas/repository/updated_v1.json
+    consumer_group: "context-plane-workers"
+    dlq_topic: repository.updated.v1.dlq
+    idempotency_strategy: "correlation_id"
+    phase: "2"
+    migration_notes: "New event for triggering index updates"
+
+  # Context cache invalidation requests
+  - topic: context.cache.invalidate.v1
+    description: "Request to invalidate context cache for specific documents"
+    schema_path: schemas/context/cache_invalidate_v1.json
+    consumer_group: "context-plane-workers"
+    dlq_topic: context.cache.invalidate.v1.dlq
+    idempotency_strategy: "correlation_id"
+    phase: "2"
+
+# Producer Contracts - Events this service publishes
+producers:
+  # Context retrieval responses to orchestrator-worker
+  - topic: evaluation.context.retrieved.v1
+    description: "Context pack retrieved and ready"
+    schema_path: schemas/evaluation/context_retrieved_v1.json
+    dlq_topic: evaluation.context.retrieved.v1.dlq
+    phase: "1"
+    migration_notes: "Already producing from Phase 1 orchestrator-worker contract"
+
+  # Context index update events
+  - topic: context.index.updated.v1
+    description: "Context index updated with new documents"
+    schema_path: schemas/context/index_updated_v1.json
+    dlq_topic: context.index.updated.v1.dlq
+    phase: "2"
+    migration_notes: "New event to notify when index updates complete"
+
+  - topic: context.index.started.v1
+    description: "Context indexing started for repository"
+    schema_path: schemas/context/index_started_v1.json
+    dlq_topic: context.index.started.v1.dlq
+    phase: "2"
+
+  - topic: context.index.completed.v1
+    description: "Context indexing completed for repository"
+    schema_path: schemas/context/index_completed_v1.json
+    dlq_topic: context.index.completed.v1.dlq
+    phase: "2"
+
+  # Context database change events
+  - topic: context.document.indexed.v1
+    description: "Document indexed and stored in context database"
+    schema_path: schemas/context/document_indexed_v1.json
+    dlq_topic: context.document.indexed.v1.dlq
+    phase: "2"
+    migration_notes: "Replaces direct database access to context entries"
+
+  - topic: context.document.removed.v1
+    description: "Document removed from context index"
+    schema_path: schemas/context/document_removed_v1.json
+    dlq_topic: context.document.removed.v1.dlq
+    phase: "2"
+
+  - topic: context.search.performed.v1
+    description: "Context search performed with results"
+    schema_path: schemas/context/search_performed_v1.json
+    dlq_topic: context.search.performed.v1.dlq
+    phase: "2"
+    migration_notes: "Analytics event for search optimization"
+
+# Legacy Support - During migration from data-platform
+legacy_support:
+  # HTTP API for migration compatibility
+  http_endpoints:
+    - path: "/api/v1/retrieve"
+      methods: ["POST"]
+      phase_out: "Phase 3"
+      migration_target: "evaluation.context.requested.v1 events"
+      notes: "Direct context retrieval for services not yet using events"
+
+    - path: "/api/v1/ingest"
+      methods: ["POST"]
+      phase_out: "Phase 3"
+      migration_target: "context.index.* events"
+      notes: "Direct document ingestion during migration"
+
+  # Database migration from data-platform
+  database_migration:
+    - source: "services/data-platform/src/storage/context_plane/index.db"
+      target: "postgresql://context_plane_db"
+      migration_strategy: "sqlite_to_postgresql"
+      phase_out: "End of Phase 2"
+      compatibility_layer: "dual_read_during_migration"
+
+# DLQ and Reliability Patterns
+dlq_patterns:
+  poison_message_topic: "system.dlq.poison.v1"
+  retry_topic: "system.retry.scheduled.v1"
+  max_retries: 5  # Context operations may need more retries
+  retry_backoff: "exponential"
+  dlq_retention_hours: 168  # 7 days
+
+# Idempotency and Reliability
+reliability:
+  idempotency_key_source: "correlation_id"
+  duplicate_detection_window_hours: 24
+  message_ordering: "partition_key_based"
+  partition_key_strategy: "repository_id"
+  consistency_model: "eventual"  # Index updates are eventually consistent
+
+# Phase 2 Migration Checklist
+migration_phase_2:
+  current_state:
+    - "✅ PostgreSQL schema implemented"
+    - "✅ Service manifest defines database ownership"
+    - "⏳ SQLite database migration from data-platform in progress"
+    - "⏳ Context database events being defined"
+
+  target_state:
+    - "⏳ Context database fully owned by context-plane"
+    - "⏳ All context operations publish database change events"
+    - "⏳ data-platform no longer accesses context database"
+    - "⏳ Index update events replace direct database triggers"
+    - "⏳ Context cache events for performance optimization"
+
+# Schema Validation Requirements
+validation:
+  envelope_validation: true
+  payload_validation: true
+  schema_registry_integration: false  # Phase 3+
+  backward_compatibility: true
+
+# Database Migration Strategy
+database_migration:
+  strategy: "sqlite_to_postgresql_with_dual_read"
+
+  migration_phases:
+    1. "PostgreSQL schema creation and validation"
+    2. "SQLite data export and transformation"
+    3. "PostgreSQL data import with integrity validation"
+    4. "Dual-read mode: PostgreSQL primary, SQLite fallback"
+    5. "Performance validation and index optimization"
+    6. "Cut over to PostgreSQL-only mode"
+    7. "Remove SQLite database and data-platform access"
+
+  data_validation:
+    - "Row count verification between SQLite and PostgreSQL"
+    - "Content hash verification for large text fields"
+    - "Index completeness and search result consistency"
+    - "Performance benchmark comparison"
+
+# Observability and Monitoring
+observability:
+  correlation_id_propagation: required
+  distributed_tracing: "enabled"
+  topic_metrics: ["message_rate", "error_rate", "latency_p95", "index_size"]
+  dlq_alerting: "enabled"
+
+  context_specific_metrics:
+    - "index_update_duration"
+    - "search_response_time"
+    - "cache_hit_rate"
+    - "database_query_performance"
+    - "repository_indexing_progress"
+
+# Performance Requirements
+performance:
+  context_retrieval:
+    target_latency_p95: "500ms"
+    max_context_tokens: 100000
+    concurrent_requests: 50
+
+  indexing:
+    batch_size: 1000
+    max_concurrent_files: 20
+    target_throughput: "1000 files/minute"
+
+  database:
+    connection_pool_size: 20
+    query_timeout: "30s"
+    max_result_size: "10MB"
+
+# Phase 2 Success Criteria
+success_criteria:
+  - "Context database migrated from data-platform to context-plane"
+  - "All context operations use context-plane PostgreSQL database"
+  - "Index update events published for all document changes"
+  - "Search performance maintained or improved after migration"
+  - "data-platform no longer has context database access"
+  - "Zero data loss during migration process"
+  - "Context retrieval latency remains under 500ms P95"

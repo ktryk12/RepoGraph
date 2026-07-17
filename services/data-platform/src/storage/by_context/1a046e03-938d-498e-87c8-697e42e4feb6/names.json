@@ -1,0 +1,26 @@
+{
+  "repo_snapshot:c088c3fb39bd9dde1455f2a33ab28eb4569e069931b88039110a4b2688ab82ca": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-15T14:54:12.789988Z",
+      "path_context_id": "1a046e03-938d-498e-87c8-697e42e4feb6",
+      "raw_context_id": "1a046e03-938d-498e-87c8-697e42e4feb6"
+    },
+    "ref": "artifact:sha256:4a2c8cdfac75f6da3fa591a12589823550819026c5c33c50f831748681f1e256"
+  },
+  "spec_fix_request": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-15T14:54:12.930005Z",
+      "kind": "SpecFixRequest",
+      "path_context_id": "1a046e03-938d-498e-87c8-697e42e4feb6",
+      "raw_context_id": "1a046e03-938d-498e-87c8-697e42e4feb6",
+      "status": "incomplete"
+    },
+    "ref": "artifact:sha256:90cdeb8f33a5f087fa5f73933c2191ca2ddbae3656dd1710ceafb1bbc24dd48e"
+  }
+}

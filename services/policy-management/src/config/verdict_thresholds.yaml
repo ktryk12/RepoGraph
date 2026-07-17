@@ -1,0 +1,78 @@
+schema_version: 1
+version: v1
+effective_from: "2026-04-18T00:00:00Z"
+updated_at: "2026-04-18T00:00:00Z"
+domain: fact_check
+description: >
+  Minimum-krav til evidens for hvert verdict-udfald.
+  Bruges af verdict_agent til at afgøre om der er nok belæg.
+  Alle tærskler er CONSERVATIVE by default — tving UNVERIFIED
+  frem for forkert TRUE/FALSE.
+
+verdicts:
+  - TRUE
+  - FALSE
+  - MISLEADING
+  - UNVERIFIED
+  - SATIRE
+  - OUT_OF_SCOPE
+
+thresholds:
+
+  TRUE:
+    min_supporting_sources: 2
+    min_source_tier_score: 0.80
+    requires_no_contradicting_tier12: true
+    max_age_days: 730
+    description: >
+      Claim er faktisk korrekt. Kræver 2+ uafhængige tier_1/2-kilder
+      der bekræfter og ingen tier_1/2 der modsiger.
+      Fakta ældre end 2 år kræver aktualitetsvurdering.
+
+  FALSE:
+    min_supporting_sources: 2
+    min_source_tier_score: 0.80
+    requires_no_contradicting_tier12: true
+    max_age_days: 730
+    description: >
+      Claim er dokumenteret forkert. Samme bevisbyrde som TRUE
+      — kræver aktive modbeviser, ikke bare mangel på bekræftelse.
+
+  MISLEADING:
+    min_supporting_sources: 1
+    min_source_tier_score: 0.60
+    requires_context_note: true
+    description: >
+      Claim er teknisk sand men vildledende på grund af manglende
+      kontekst, cherry-picking eller framing. Kontekst-note er obligatorisk.
+
+  UNVERIFIED:
+    min_supporting_sources: 0
+    description: >
+      Default-verdict når bevisgrundlaget er utilstrækkeligt,
+      modstridende eller for gammelt. Ingen minimumsgrænse —
+      dette er fall-through-verdiktet.
+
+  SATIRE:
+    requires_satire_source_flag: true
+    description: >
+      Kilden er identificeret som satire. Claim behandles ikke
+      som seriøs påstand. Publiceres med tydelig satire-markering.
+
+  OUT_OF_SCOPE:
+    description: >
+      Claim falder inden for et blocked-område
+      (content_moderation.yaml) og afvises uden behandling.
+
+model_confidence_gates:
+  min_llm_confidence_for_true_false: 0.80
+  description: >
+    LLM-confidence-score under 0.80 for TRUE/FALSE → downgrade til UNVERIFIED.
+    Forhindrer hallucination-drevne klare verdikter.
+
+hallucination_guard:
+  enabled: true
+  description: >
+    verdict_agent må ikke citere en kilde der ikke er hentet og
+    valideret af source_validator_agent. Phantom-citations → UNVERIFIED.
+  require_source_fetch_confirmation: true

@@ -1,0 +1,17 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "truthpack-conversation"
+version = "0.1.0"
+requires-python = ">=3.13"
+
+[tool.setuptools]
+package-dir = {"truthpack_conversation" = "src"}
+packages = [
+  "truthpack_conversation",
+  "truthpack_conversation.application",
+  "truthpack_conversation.domain",
+  "truthpack_conversation.infrastructure",
+]

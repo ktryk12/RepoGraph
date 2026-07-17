@@ -1,0 +1,35 @@
+{
+  "artifacts": [
+    {
+      "bytes": 6892,
+      "created_at_utc": "2026-03-20T09:53:24.663994Z",
+      "fingerprint_ref": "artifact:sha256:4c4e20f7f71c0b80fe408637d49ba79589886e832eb26ba299041eb8ad371689",
+      "name": "episode_result",
+      "path": "episodes/efaba6bb-bcec-4e71-b684-56c9148b7b67/episode_result.v1.json",
+      "schema_version": 1,
+      "sha256": "4c4e20f7f71c0b80fe408637d49ba79589886e832eb26ba299041eb8ad371689"
+    },
+    {
+      "bytes": 779,
+      "created_at_utc": "2026-03-20T09:53:24.663994Z",
+      "fingerprint_ref": "artifact:sha256:1c0a9ccd4d1af8f69c60106f05c244e6075b485cdb91849560c1f884caae14c8",
+      "name": "tools:tools/efaba6bb-bcec-4e71-b684-56c9148b7b67/repo_reader/result.json",
+      "path": "tools/efaba6bb-bcec-4e71-b684-56c9148b7b67/repo_reader/result.json",
+      "schema_version": 1,
+      "sha256": "1c0a9ccd4d1af8f69c60106f05c244e6075b485cdb91849560c1f884caae14c8"
+    },
+    {
+      "bytes": 1355,
+      "created_at_utc": "2026-03-20T09:53:24.663994Z",
+      "fingerprint_ref": "artifact:sha256:608883bad65da01e99d849c9be11971148ac91737229a8108a9421e16487fe66",
+      "name": "tools:tools/efaba6bb-bcec-4e71-b684-56c9148b7b67/tool_evidence.json",
+      "path": "tools/efaba6bb-bcec-4e71-b684-56c9148b7b67/tool_evidence.json",
+      "schema_version": 1,
+      "sha256": "608883bad65da01e99d849c9be11971148ac91737229a8108a9421e16487fe66"
+    }
+  ],
+  "created_at_utc": "2026-03-20T09:53:24.663994Z",
+  "episode_id": "efaba6bb-bcec-4e71-b684-56c9148b7b67",
+  "schema_version": 1,
+  "task_id": "EVAL-001"
+}

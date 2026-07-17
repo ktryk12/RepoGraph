@@ -1,0 +1,1 @@
+{"decision_id": "adac988f-d19e-49cf-8383-515ee4145181", "generation_error": "expert_serving_http_error status=503 body={\"detail\":{\"error\":\"model_profile_unavailable\",\"message\":\"model_manager unreachable for model_profile=general: <urlopen error [Errno 111] Connection refused>\",\"model_profile\":\"general\"}}"}

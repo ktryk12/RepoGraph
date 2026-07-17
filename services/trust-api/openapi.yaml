@@ -1,0 +1,235 @@
+openapi: "3.1.0"
+info:
+  title: babyAI Trust API
+  version: "1.0.0"
+  description: |
+    Fact-check og trust-score API. Givet en claim-tekst returneres
+    en maskinlæst vurdering med verdict, confidence-score og kildeliste.
+
+    **Auth:** Alle endpoints kræver `X-API-Key` header.
+    Kontakt sales@babyai.app for en API-nøgle.
+
+    **Rate limits:**
+    | Tier  | Pris       | Req/dag |
+    |-------|------------|---------|
+    | Free  | 0 kr       | 100     |
+    | Basic | 299 kr/md  | 1.000   |
+    | Pro   | 999 kr/md  | Ubegrænset |
+
+  contact:
+    name: babyAI
+    email: api@babyai.app
+  license:
+    name: Proprietary
+
+servers:
+  - url: https://api.babyai.app/v1
+    description: Production
+  - url: http://localhost:8141
+    description: Local development
+
+security:
+  - ApiKeyAuth: []
+
+paths:
+  /trust/score:
+    post:
+      summary: Beregn trust-score for en påstand
+      operationId: computeTrustScore
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrustScoreRequest'
+            examples:
+              crypto_claim:
+                summary: Krypto-påstand
+                value:
+                  claim_text: "Bitcoin will reach $1M by end of 2025"
+              ecb_claim:
+                summary: Makro-påstand med kontekst
+                value:
+                  claim_text: "ECB cuts rates to zero"
+                  context: "Circulating on Twitter, June 2026"
+      responses:
+        "200":
+          description: Trust-score beregnet
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrustScoreResponse'
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+        "429":
+          $ref: '#/components/responses/RateLimited'
+
+  /trust/claim/{id}:
+    get:
+      summary: Hent historisk fact-check
+      operationId: getClaimById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+          example: "claim-abc123"
+      responses:
+        "200":
+          description: Claim fundet
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClaimRecord'
+        "404":
+          description: Claim ikke fundet
+        "401":
+          $ref: '#/components/responses/Unauthorized'
+
+  /health:
+    get:
+      summary: Health check
+      operationId: healthCheck
+      security: []
+      responses:
+        "200":
+          description: Service kører
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  ok:
+                    type: boolean
+
+  /metrics:
+    get:
+      summary: Prometheus metrics
+      operationId: getMetrics
+      security: []
+      responses:
+        "200":
+          description: Prometheus text format
+          content:
+            text/plain:
+              schema:
+                type: string
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+
+  schemas:
+    TrustScoreRequest:
+      type: object
+      required: [claim_text]
+      properties:
+        claim_text:
+          type: string
+          maxLength: 500
+          description: Påstanden der skal vurderes
+          example: "Bitcoin will reach $1M by end of 2025"
+        context:
+          type: string
+          maxLength: 200
+          description: Valgfri kontekst (platform, dato, kilde)
+          example: "Viral Twitter post, April 2026"
+
+    TrustScoreResponse:
+      type: object
+      properties:
+        claim_text:
+          type: string
+        verdict:
+          type: string
+          enum: [TRUE, FALSE, MISLEADING, UNVERIFIED, SATIRE]
+          description: |
+            - TRUE: Påstanden er korrekt baseret på tilgængelig evidens
+            - FALSE: Påstanden er faktuel forkert
+            - MISLEADING: Teknisk sand men vildledende
+            - UNVERIFIED: Utilstrækkelig evidens
+            - SATIRE: Satirisk indhold
+        score:
+          type: number
+          format: float
+          minimum: 0.0
+          maximum: 1.0
+          description: Confidence-score (1.0 = meget sikker)
+        evidence_summary:
+          type: string
+          description: 1-2 sætningers forklaring af vurderingen
+        sources:
+          type: array
+          items:
+            type: string
+          description: Relevante kilder brugt i vurderingen
+        cached:
+          type: boolean
+          description: True hvis svaret kom fra cache
+        latency_ms:
+          type: integer
+          description: Svartid i millisekunder
+        model:
+          type: string
+          description: Claude-model brugt til scoring
+
+    ClaimRecord:
+      type: object
+      properties:
+        claim_id:
+          type: string
+        raw_text:
+          type: string
+        platform:
+          type: string
+        verdict:
+          type: string
+          enum: [TRUE, FALSE, MISLEADING, UNVERIFIED, SATIRE]
+        confidence:
+          type: number
+        detected_at:
+          type: string
+          format: date-time
+        sources:
+          type: array
+          items:
+            type: string
+
+  responses:
+    BadRequest:
+      description: Ugyldig forespørgsel
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+    Unauthorized:
+      description: Ugyldig eller manglende API-nøgle
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: unauthorized
+    RateLimited:
+      description: Rate limit overskredet
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: rate_limit_exceeded
+              tier:
+                type: string

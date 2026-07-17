@@ -1,0 +1,8 @@
+schema_version: 1
+version: v1
+defaults:
+  enabled: true
+  # Hard cap for discovery/ingest-style operations per logical run scope.
+  max_discoveries_per_scope: 25
+  # Minimum time between two accepted discovery operations in the same scope.
+  cooldown_seconds: 0

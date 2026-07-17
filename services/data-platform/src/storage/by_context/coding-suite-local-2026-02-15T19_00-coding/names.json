@@ -1,0 +1,10 @@
+{
+  "repo_snapshot:3b184af8225df3ea573cac73775e04ec98bbb8d3b7602ff92ea17ea2cda4c768": {
+    "metadata": {
+      "created_at": "2026-02-15T19:00:55.288550Z",
+      "path_context_id": "coding-suite-local-2026-02-15T19_00-coding",
+      "raw_context_id": "coding-suite-local-2026-02-15T19_00-coding"
+    },
+    "ref": "artifact:sha256:7f87528bec22a2f1dbe89f865ade015b68456ad49d6712625276ff71eafa7a9b"
+  }
+}

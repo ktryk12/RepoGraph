@@ -65,6 +65,10 @@ def _already_applied(conn, name: str) -> bool:
         return cur.fetchone() is not None
 
 
-if __name__ == "__main__":
+def main() -> None:
     logging.basicConfig(level=logging.INFO, format="%(message)s")
     run()
+
+
+if __name__ == "__main__":
+    main()

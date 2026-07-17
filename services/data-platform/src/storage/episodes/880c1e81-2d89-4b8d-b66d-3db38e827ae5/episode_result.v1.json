@@ -1,0 +1,213 @@
+{
+  "artifacts": {
+    "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+    "constitution_version": "v1",
+    "context_id": "24865829-3734-47fa-b8ae-c5081a390267",
+    "log_path": "logs\\episode_880c1e81-2d89-4b8d-b66d-3db38e827ae5.jsonl",
+    "tool_evidence_ref": "artifact:sha256:62b86be9aef1b5fea80d3d51f7f62882570fc701ab48b7ba26189db14512b7d1"
+  },
+  "decision": {
+    "bounded_contexts": [
+      {
+        "name": "Core",
+        "stability": "medium"
+      }
+    ],
+    "chosen_style": "modular_monolith",
+    "decision_id": "arch_EVAL-002",
+    "ops_readiness": {
+      "observability": {
+        "present": true
+      }
+    },
+    "rationale": [
+      {
+        "evidence_path": "$.constraints.team_size",
+        "reason": "Small team + limited time -> minimize operational complexity",
+        "signal": "evidence used: limited delivery capacity",
+        "weight": 0.8
+      },
+      {
+        "evidence_path": "$.constraints.time_to_mvp_days",
+        "reason": "Fallback rationale (delivery horizon noted)",
+        "signal": "evidence used: delivery horizon noted",
+        "weight": 0.7
+      },
+      {
+        "evidence_path": "$.nfr.operability.observability_level",
+        "reason": "Fallback rationale (runtime visibility expected)",
+        "signal": "evidence used: runtime visibility expected",
+        "weight": 0.7
+      }
+    ],
+    "risks": [
+      {
+        "mitigation": "Iterate generator + stronger checks",
+        "risk": "Baseline may be naive"
+      }
+    ],
+    "spec_id": "spec_2026_02_11_0002",
+    "stop_conditions": [
+      "If infra/ops overhead rises, simplify topology"
+    ],
+    "tool_evidence_ref": "artifact:sha256:62b86be9aef1b5fea80d3d51f7f62882570fc701ab48b7ba26189db14512b7d1",
+    "topology": {
+      "core": "modular_monolith",
+      "separated_services": []
+    },
+    "verification_plan": [
+      "perf smoke: p95 <= 500ms at target load (~50 rps)",
+      "Basic rollback strategy for deployments (fallback to last stable release)"
+    ]
+  },
+  "episode_id": "880c1e81-2d89-4b8d-b66d-3db38e827ae5",
+  "eval_result": {
+    "errors": [],
+    "evidence": {
+      "missing_paths": [],
+      "present_paths": []
+    },
+    "must_include": {
+      "missing": [],
+      "present": []
+    },
+    "passed": true,
+    "penalties": [],
+    "scores": {
+      "architecture_fit": 1.0,
+      "functional": 1.0,
+      "security": 1.0,
+      "total": 1.0
+    }
+  },
+  "knobs": {
+    "autoloop_run_id": "local-2026-02-23T19_07-coding",
+    "data_need_scope_id": "local-2026-02-23T19_07-coding",
+    "effective_policy": {
+      "policy_id": "smoke_policy",
+      "policy_version": 1,
+      "write_scope": {
+        "type": "read_only"
+      }
+    },
+    "intake_artifact": {
+      "classification": "low",
+      "content_hash": "1b2c6ead767db83a95c619c2f2a43005330e251a72d65fb933590584c3973690",
+      "content_size": 1281,
+      "detected_pii": false,
+      "id": "f01f4e7bd32a693c0abcdcb888866752f8243047a3f29697e6b655ed00347989",
+      "source_type": "coding_suite"
+    },
+    "librarian_artifact_root": "artifacts",
+    "librarian_enabled": true,
+    "librarian_registry_path": "knowledge/registry.sqlite",
+    "promote_truth_enabled": false,
+    "snapshot_ref": "artifact:sha256:7aa53745f4d70780d50edc1778e78294622b203498a5491cfd334e4c0479f8f9",
+    "tool_results": [
+      {
+        "backend": "tool_runtime",
+        "cost": {
+          "bytes": 16613
+        },
+        "error": null,
+        "ok": true,
+        "output": {
+          "content_ref": "artifact:sha256:0eb46010ac165bc2de0747542211747530c33f663c01a1be9f93612d92abe4f3",
+          "end_line": null,
+          "path": "verify\\run_eval.py",
+          "start_line": null,
+          "truncated": false
+        },
+        "run_ref": {
+          "artifact_ref": "artifact:sha256:0eb46010ac165bc2de0747542211747530c33f663c01a1be9f93612d92abe4f3",
+          "manifest_ref": "artifact:sha256:b4191ad89087586b7251333a207a5b508f12723e649cb7bd0c4698f78d6b73d9",
+          "tool_id": "repo_reader"
+        },
+        "schema_version": 1,
+        "timing": {
+          "duration_ms": 1.078,
+          "finished_at": "2026-02-23T19:10:31.692401Z",
+          "started_at": "2026-02-23T19:10:31.691323Z"
+        },
+        "tool_id": "repo_reader",
+        "warnings": []
+      }
+    ],
+    "trace_id": "local-2026-02-23T19_07-coding:CODE-002:66879143"
+  },
+  "task_id": "EVAL-002",
+  "telemetry": {
+    "failure_reasons": [],
+    "fixed_by_1": 0,
+    "gate_flip_count": 0,
+    "gate_flip_rate": 0.0,
+    "gate_snapshots": [],
+    "no_progress_stops": 0,
+    "passed": true,
+    "repairs_used": 0,
+    "runner_selected": "default",
+    "selection_reason": "preferred",
+    "stop_reason": "success",
+    "truth_pack_hash": "b2807b9731301e810d7e3e0229f885ce2c2a9a3103561ab2b13c492e1f27d292",
+    "wasted_repairs": 0
+  },
+  "tool_evidence_ref": "artifact:sha256:62b86be9aef1b5fea80d3d51f7f62882570fc701ab48b7ba26189db14512b7d1",
+  "truth_pack": {
+    "allowed_tools": [],
+    "baseline_hash": "cb54e5ea243549e39a3b849d2fa7656ef8ba3af7bd5db9ddac607cf61f8b7510",
+    "budgets": {
+      "max_repairs": 2,
+      "max_steps": 200
+    },
+    "gates": {
+      "ci_mode": false,
+      "schema_enforcement": "strict"
+    },
+    "generator": "ml.hybrid_generator:generate_decision",
+    "layers": {
+      "baseline": "truth\\packs\\baseline.yaml",
+      "org": "truth\\packs\\software_org.yaml",
+      "user": "truth\\packs\\user_default.yaml",
+      "versions": {
+        "baseline": "baseline_v1",
+        "org": "org_v1",
+        "user": "user_v1"
+      }
+    },
+    "logging": {
+      "enabled": true,
+      "log_dir": "logs",
+      "redact_secrets": true
+    },
+    "models": {
+      "allowed": [
+        "default",
+        "mamba_gpt_7b_q2"
+      ],
+      "by_purpose": {
+        "bootstrap": "mamba_gpt_7b_q2"
+      },
+      "fallback_order": [
+        "default",
+        "mamba_gpt_7b_q2"
+      ]
+    },
+    "pack_hash": "b2807b9731301e810d7e3e0229f885ce2c2a9a3103561ab2b13c492e1f27d292",
+    "policy": {
+      "rules_path": "policy/policy_rules.yaml"
+    },
+    "privacy": {
+      "data_retention_days": 0,
+      "pii_allowed": false
+    },
+    "redaction": {
+      "enabled": true,
+      "strategy": "mask"
+    },
+    "retries": {
+      "backoff_seconds": 5,
+      "max_attempts": 3
+    },
+    "version": "layered_default"
+  }
+}

@@ -11,7 +11,9 @@ from repograph.cache import redis as redis_layer
 from repograph.graph.factory import GraphStore
 from repograph.postgres import tracer as pg_tracer
 from repograph.working_set.builder import build as build_working_set
+from repograph.retrieval.task_planner import classify
 
+from .analysis import build_analysis_plan, request_for_analysis_step, select_analysis_step, should_break_down_for_analysis
 from .compressor import compress
 from .models import (
     CacheInfo,
@@ -24,6 +26,31 @@ from .prompt_packer import pack
 
 
 def prepare_task_context(
+    req: SharedRetrievalRequest,
+    store: GraphStore,
+) -> SharedRetrievalResponse:
+    task_family = classify(req.query, req.task_hint)
+    analysis_plan = None
+    analysis_step = None
+    effective_req = req
+    if req.include_analysis_plan and should_break_down_for_analysis(req, task_family):
+        analysis_plan = build_analysis_plan(req)
+        analysis_step = select_analysis_step(analysis_plan, req.analysis_step_id)
+        effective_req = request_for_analysis_step(req, analysis_step)
+
+    response = _prepare_task_context_base(effective_req, store)
+    if analysis_plan is None or analysis_step is None:
+        return response
+    return response.model_copy(
+        update={
+            "analysis_plan": analysis_plan,
+            "analysis_step_id": analysis_step.step_id,
+            "analysis_step_kind": analysis_step.step_kind,
+        }
+    )
+
+
+def _prepare_task_context_base(
     req: SharedRetrievalRequest,
     store: GraphStore,
 ) -> SharedRetrievalResponse:
@@ -102,16 +129,28 @@ def prepare_task_context(
         task_id=task_id,
         working_set_id=ws_id,
         retrieval_trace_id=ws.retrieval_id,
+        consumer=req.consumer,
+        source_mode="shared_retrieval",
+        payload_mode="retrieval_envelope",
+        prompt_assembly_owner="consumer",
         prompt_pack=prompt_pack,
         working_set=ws.model_dump(),
         verification_plan=verification_plan,
+        verification_plan_available=bool(
+            verification_plan.tests
+            or verification_plan.lint
+            or verification_plan.typecheck
+            or verification_plan.static_analysis
+        ),
+        retry_pack_available=False,
+        task_memory_refs=[],
         cache=cache_info,
         duration_ms=duration_ms,
         debug=debug,
     )
 
     # Write to cache
-    redis_layer.set(ws_key, response.model_dump(), ttl=redis_layer.TTL_WORKING_SET)
+    redis_layer.set(ws_key, response.model_dump(exclude_none=True), ttl=redis_layer.TTL_WORKING_SET)
 
     return response
 

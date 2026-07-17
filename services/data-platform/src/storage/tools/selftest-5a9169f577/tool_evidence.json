@@ -1,0 +1,35 @@
+{
+  "case_id": "selftest-task",
+  "run_id": "selftest-5a9169f577",
+  "schema_version": 1,
+  "tool_results": [
+    {
+      "backend": "selftest",
+      "cost": {},
+      "error": null,
+      "ok": true,
+      "output": {},
+      "run_ref": {
+        "artifact_ref": "artifact:sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "manifest_ref": null,
+        "tool_id": "selftest.tool"
+      },
+      "schema_version": 1,
+      "timing": {
+        "duration_ms": 0.0,
+        "finished_at": "2026-01-01T00:00:00Z",
+        "started_at": "2026-01-01T00:00:00Z"
+      },
+      "tool_id": "selftest.tool",
+      "warnings": []
+    }
+  ],
+  "tool_runs": [
+    {
+      "artifact_ref": "artifact:sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "manifest_ref": null,
+      "tool_id": "selftest.tool"
+    }
+  ],
+  "trace_id": "selftest-trace-5a9169f577"
+}

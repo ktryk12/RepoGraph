@@ -1,0 +1,59 @@
+# Docker Compose override for development environment
+# This file provides safe dev defaults that are automatically loaded in dev
+# See: https://docs.docker.com/compose/extends/#multiple-compose-files
+
+services:
+  context-plane:
+    environment:
+      # Dev-safe API keys (override production placeholders)
+      CONTEXT_PLANE_API_KEY: dev-context-plane-key
+      EXPERT_SERVING_API_KEY: dev-expert-serving-key
+
+  tool-runtime:
+    environment:
+      TOOL_RUNTIME_API_KEY: dev-tool-runtime-key
+
+  policy-validator:
+    environment:
+      POLICY_VALIDATOR_API_KEY: dev-policy-validator-key
+
+  artifact-writer:
+    environment:
+      ARTIFACT_WRITER_API_KEY: dev-artifact-writer-key
+
+  expert-serving:
+    environment:
+      EXPERT_SERVING_API_KEY: dev-expert-serving-key
+
+  planner:
+    environment:
+      CONTEXT_PLANE_API_KEY: dev-context-plane-key
+      TOOL_RUNTIME_API_KEY: dev-tool-runtime-key
+      POLICY_VALIDATOR_API_KEY: dev-policy-validator-key
+      ARTIFACT_WRITER_API_KEY: dev-artifact-writer-key
+      EXPERT_SERVING_API_KEY: dev-expert-serving-key
+
+  request-gate:
+    environment:
+      REQUEST_GATE_POLICY_VALIDATOR_API_KEY: dev-policy-validator-key
+      AUTO_APPROVE: "true"  # Dev-only: allows automatic approval
+
+  truthpack-conversation:
+    environment:
+      EXPERT_SERVING_API_KEY: dev-expert-serving-key
+
+  vault:
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: dev-vault-token
+
+  broker-gateway:
+    environment:
+      VAULT_TOKEN: dev-vault-token
+
+  # Dev-specific features
+  verify:
+    environment:
+      AUTO_APPROVE: "true"  # Only in dev - allows automatic approval
+
+# Note: This file is automatically loaded when docker-compose is run
+# It provides dev defaults that override the secure placeholders in docker-compose.yml

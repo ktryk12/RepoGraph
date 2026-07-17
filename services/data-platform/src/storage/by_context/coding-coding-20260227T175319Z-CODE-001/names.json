@@ -1,0 +1,13 @@
+{
+  "toolrun:toolrun-054a8a29-4fb8-4294-b436-c517639b5340": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-02-27T17:53:19.868865Z",
+      "path_context_id": "coding-coding-20260227T175319Z-CODE-001",
+      "raw_context_id": "coding-coding-20260227T175319Z-CODE-001"
+    },
+    "ref": "artifact:sha256:f8c20ed80f5f30534bb0fa172984c7f86269e7a006a75f3a6aaedc2ca84f101e"
+  }
+}

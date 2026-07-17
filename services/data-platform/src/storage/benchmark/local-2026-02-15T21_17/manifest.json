@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "run_id": "local-2026-02-15T21:17",
+  "created_at_utc": "2026-02-15T21:17:05.321406Z",
+  "artifacts": [
+    {
+      "name": "benchmark_latest_json",
+      "path": "artifacts/benchmark/benchmark_latest.json",
+      "sha256": "eda98278224e9a3cb9c1edd6203bca9d58b3d9c7688491e9cc02f2e1d018b941",
+      "bytes": 7504,
+      "created_at_utc": "2026-02-15T21:17:05.321406Z"
+    },
+    {
+      "name": "benchmark_latest_md",
+      "path": "artifacts/benchmark/benchmark_latest.md",
+      "sha256": "012dd8741288c6e321b30fbd1587d0df73cfb8b3733827246cee7fe03d14d388",
+      "bytes": 656,
+      "created_at_utc": "2026-02-15T21:17:05.321406Z"
+    },
+    {
+      "name": "compat_latest_scoreline_json",
+      "path": "artifacts/benchmark/latest_scoreline.json",
+      "sha256": "eda98278224e9a3cb9c1edd6203bca9d58b3d9c7688491e9cc02f2e1d018b941",
+      "bytes": 7504,
+      "created_at_utc": "2026-02-15T21:17:05.321406Z"
+    },
+    {
+      "name": "eval_manifest_json",
+      "path": "artifacts/benchmark/eval_set_manifest.json",
+      "sha256": "231574d00ef78838e6aca875fc1d98749d90546ea4e09c7615b75375cb24b0b1",
+      "bytes": 336,
+      "created_at_utc": "2026-02-15T21:17:05.321406Z"
+    },
+    {
+      "name": "latest_scoreline_json",
+      "path": "C:/Users/Admin/AppData/Local/Temp/pytest-of-Admin/pytest-226/test_benchmark_scoreline_parse0/scorecard.json",
+      "sha256": "eda98278224e9a3cb9c1edd6203bca9d58b3d9c7688491e9cc02f2e1d018b941",
+      "bytes": 7504,
+      "created_at_utc": "2026-02-15T21:17:05.321406Z"
+    },
+    {
+      "name": "per_task_jsonl",
+      "path": "artifacts/benchmark/per_task_latest.jsonl",
+      "sha256": "8287be2037be953ae43f335322b41a49ab480c790601211268ed4496cfe8cc2c",
+      "bytes": 561,
+      "created_at_utc": "2026-02-15T21:17:05.321406Z"
+    },
+    {
+      "name": "resolved_config_json",
+      "path": "artifacts/meta/resolved_config.json",
+      "sha256": "3caadeac87976c8d95224f7917f79175dc204fc17ac920b9352519f08c141099",
+      "bytes": 2330,
+      "created_at_utc": "2026-02-15T21:17:05.321406Z"
+    }
+  ]
+}

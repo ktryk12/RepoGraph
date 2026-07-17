@@ -1,0 +1,1 @@
+{"acceptance":["Episode reaches terminal state","Eval event is published"],"context_id":"live-discovery-e2e","domain_name":"live-discovery-e2e","inputs":{"objective":"smoke test","policy_preset":"dev"},"prompt":"Write a concise, safe architecture recommendation.","schema_version":1,"task_id":"task-smoke-hdlvnxhh","template":"auto","title":"Smoke test episode"}

@@ -1,0 +1,1348 @@
+{
+  "toolrun:toolrun-009887a4-d6d3-43d2-a80a-7111e2489945": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-22T15:12:40.869429Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:83cb598c99423562a0f8933f7048a72cf737b52e26c2988531b2e7dfa3d72967"
+  },
+  "toolrun:toolrun-00b7f826-da51-4fa3-a628-4aa070308587": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-04-05T19:31:38.866200Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:e08ec95f53360e5aecaa6a26279ed4a1355d696a019ce6a4536af2f56982c1c6"
+  },
+  "toolrun:toolrun-00b9c000-7a22-41eb-925e-965a43466116": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-29T18:31:24.520337Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:2f614ae28c95bb05f9b2760df87cc8a8a07d44eacd377f57d31aab193dd94b0d"
+  },
+  "toolrun:toolrun-03863582-998f-401d-b35f-10cb256b4d5b": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-02-27T17:53:15.786409Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:af4350227ac1164da11efc1f46495b6512d1152c7f1d20b22b218170f7181edc"
+  },
+  "toolrun:toolrun-038fb906-5af8-4c5f-b365-f5f630955c6e": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-02-27T18:36:34.197796Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:793e42008fe8e21a401196a2eb2942b7c2ae66f4eff19d417cd7d964b423775b"
+  },
+  "toolrun:toolrun-051597d8-da1d-46ff-bac4-d67acb4be7dd": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-25T12:26:09.208365Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:5af76a31475158a469a7d07970f7684ec6e4a853e2497044fe634c8519239f48"
+  },
+  "toolrun:toolrun-073f5f75-962b-413c-a3c6-05b658330db9": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-24T12:26:41.099737Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:01ccaef3d388cadfe67ba569d9f9242d06e128447c34d7ae9f7995596e0a3b31"
+  },
+  "toolrun:toolrun-0ac841b2-4965-4992-a60a-b2f1bf0f5520": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-06T16:03:48.763246Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:f28efde3ec080e36cd8bdd2b47200cd78dad921cadd9afd9b500173201c04f81"
+  },
+  "toolrun:toolrun-0e9e3303-e792-4d87-8017-43a18214c04d": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-25T09:40:03.781898Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:0d44a54c355779278d2d8b3e1e67ed0af9bae051819fdb0d022f215c8c9c268d"
+  },
+  "toolrun:toolrun-0f1446bb-a697-4fae-a62a-1af5cfb50f95": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-27T15:15:15.912946Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:9754c8f7ad6a02caf4130cd68ccafb85fc9830c057d7f7875d60eeed1a3553cb"
+  },
+  "toolrun:toolrun-118a9b74-ee45-4574-a2de-41021ea42c63": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-02-16T13:35:23.905756Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:4d672f2e46e91e0d0e16f893dd2bca641df1ede3775edb1b1a0ea8427bbe40bb"
+  },
+  "toolrun:toolrun-12cc4464-60be-4d4d-a187-ba8eed9db63b": {
+    "metadata": {
+      "created_at": "2026-02-15T20:34:24.626903Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:b57403cf5855c0148077b356fa305f1fab4429efaeaf5051ce10e9434f853c46"
+  },
+  "toolrun:toolrun-149216f5-93aa-49c9-8fa7-f9103bd7f35b": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-27T15:03:22.019379Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:40fae14ed96d3182243bba3b88cd352ffb91cc9e57d543bd1c6eb1f722730ae9"
+  },
+  "toolrun:toolrun-169641c3-464a-49a2-b1ea-8bb10767cb2a": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-06T16:33:23.116422Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:58c4d839eac9d5231afdaa928dbc9d941aed3182a2ea9c4d532b99b71f562db2"
+  },
+  "toolrun:toolrun-1ed3272a-0716-4578-9d70-c8ec3cce601e": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-21T15:48:36.223678Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:4ddf2a8da80d332e990b8f5532d233c3b8a5c1979a61ee6d48c829d1b1b44195"
+  },
+  "toolrun:toolrun-1f9a1402-d066-420c-a20f-413c65014e37": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-02T13:23:47.935850Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:c3a8cd878f872917888e88a5ad295ac669691954d78bb226c42f801f1707a176"
+  },
+  "toolrun:toolrun-20333941-f3d5-47e4-9918-256e666a26d2": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-20T08:56:07.629330Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:a63e6810296976cd5bb0fce6b9bf4fa68bbe82a8f6bfe8ad1b26eef6bbb64fd8"
+  },
+  "toolrun:toolrun-204b3ac9-1a69-48f6-800b-c326c595997e": {
+    "metadata": {
+      "created_at": "2026-02-15T14:26:08.483125Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:d27155903d45b2cc6967b55a5c6e5250a4734acfb54e857c944533506e578900"
+  },
+  "toolrun:toolrun-21f23beb-73c0-4a1d-842d-8484b10da24e": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-22T15:04:17.157759Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:825e52e2a2f196928d7db50f2adfdaba7433ed702ee65df884e3a068d41d8e77"
+  },
+  "toolrun:toolrun-233db1a9-6892-4125-a1f0-fbddb175e29d": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-30T13:25:50.592990Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:22f4a5f84afbafe57ccef6d1eac2b301eaa4f114cb10db46f2de5f93540b2309"
+  },
+  "toolrun:toolrun-24826e7e-444e-408d-a42c-9aac8c0940c4": {
+    "metadata": {
+      "created_at": "2026-02-15T15:51:04.177979Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:f776cc5f9095cace7b117a41da355fa65b0c9ffe490cb478f8d892a6a4438fae"
+  },
+  "toolrun:toolrun-26754aca-4ff8-4802-8310-70c12e6f9a7b": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-20T08:42:30.514488Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:8bb497b62f001ad12eaf4b61b9c85207e48615e8285cc16e82bac6fc775c8736"
+  },
+  "toolrun:toolrun-293eb5c1-7a0f-4381-9ee2-c8b87bc82ef7": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-30T18:45:05.770641Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:a1d1f1133dcc046f5ac7c7c098ac5882978a6a2c99a6748eaa0a4b46528cd30a"
+  },
+  "toolrun:toolrun-2a7855f5-aba1-4710-92b8-97ab8f8eeb83": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-15T14:10:54.306464Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:5a7272b51cd6f208eae01ff421859e40685100124ea49f0fcbaf2f7f2909dcb0"
+  },
+  "toolrun:toolrun-2ade8c5d-e1fc-4973-ad53-788b527ccdaa": {
+    "metadata": {
+      "created_at": "2026-02-15T14:16:34.695207Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:bf645412141c12fdad0189bf36488c1c59f9c662eaa7abba8e9b44aa64648338"
+  },
+  "toolrun:toolrun-2baaf81e-b6bd-4281-ae02-40cab90148b5": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-06T17:22:37.747680Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:a077bb451ffdd832ebf0f2270555c2691c9ae3e2059a6080892d652f55f16af8"
+  },
+  "toolrun:toolrun-2c1e91e9-aef7-4471-aa22-08913e60da8b": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-04-05T18:45:10.513763Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:68bccc4d52df3f5f71fc3257aeda8a7e704c4e58b9f0df62f0e5f8043f23cd8e"
+  },
+  "toolrun:toolrun-2d015a01-d0f6-47da-a170-b668f5595fc0": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-29T19:08:35.945231Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:6c647d06d10a674ae3af87577f59cc582ee44f52da82e8ac3d4d3e249e9ba640"
+  },
+  "toolrun:toolrun-2eadcece-ca0f-4a40-9f4f-16e479c3283e": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-02-28T15:42:04.777133Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:bb9cca62bdd0f8faf591b52777525408f271d60c785a66937b8188bec762984b"
+  },
+  "toolrun:toolrun-329a5e94-8653-4d3c-bc5d-78d46b2392c8": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-25T09:10:11.980068Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:82760a8912f5b75b7e2fc8d6c095a9f7519b04f92a5bac50df2de21d09f8c30e"
+  },
+  "toolrun:toolrun-33c43ae7-1d71-4377-acb3-18b2a5bde2ef": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-23T16:57:59.406538Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:e6611dbfb2f07daf24c38934a24bf94da94e4cacc1af5bee447e0404ff3ff489"
+  },
+  "toolrun:toolrun-3a236447-12ea-4035-a984-94caaa98d699": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-04-05T18:34:13.484910Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:cd7219c01c7d3c91a9f4c2408e2fdf4df0b81dd68fc6d1c75f283e13600d2a7d"
+  },
+  "toolrun:toolrun-3af4c603-5015-42eb-a20a-b63dfb5ddda8": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-10T13:49:45.510754Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:7a5388dae9bdd1fa12f1ca998140b9f6b38feb0c3fc6bd41163bf4fd1f7ba7b9"
+  },
+  "toolrun:toolrun-41bc16a2-0307-41a5-8c66-e51d3a3ca788": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-24T11:26:16.389132Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:5268579818102dc9a736abe2334ae1fc5273c2763eeedf5fb8c493f3b3776bc8"
+  },
+  "toolrun:toolrun-482ae022-83b2-4b03-a490-e3e625ed0149": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-21T16:12:47.527221Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:cbe60ac5e408cdac92bcddc9b545c7631ba24b31882d083a8048d214e340bfee"
+  },
+  "toolrun:toolrun-48f1fbea-eaea-4269-8b3d-3db1ac7c9960": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-06T15:56:30.361819Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:f26cf4613298d98340dde16c157652e8efc8ab12a911da703f2358db93d676e8"
+  },
+  "toolrun:toolrun-4e28046d-36e7-414b-87e4-5b1bb710380d": {
+    "metadata": {
+      "created_at": "2026-02-15T16:04:25.981172Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:ea42161c6da19b082d593f16c58aeebbedeaa77e90f89820a3530425635f97b7"
+  },
+  "toolrun:toolrun-500ea7da-53c2-4925-86dd-01384bbb30d0": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-20T08:29:42.234311Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:b6b53f77bf255c3ccbb15052e8df420f5e64ddf900d9a5c2877b6eee2751b409"
+  },
+  "toolrun:toolrun-501adfc0-e221-4494-80bc-1658dc4e826a": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-15T16:07:31.956404Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:5d3c0f87a5b8abab8a3bbc1f442952ecdf7eeee3589859b1a5804dbb4e3a25f6"
+  },
+  "toolrun:toolrun-5075b0d8-58df-47cd-a2a0-4f68254313a5": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-20T09:53:19.702633Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:a21b5bf55c269adb0a9e9b7434b4d50e8bf2ecbb5d7c34b00271413ea641c54b"
+  },
+  "toolrun:toolrun-51279e67-270a-4cf2-9ebd-62358e9f5678": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-20T08:40:15.252542Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:6a1101f1bfea50882f408685fc2cf7e9ae23ad7f842166579b1fc8167505d807"
+  },
+  "toolrun:toolrun-531bb1ea-149c-4c47-ac1c-05b58e2cc3dc": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-30T10:00:03.997123Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:683f2d46eb54bf2fb349d2b42f449127f5edcb8cccfe43b4ef431a7ac29e24fe"
+  },
+  "toolrun:toolrun-534c7bdc-bded-4d3e-a6cd-dd26b06cf373": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-21T16:04:35.315601Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:0986fff3cd8a74f83255e288c252345abd832c8e40565d6aa5db2316f870a312"
+  },
+  "toolrun:toolrun-5a0b7c35-4c85-4c08-a0d3-da9ce356bccf": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-15T13:28:43.298063Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:bedfb0a9062df42f606573ca307336b710d9771ace6434ea69238f9f3a51175b"
+  },
+  "toolrun:toolrun-5a8f34f8-58b9-426c-967c-eb6546be5055": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-22T17:13:24.784329Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:4b5086ab4e0d5feba9915381581c94edea93c385cc9a90642dd4c803d2a6ab14"
+  },
+  "toolrun:toolrun-5afa3fe3-53bf-4b7f-8dc1-1c825a236d42": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-04-05T18:57:48.973860Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:be66b5ddfc56538dfed1b668f968be45e395345ad89258d2f86297c551063e17"
+  },
+  "toolrun:toolrun-5ef41374-cd33-44bc-93a7-8ba7e2262070": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-27T05:23:11.008430Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:63c72bf172957bd9dd3101fbc7b1b8dcdf997df2de35b4dd8db72a16b191579c"
+  },
+  "toolrun:toolrun-5f13edd8-d812-44f4-bee1-4b715e1e8b56": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-05T18:54:32.986479Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:799749ff0e7e0d83cf631956dd143e58ddd76b2a3edce19900e452653c4d5665"
+  },
+  "toolrun:toolrun-5f29fa2d-d7b3-4dba-a9ce-513fb38346c2": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-26T16:52:47.058589Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:39441d45bfb4e879b6c8a34b015d6e429723c3d8ff25b9381cb85127f6c71926"
+  },
+  "toolrun:toolrun-5f3f617f-1b2d-4fa0-80c8-32e7bee872a0": {
+    "metadata": {
+      "created_at": "2026-02-15T15:29:16.407649Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:c8b596e2b6fe23339d985e69487632f7feec5158ef5ca7f8028bba5109ed8dd7"
+  },
+  "toolrun:toolrun-5f4c5ae6-b442-4654-a0af-6acb6de3b8ad": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-02-27T18:12:46.043066Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:69e2fa83fc7da0c922a694a37b353d17e3e8303d0ecf6a8626841dad7b94c049"
+  },
+  "toolrun:toolrun-62442a6c-ff22-4b82-a682-dc7686bfd503": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-22T16:28:37.958189Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:1bc71e0cd7f3960a41ffb4d457626d76bb8fea44c797e1dcaf78735ab4aa276a"
+  },
+  "toolrun:toolrun-62f453a9-d3fe-4c26-8d7a-14eb95d88b8c": {
+    "metadata": {
+      "created_at": "2026-02-15T14:17:15.688443Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:7016a466cf7d9a849471bc7aae9a43749537a04aad53c89133609fb2b7202158"
+  },
+  "toolrun:toolrun-6efea774-e03e-4a04-83e7-e35eb487d9bf": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-26T15:33:10.475506Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:b30b602ebc2c80c30c2d1ac2835010da8fa7dc0232315a3b874828cc92795e86"
+  },
+  "toolrun:toolrun-72e75a74-4202-400a-b86b-86365241ef0a": {
+    "metadata": {
+      "created_at": "2026-02-15T16:02:50.440255Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:32fdc7049fcf7dce3f2dc7c68a6ab0d19676df6fe6b6ae90b515468107aa4fb9"
+  },
+  "toolrun:toolrun-7877caca-95ac-4611-9040-8a8ab9fb10a0": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-06T16:03:25.361453Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:3d7c6fa264d965648995a5abefd3af4e88f62fde65d00e2822837179ff0e6543"
+  },
+  "toolrun:toolrun-7a83cbf7-22ef-489e-800c-14321939ec95": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-02-16T13:26:15.320856Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:db2e59967f38c64c903a7eae77bfca05cc7078ec57b897ca65ac95ed86354b8a"
+  },
+  "toolrun:toolrun-7c3d75db-35d3-478b-9faa-ac85ed7bf5b1": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-15T14:54:35.376206Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:c6f094a1f20162696c58fdd13835a1008e177788a1dccff5e94b36ad412319b2"
+  },
+  "toolrun:toolrun-7d95e883-cd7d-4c93-b920-f2d91030713f": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-04-05T19:29:44.572036Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:1e303e0939a133e0485db13afcb6ac8ece284aef5920902621158b08e1bed2a5"
+  },
+  "toolrun:toolrun-7db1837c-ceae-4e8c-9e59-40252ab14cd9": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-02-28T15:27:59.125384Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:940351a6eb310b18176c76d4937a71e0213ee7cff130f298ffeb919417ec56c0"
+  },
+  "toolrun:toolrun-809691ce-c735-4c35-89c3-b01060747c6f": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-30T10:23:52.916959Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:745bb2328287d1ae9156c315a67133405cd0cc8ed67420cffc391521b5ac4331"
+  },
+  "toolrun:toolrun-814b9d88-7540-4c37-b0df-bcd9ab1fea43": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-02-16T14:07:07.583358Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:c4b43d7e421bc8718ed5859803609506c93252131057fc3a8d13af1168925571"
+  },
+  "toolrun:toolrun-84b0e922-5dd9-4da4-a5ee-000235461140": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-30T09:09:18.004131Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:47fa85bce68677dbc22d488d470a1fca5f8f60bac347dd007df22b69daaced65"
+  },
+  "toolrun:toolrun-84f7675b-b3ff-4fa9-86f2-27f8a7dde85c": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-21T16:50:01.410408Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:8178402f044bf38df8dd107d479309c8e28d4653481540b49808720599d68aba"
+  },
+  "toolrun:toolrun-86b84bd9-e33d-4b76-bb3b-17c40e995bd8": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-27T21:01:10.717104Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:9f6d8793438ded87d22556869494d3f3dce54be30650c3d18580faadf898e3f8"
+  },
+  "toolrun:toolrun-8b833c34-8116-4a61-9ea6-78073534730e": {
+    "metadata": {
+      "created_at": "2026-02-15T15:30:03.114691Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:b5b8d5a455aea28260656e946146115caa9c18c59fab9279489c75bb19d94933"
+  },
+  "toolrun:toolrun-8dcd72a4-37ed-412d-bc96-5d77d2f758e5": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-24T21:21:44.495593Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:b4657b417d8b5d510927fc0581912c86376d5a5bca057940288fdee85451a147"
+  },
+  "toolrun:toolrun-9005175b-4b48-4a5d-93d0-08fbc357589b": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-06T17:02:37.142252Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:fb6166769e758cb34f1e379c0d86ff1b2fb6ae52b052bb4f1fbdccf4521e5505"
+  },
+  "toolrun:toolrun-926557c0-d909-48ad-bdc0-b115feb48010": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-02-16T13:52:17.755620Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:7a86fcea17a5b9c5a2a1e3381a1ec63bb990d2fd0f6594b54753edcc996e5445"
+  },
+  "toolrun:toolrun-93f4a508-2f73-4865-91dd-340cd1080372": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-22T17:11:20.049180Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:8606e6169ec8daab577add30a35927be3e1be2d9c85ac7f4a5f5325535e09e0d"
+  },
+  "toolrun:toolrun-98ee365e-d816-4a5a-9105-3893b4dd76ee": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-22T13:33:37.503962Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:a58458fd1982ed583fdb80887190d35d756098be07997b4f68fb623efdeeb4e8"
+  },
+  "toolrun:toolrun-9996786a-6d91-4db3-8e52-5e8abf6155fb": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-02-16T13:24:55.920708Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:df2126f0a94eb92afde30ea2e49a099cfe7fce9eb074a0189442de95cb58f03b"
+  },
+  "toolrun:toolrun-9c98346f-7496-43f9-9c42-5ca83aee5434": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-15T16:54:06.984981Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:f590464a44968b6399b32acc7a909a2d536be76309054c59cae9d867dbefbac1"
+  },
+  "toolrun:toolrun-9e268779-3ac4-4133-8b39-3d72091e8456": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-02-16T13:45:01.450451Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:29f89b142cf359c45adf3263a6abedc0d8a4c7d637458c8c9799938dff040de6"
+  },
+  "toolrun:toolrun-9eeee1cc-1747-4b8d-8f09-85920db4e958": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-30T15:10:23.816917Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:1599fcb0afa665681a6337ef7ca67b465836cefb86822d2801f26582ebf645b1"
+  },
+  "toolrun:toolrun-a0e34894-a43b-408c-8f16-64016d0017c3": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-27T14:51:21.549760Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:5485cd848f95dbaa89fe99920c5ed4f83147a339578f7255e5adba9ff44b7d33"
+  },
+  "toolrun:toolrun-a180b111-c059-45ba-9742-451d058d78c0": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-22T15:58:59.804793Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:c5c39bc9bd29cb1d2af82cbbc32eaf22c25d611ffb4eab803c4f38b4327a3334"
+  },
+  "toolrun:toolrun-a1e56e3b-7deb-41e6-8cbc-d783ffab8d17": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-22T14:49:02.874078Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:8a9a3791b262cec6a7ffd0710294d5954f34f6d9292665ee1cc34f014c93ddee"
+  },
+  "toolrun:toolrun-a1e8617a-5e0c-4ebc-bf78-7f06616d73dd": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-20T08:33:00.009404Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:114d82505cee40d97086a736a778a32fc52f46bf9e7d92d57c4a8b658868a759"
+  },
+  "toolrun:toolrun-a3d71e20-b97b-409a-869b-6b51b5f39618": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-02-16T13:37:58.518019Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:6e6e608e3f8fc19c15d32e1ee3331bca3350c6911307bd6f66530ac11ce95750"
+  },
+  "toolrun:toolrun-a42fedac-c912-419b-968a-7809408617fc": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-25T18:53:22.452232Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:d463ef7c28b36354f7c3b340d3d3f2c15b3972d824261191784f03684abbd229"
+  },
+  "toolrun:toolrun-a488c5a3-8df0-4c79-99fc-971989d7eaa6": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-22T17:45:02.811767Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:043d5fde97ca51f6225d80adf268ddf32ab3bcfed8067ef2ae242b9cfd00e9f4"
+  },
+  "toolrun:toolrun-a495541c-aa2b-4e0e-8cfa-1422996dbff9": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-30T14:53:36.692055Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:401c4ddddd8f623e1f429c4d32778575524726fd961589478d2657246883f85f"
+  },
+  "toolrun:toolrun-a51a6f27-078b-479b-9ef0-336daea04223": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-24T21:52:51.691534Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:a20d7b82a08e296c5a714f32b79a2fc568d37b9b47ea0cc9d713a75c2c4684fe"
+  },
+  "toolrun:toolrun-a5fb6f2b-b4fb-4b2a-9ee3-4175f3cf92fb": {
+    "metadata": {
+      "created_at": "2026-02-15T15:47:00.693310Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:10bce1f07bd1dffa23a249863491baaaccd7551ac0343436b0a04345b94885a3"
+  },
+  "toolrun:toolrun-a7f668ee-b434-4856-9f7c-8151275dc092": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-20T16:47:59.622371Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:240c0d170e22bdb9fc2fc34d04ca54b7682fa7b7a1be4a61622efe59cfa5cce0"
+  },
+  "toolrun:toolrun-ac5833aa-a824-46ee-a466-b0d5718a7ac7": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-20T13:03:10.812244Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:a77e2f921c598132cd7ca4ae13e811c7a29af83dacd04d383f135ab55f47b3d1"
+  },
+  "toolrun:toolrun-aea67704-78b3-46d3-9d30-ea68c3ced0d5": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-22T19:15:09.953708Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:3b1f2857ef0eafdbb0f1fd4558f7b2301d6e5d965852983d5c3482b0cfd1745c"
+  },
+  "toolrun:toolrun-b221c58b-5ce7-4baf-aa2e-5246bbb5913c": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-10T10:49:49.045262Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:f78bae39ece6a6df4a6ac8128cdf0358c4774a5d40ebad108ff3052a651f2e31"
+  },
+  "toolrun:toolrun-b4d4a9ef-183f-40cd-bb37-fec0ff786ab2": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-20T10:21:03.976446Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:c12d412b04b8cc0dc73e4251c2e8af259f49c3b975c1cb54a53db83e0db0b00d"
+  },
+  "toolrun:toolrun-b5d95e5d-21bf-49c1-a592-fb8073eca7f3": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-26T05:09:53.676326Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:5e1e1e0eae7e529fd6add6698aa97a9ba6845c94db4f26ce89e6ac92e41cc302"
+  },
+  "toolrun:toolrun-b67a4843-a2f0-429d-8547-981115203e6b": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-22T15:27:20.686711Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:a357076d47567fde3e6cbf853a9c19d04dfa2c57094190d9e88de9f5680dbc99"
+  },
+  "toolrun:toolrun-b80af7bb-3018-433d-9e30-9b0b7d2f73ad": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-29T16:45:28.944141Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:0d752b125ae0e5fd555278d72b3dcb494a23c130e916d33c5a0a77f8ff912ad7"
+  },
+  "toolrun:toolrun-ba08805d-0990-4562-a5c1-832c23823d7b": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-24T15:01:05.208836Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:a807222de510911822f097077f156a51e0a489c292ea4d496ac7872f752c9a54"
+  },
+  "toolrun:toolrun-c0893531-2145-426b-8f0d-6013b3e716f4": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-02-27T15:56:19.637131Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:bb69ba95cedc7671e06de30836d44c3feabd3cd51a253cf2b15923512838a9d4"
+  },
+  "toolrun:toolrun-c08e205c-6501-4098-a003-b752da5aea7c": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-02-16T13:53:36.905562Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:af41bd6b47ea8eab6a6da5878c3d408f9b6b864bb0894944aebd5aec34185f2c"
+  },
+  "toolrun:toolrun-c0ee21b1-c6ee-479a-8f7d-e5f61a1bf30d": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-30T16:03:59.409689Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:729f66707d0bd6a09af2d066db27e55075afa54b959260d7573b3fa9bb147ed5"
+  },
+  "toolrun:toolrun-c20133fc-6fb8-4020-ba71-22720d23d835": {
+    "metadata": {
+      "created_at": "2026-02-15T20:24:12.572317Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:51467f93945b9cdaf0b5bb5dc87fa68e159a5374504e9636cdaf84f6212d731d"
+  },
+  "toolrun:toolrun-c27ea4f2-c5ad-477f-91eb-5f58540383a5": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-29T19:32:52.347102Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:cf86b6ce8c91f8c7849698e365c13556cacd634f8f4e9efd3c5668dbaf4cc878"
+  },
+  "toolrun:toolrun-c3f38c4b-d475-4e31-b43b-48afedeb27fb": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-02-16T13:26:29.503720Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:d347fd13dd5997a7ea39a51aaeec4f4cbf6ef186740be870d5cff6504c0994e0"
+  },
+  "toolrun:toolrun-c4902620-ea4a-4683-83c3-09a08ca6203a": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-21T16:18:34.451934Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:f8ac30bbb636c4ddbbf677383b2689433f6b7c8b6377a4ada34a1f320c6739db"
+  },
+  "toolrun:toolrun-c5a3002d-602e-4d05-8363-162804894d6a": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-06T17:16:45.485092Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:792b396764ae0b21c12bcb05ffa076d877c9751609029b850ced1a88bc620c36"
+  },
+  "toolrun:toolrun-c6e4e453-a1fa-4d60-87e7-f92d738e3970": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-20T08:29:18.163502Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:f55e368181b0d63f5925d6a0d049774c73526242a69203b587131a4a71e5645e"
+  },
+  "toolrun:toolrun-ca3775ec-c7e0-433e-8394-cd5fedc71567": {
+    "metadata": {
+      "created_at": "2026-02-15T20:22:11.087272Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:9ebbd160e37bd9608dff7cc32f67fafa955d0b01967fec698622dfa429633845"
+  },
+  "toolrun:toolrun-ca429124-21e6-4e5c-a78c-215568db8a31": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-15T13:46:43.233233Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:f0080c12e0f64336f071acc78459cf81e48058075e8b5f8d95027a67b67d7040"
+  },
+  "toolrun:toolrun-d07275c8-3696-4118-b71c-0bd64d82c756": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-26T20:57:24.753370Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:e0a573d703907dfdf3fb19ff2d76d5d66d5eeb0d204dc012d2b80fab2e26b7f4"
+  },
+  "toolrun:toolrun-d085e270-3fa5-4d1c-9467-2ab528c15ba2": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-30T18:12:34.360310Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:d5b31a65ffec82ea9cfa73273b4e2b18117a5d397cef3c2907ad95c955d59d1e"
+  },
+  "toolrun:toolrun-d0905fcb-c6c3-4576-a741-ba5031590dff": {
+    "metadata": {
+      "created_at": "2026-02-15T16:09:16.233885Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:7c47361db4b026fa1ccb25d852c76aad3cc780a6b32a12546ecbca1f905104c4"
+  },
+  "toolrun:toolrun-d53228b5-c8fa-430b-842d-35360e6d8c66": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-04-05T19:28:49.725216Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:07b7132869450ba96d9f5ab48802cd0e663c16f38494ca3323f5b73a296d7516"
+  },
+  "toolrun:toolrun-d898a240-844d-45bc-999c-e2a468b96440": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-20T08:38:19.249491Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:d5782085bc739981c8ba3c19dc4c18f920fb1b9789351ca75be35eb3bb78c7a2"
+  },
+  "toolrun:toolrun-da2d2f48-996f-42f6-8208-0fca4b11ff06": {
+    "metadata": {
+      "created_at": "2026-02-15T16:08:36.712784Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:d455f10dcd8aee346aa5b7c98209206bf480002278f0b437ecc5cb63542df46c"
+  },
+  "toolrun:toolrun-daf0f601-6a86-4a67-98ce-95e5fa23e4da": {
+    "metadata": {
+      "created_at": "2026-02-15T16:22:39.412288Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:83be725224af960bdc9a1eae207ae753c08ff004e46d593ba5722bf1c7a85930"
+  },
+  "toolrun:toolrun-db54a865-9c9e-4859-b6ca-2b407c95e442": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-02-16T13:46:46.058166Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:1ca107dae83e1803aac379620edcacb139eb521e15a84ade6663f654b3675e8b"
+  },
+  "toolrun:toolrun-dd4bb95b-181d-45d7-954e-22d31f3bf99b": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-21T15:48:54.835368Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:e3ae435a7f04f391e107c0af5d012a3e144177c2fae4d31f254877fb9e34ab29"
+  },
+  "toolrun:toolrun-ddbe56a9-44d4-4782-ac79-6fedc5267b34": {
+    "metadata": {
+      "created_at": "2026-02-15T15:35:31.884039Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:5f38016bd03db8f0e9afcc604a26c1773f69f0084f2daf293680dcc1b99c6b51"
+  },
+  "toolrun:toolrun-e3d5c743-d06f-49d0-8ce6-986361f5cd7e": {
+    "metadata": {
+      "created_at": "2026-02-15T15:29:24.364242Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:8e599060069df1bfc79d587629bd14c50957eab8a12b647c415f9aff1f62d6f2"
+  },
+  "toolrun:toolrun-e5ac594b-6989-4009-a84f-57b0fa6cfce7": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-06T16:19:12.642995Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:aef4da4dac3fe97c7d642a5eab16c44067daf1a883f178fbec1ba8b1274b1d0a"
+  },
+  "toolrun:toolrun-e6f5a1a2-23bf-41da-8c5c-88671bdc08f5": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-29T17:56:29.133356Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:060a162bb35fba0f196be76447d9cb5dd40e2655ac44f96c8a52226f2be687e8"
+  },
+  "toolrun:toolrun-ea815df4-3d12-4389-bb86-54bd4d9e9020": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-15T16:14:25.828288Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:0f1b5a019bb28e9a2777e2857a333517ba025d829c9c6fc27723985ae58b0b73"
+  },
+  "toolrun:toolrun-ec037d10-d5cc-4c16-80d8-1099d2dfdedd": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-02-27T18:49:19.422886Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:eaa6a29c9db11f675bf01c73adcd628b9d3bc392fab4b4eed89e272f96a6bc84"
+  },
+  "toolrun:toolrun-ec71dacb-5a65-42ca-82e3-0781d1ae36d0": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-04-05T18:59:08.989952Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:30fe22419200366fb07443918e694cd054505017b86a25ed15efc1e3a0c1e456"
+  },
+  "toolrun:toolrun-f038ffd6-387b-4d4d-bcbe-d535623231d1": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-22T16:22:54.882726Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:28d08ce45b7724d4a4aae2e9e6a47949866c91eb9d0515bee9a93adac657296c"
+  },
+  "toolrun:toolrun-f5a083fb-38b7-4464-9408-9399fff49b08": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-02-16T14:12:55.587687Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:58b1b3a9bd857a1e81ee1327fba514213a73f41eeb2b8437f6b429608fb89042"
+  },
+  "toolrun:toolrun-f62cc212-390d-4170-ac49-06056e4c5637": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-15T18:45:09.387862Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:d7f99f69866b23e7b650acb0b3f35f7f7071b89cfa1079e5db54a3496001d483"
+  },
+  "toolrun:toolrun-f8c16d7d-5e36-4c06-9049-861ad0f89d08": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-24T20:32:17.988261Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:b122b169453b1b7798f42fb03d711858af58278d1835e32d4e55a39205faae70"
+  },
+  "toolrun:toolrun-f8cbd7e2-8e61-48b0-8564-2195fa095cfb": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-24T11:53:13.701330Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:93f720a90f8f2921893877e187aa63f5be143897d06e9d4ada5886dc809d024e"
+  },
+  "toolrun:toolrun-ff96f153-db93-48b2-b658-e9e2dbd96ec1": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-24T21:22:10.385581Z",
+      "path_context_id": "coding-coding-test-CODE-001",
+      "raw_context_id": "coding-coding-test-CODE-001"
+    },
+    "ref": "artifact:sha256:1cab995d40853a0b60b171dc6585465c620b0157081320fdf232d5893ccbaaa8"
+  }
+}

@@ -40,6 +40,21 @@ mcp = FastMCP(
 
 TENANT_ID = os.getenv("REPOGRAPH_TENANT_ID")
 
+# Write tools mutate the local filesystem and are OFF by default. RepoGraph's
+# core contract is purely structural, read-only retrieval. Set
+# REPOGRAPH_ENABLE_WRITE_TOOLS=1 to expose write_file/update_file/etc.
+WRITE_TOOLS_ENABLED = os.getenv("REPOGRAPH_ENABLE_WRITE_TOOLS", "").lower() in {"1", "true", "yes"}
+
+
+def _write_tool(*d_args, **d_kwargs):
+    """Register a tool only when write tools are explicitly enabled."""
+    def decorator(func):
+        if WRITE_TOOLS_ENABLED:
+            return mcp.tool(*d_args, **d_kwargs)(func)
+        return func
+
+    return decorator
+
 
 def index_repo_impl(repo_path: str, force: bool = False) -> str:
     result = _handle_api_call(api_index_repo, IndexRequest(repo_path=repo_path, force=force), x_tenant_id=TENANT_ID)
@@ -224,6 +239,27 @@ def prepare_task_context(
     return format_for_consumer(response, consumer)
 
 
+@mcp.tool(name="build_analysis_plan")
+def build_analysis_plan(
+    repo_path: str,
+    query: str,
+    output_profile: str = "review",
+    target_context: int = 8192,
+) -> dict[str, Any]:
+    """Build a retrieval-level analyze-code plan. The plan is step decomposition, not autonomous execution."""
+    from repograph.shared_retrieval import SharedRetrievalRequest
+    from repograph.shared_retrieval.analysis import build_analysis_plan as _build_plan
+    req = SharedRetrievalRequest(
+        repo_path=repo_path,
+        query=query,
+        output_profile=output_profile,
+        target_context=target_context,
+        consumer="generic",
+        tenant_id=TENANT_ID or "default",
+    )
+    return _build_plan(req).model_dump()
+
+
 @mcp.tool(name="build_prompt_pack")
 def build_prompt_pack(
     repo_path: str,
@@ -326,6 +362,268 @@ def invalidate_context_cache(repo_path: str) -> dict[str, Any]:
 
 def main() -> None:
     mcp.run(transport="stdio")
+
+
+# Write Operations
+@_write_tool()
+def write_file(file_path: str, content: str, tenant_id: str = "default") -> dict[str, Any]:
+    """
+    Write content to a file in the repository.
+
+    Args:
+        file_path: Path to the file to write
+        content: Content to write to the file
+        tenant_id: Tenant identifier for multi-tenancy support
+
+    Returns:
+        Result of the write operation
+    """
+    import os
+    from pathlib import Path
+
+    try:
+        # Ensure directory exists
+        Path(file_path).parent.mkdir(parents=True, exist_ok=True)
+
+        # Write file content
+        with open(file_path, 'w', encoding='utf-8') as f:
+            f.write(content)
+
+        return {
+            "status": "success",
+            "file_path": file_path,
+            "size": len(content),
+            "tenant_id": tenant_id
+        }
+    except Exception as e:
+        raise RuntimeError(f"Failed to write file {file_path}: {str(e)}")
+
+
+@_write_tool()
+def create_document(file_path: str, title: str, content: str,
+                   frontmatter: dict[str, Any] | None = None,
+                   tenant_id: str = "default") -> dict[str, Any]:
+    """
+    Create a new document with YAML frontmatter and content.
+
+    Args:
+        file_path: Path where the document should be created
+        title: Document title
+        content: Main content of the document
+        frontmatter: Optional YAML frontmatter dictionary
+        tenant_id: Tenant identifier for multi-tenancy support
+
+    Returns:
+        Result of the document creation
+    """
+    import yaml
+    from pathlib import Path
+
+    try:
+        # Prepare frontmatter
+        if frontmatter is None:
+            frontmatter = {}
+
+        frontmatter.update({
+            "title": title,
+            "created": "2026-04-28",
+            "tenant_id": tenant_id
+        })
+
+        # Build document content
+        doc_content = "---\n"
+        doc_content += yaml.dump(frontmatter, default_flow_style=False)
+        doc_content += "---\n\n"
+        doc_content += content
+
+        # Ensure directory exists
+        Path(file_path).parent.mkdir(parents=True, exist_ok=True)
+
+        # Write document
+        with open(file_path, 'w', encoding='utf-8') as f:
+            f.write(doc_content)
+
+        return {
+            "status": "success",
+            "file_path": file_path,
+            "title": title,
+            "size": len(doc_content),
+            "tenant_id": tenant_id
+        }
+    except Exception as e:
+        raise RuntimeError(f"Failed to create document {file_path}: {str(e)}")
+
+
+@_write_tool()
+def update_file(file_path: str, content: str, backup: bool = True,
+                tenant_id: str = "default") -> dict[str, Any]:
+    """
+    Update an existing file with new content.
+
+    Args:
+        file_path: Path to the file to update
+        content: New content for the file
+        backup: Whether to create a backup of the original file
+        tenant_id: Tenant identifier for multi-tenancy support
+
+    Returns:
+        Result of the update operation
+    """
+    import shutil
+    from pathlib import Path
+
+    try:
+        file_path_obj = Path(file_path)
+
+        # Check if file exists
+        if not file_path_obj.exists():
+            raise RuntimeError(f"File {file_path} does not exist")
+
+        # Create backup if requested
+        backup_path = None
+        if backup:
+            backup_path = f"{file_path}.backup"
+            shutil.copy2(file_path, backup_path)
+
+        # Update file content
+        with open(file_path, 'w', encoding='utf-8') as f:
+            f.write(content)
+
+        return {
+            "status": "success",
+            "file_path": file_path,
+            "backup_path": backup_path,
+            "size": len(content),
+            "tenant_id": tenant_id
+        }
+    except Exception as e:
+        raise RuntimeError(f"Failed to update file {file_path}: {str(e)}")
+
+
+@_write_tool()
+def create_directory(dir_path: str, tenant_id: str = "default") -> dict[str, Any]:
+    """
+    Create a directory structure.
+
+    Args:
+        dir_path: Path of the directory to create
+        tenant_id: Tenant identifier for multi-tenancy support
+
+    Returns:
+        Result of the directory creation
+    """
+    from pathlib import Path
+
+    try:
+        Path(dir_path).mkdir(parents=True, exist_ok=True)
+
+        return {
+            "status": "success",
+            "dir_path": dir_path,
+            "tenant_id": tenant_id
+        }
+    except Exception as e:
+        raise RuntimeError(f"Failed to create directory {dir_path}: {str(e)}")
+
+
+@_write_tool()
+def save_spec(spec_name: str, spec_content: str, version: str = "v1",
+              spec_type: str = "design", tenant_id: str = "default") -> dict[str, Any]:
+    """
+    Save a specification document to the repository.
+
+    Args:
+        spec_name: Name of the specification
+        spec_content: Content of the specification
+        version: Version of the specification
+        spec_type: Type of specification (design, api, ui, etc.)
+        tenant_id: Tenant identifier for multi-tenancy support
+
+    Returns:
+        Result of the spec save operation
+    """
+    import yaml
+    from pathlib import Path
+
+    try:
+        # Determine file path based on spec type and name
+        specs_dir = Path("specs") / spec_type
+        file_path = specs_dir / f"{spec_name}_{version}.md"
+
+        # Prepare frontmatter
+        frontmatter = {
+            "spec_name": spec_name,
+            "version": version,
+            "spec_type": spec_type,
+            "created": "2026-04-28",
+            "tenant_id": tenant_id
+        }
+
+        # Build document content
+        doc_content = "---\n"
+        doc_content += yaml.dump(frontmatter, default_flow_style=False)
+        doc_content += "---\n\n"
+        doc_content += spec_content
+
+        # Ensure directory exists
+        specs_dir.mkdir(parents=True, exist_ok=True)
+
+        # Write specification
+        with open(file_path, 'w', encoding='utf-8') as f:
+            f.write(doc_content)
+
+        return {
+            "status": "success",
+            "file_path": str(file_path),
+            "spec_name": spec_name,
+            "version": version,
+            "spec_type": spec_type,
+            "size": len(doc_content),
+            "tenant_id": tenant_id
+        }
+    except Exception as e:
+        raise RuntimeError(f"Failed to save specification {spec_name}: {str(e)}")
+
+
+@_write_tool()
+def sync_from_project(source_path: str, target_path: str,
+                      tenant_id: str = "default") -> dict[str, Any]:
+    """
+    Sync a file from a project source to the repository.
+
+    Args:
+        source_path: Path to the source file in the project
+        target_path: Target path in the repository
+        tenant_id: Tenant identifier for multi-tenancy support
+
+    Returns:
+        Result of the sync operation
+    """
+    import shutil
+    from pathlib import Path
+
+    try:
+        source_file = Path(source_path)
+
+        # Check if source exists
+        if not source_file.exists():
+            raise RuntimeError(f"Source file {source_path} does not exist")
+
+        # Ensure target directory exists
+        Path(target_path).parent.mkdir(parents=True, exist_ok=True)
+
+        # Copy file
+        shutil.copy2(source_path, target_path)
+
+        return {
+            "status": "success",
+            "source_path": source_path,
+            "target_path": target_path,
+            "size": source_file.stat().st_size,
+            "tenant_id": tenant_id
+        }
+    except Exception as e:
+        raise RuntimeError(f"Failed to sync from {source_path} to {target_path}: {str(e)}")
 
 
 def _handle_api_call(func, *args, **kwargs):

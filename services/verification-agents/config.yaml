@@ -1,0 +1,17 @@
+# verification-agents Configuration
+service:
+  name: verification-agents
+  version: "1.0.0"
+  port: 8080
+
+kafka:
+  bootstrap_servers: "localhost:9092"
+  consumer_group: "verification-agents-group"
+
+logging:
+  level: INFO
+  format: json
+
+health:
+  check_interval: 30
+  timeout: 10

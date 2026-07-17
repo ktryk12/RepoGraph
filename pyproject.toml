@@ -1,41 +1,80 @@
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
 
 [project]
-name = "repograph"
+name = "babyai"
 version = "0.1.0"
-description = "Code intelligence knowledge graph for AI agents"
-requires-python = ">=3.11"
-license = {text = "MIT"}
+requires-python = ">=3.13,<3.14"
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: Implementation :: CPython",
+]
 dependencies = [
-    "cogdb>=3.0.7",
-    "tree-sitter>=0.21.0",
-    "tree-sitter-languages>=1.10.2; python_version < '3.13'",
-    "tree-sitter-language-pack>=1.1.2; python_version >= '3.13'",
-    "fastapi>=0.111.0",
-    "uvicorn>=0.29.0",
-    "pathspec>=0.12.1",
-    "httpx>=0.27.0",
-    "mcp>=1.0.0",
-    "sse-starlette<3",
-    "starlette<0.48",
+  "jsonschema>=4.21",
+  "referencing>=0.35",
+  "pyyaml>=6.0",
+  "scikit-learn>=1.4",
+  "confluent-kafka>=2.5",
+  "prometheus-client>=0.19",
+  "fastapi>=0.115",
+  "uvicorn>=0.30",
+  "httpx>=0.27",
+  "redis>=5,<6",
+  "pdfplumber>=0.11",
+  "python-multipart>=0.0.9",
+  "aiokafka>=0.10",
+  "aiohttp>=3.9",
+  "playwright>=1.40",
+  "json-repair>=0.10",
+  "pydantic>=2.0",
+  "langdetect>=1.0.9",
+  "mcp>=1.2",
+  "cogdb>=3.0",
+  "tree-sitter-language-pack>=0.13",
+  "pathspec>=0.12",
 ]
 
 [project.optional-dependencies]
 dev = [
-    "pytest>=8.0.0",
-    "pytest-asyncio>=0.23.0",
-    "httpx>=0.27.0",
+  "pytest>=9.0",
+  "pytest-asyncio>=1.0",
+  "pytest-cov>=7.0",
+  "pytest-mock>=3.14",
 ]
 cache = [
-    "redis>=5.0.0",
+  "redis>=5,<6",
 ]
 postgres = [
-    "psycopg2-binary>=2.9.0",
+  "psycopg2-binary>=2.9",
 ]
 
+[tool.pytest.ini_options]
+markers = [
+  "integration: integration tests (may require external services)",
+]
+norecursedirs = [
+  "artifacts",
+]
+
+[tool.setuptools]
+package-dir = {"" = "."}
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = [
+  "aesa*", "bus*", "core*", "ops*", "services*",
+  "config*", "schemas*", "eval*", "verify*",
+  "policy*", "ml*", "repo*", "agents*", "repobrain*", "babyai*"
+]
+exclude = ["tests*", "artifacts*", "*.egg-info*"]
+
 [project.scripts]
+babyai-gold = "eval.generate_gold_decisions:main"
+babyai-redteam = "verify.run_redteam_suite:main"
+brainctl = "cli.brainctl:main"
 repograph = "repograph.api.app:main"
 repograph-mcp = "repograph.mcp_server.server:main"
-repograph-migrate = "repograph.postgres.migrate:run"
+repograph-migrate = "repograph.postgres.migrate:main"
+repograph-autoindex = "repograph.autoindex:main"

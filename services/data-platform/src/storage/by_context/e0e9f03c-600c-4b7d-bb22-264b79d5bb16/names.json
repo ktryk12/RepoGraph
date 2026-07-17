@@ -1,0 +1,28 @@
+{
+  "repo_snapshot:6e56c20d3b3327847c7dd5a0c8524faae3c8b888d0acf94891eb3e1bf8800be8": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-24T21:51:00.307145Z",
+      "path_context_id": "e0e9f03c-600c-4b7d-bb22-264b79d5bb16",
+      "raw_context_id": "e0e9f03c-600c-4b7d-bb22-264b79d5bb16"
+    },
+    "ref": "artifact:sha256:489b0804f428973ddbbeaf2b743ad8366e3dcbb8c3d8dcfc8c57758989644f5e"
+  },
+  "universal_plan_v1": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-24T21:51:00.482156Z",
+      "kind": "UniversalPlan",
+      "parent_version": null,
+      "path_context_id": "e0e9f03c-600c-4b7d-bb22-264b79d5bb16",
+      "plan_id": "plan:sha256:357294716f32dc5f3543cdcd571b6f5acd58a9e8bd6e8030fa9aa1ac4c8b6dbf",
+      "plan_version": 1,
+      "raw_context_id": "e0e9f03c-600c-4b7d-bb22-264b79d5bb16"
+    },
+    "ref": "artifact:sha256:faf5cdb36d5d28ba2a631cb3eb7751a46629b8ada8574ea6f5ebddee25f2dfee"
+  }
+}

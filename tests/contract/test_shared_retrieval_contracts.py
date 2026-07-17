@@ -27,7 +27,7 @@ def test_prepare_task_context_response_shape_matches_contract(
         lambda **_: make_working_set(symbol_count=14, token_budget=sample_request.target_context),
     )
 
-    response = prepare_task_context(sample_request, fake_store).model_dump()
+    response = prepare_task_context(sample_request, fake_store).model_dump(exclude_none=True)
     shape = _golden("prepare_task_context_shape.json")
 
     assert set(response) == set(shape["top_level"])
@@ -179,3 +179,164 @@ def test_claude_code_consumer_contract_preserves_flat_prompt_and_full_envelope(
     assert "verification_plan" in api_payload
     assert "retrieval_trace_id" in api_payload
     assert "cache" in api_payload
+
+
+def test_babyai_agent_consumer_contract_is_structured_first_and_marks_prompt_ownership(
+    api_client,
+    fake_store,
+    fake_redis,
+    fake_tracer,
+    monkeypatch,
+) -> None:
+    req = SharedRetrievalRequest(
+        repo_path="/repo",
+        query="Prepare structured retrieval for babyAI orchestration",
+        consumer="babyai_agent",
+        output_profile="patch",
+        target_context=6000,
+    )
+    monkeypatch.setattr(
+        "repograph.shared_retrieval.gateway.build_working_set",
+        lambda **_: make_working_set(symbol_count=12, token_budget=req.target_context),
+    )
+
+    response = prepare_task_context(req, fake_store)
+    payload = format_for_consumer(response, "babyai_agent")
+
+    assert payload["payload_mode"] == "structured_retrieval_pack"
+    assert payload["prompt_assembly_owner"] == "babyai"
+    assert payload["consumer"] == "babyai_agent"
+    assert payload["retrieval_trace_id"] == response.retrieval_trace_id
+    assert payload["cache"] == response.cache.model_dump()
+    assert "prompt" not in payload
+    assert payload["context_blocks"]
+    assert payload["verification_plan_available"] is True
+
+    api_response = api_client.post(
+        "/shared-retrieval/prepare",
+        json={
+            "repo_path": "/repo",
+            "query": "Prepare structured retrieval for babyAI orchestration",
+            "consumer": "babyai_agent",
+            "output_profile": "patch",
+            "target_context": 6000,
+        },
+    )
+
+    assert api_response.status_code == 200
+    api_payload = api_response.json()
+    assert api_payload["payload_mode"] == "structured_retrieval_pack"
+    assert api_payload["prompt_assembly_owner"] == "babyai"
+    assert api_payload["consumer"] == "babyai_agent"
+    assert "prompt" not in api_payload
+
+
+def test_newmodel_consumer_contract_preserves_structured_pack_without_babyai_ownership(
+    fake_store,
+    fake_redis,
+    fake_tracer,
+    monkeypatch,
+) -> None:
+    req = SharedRetrievalRequest(
+        repo_path="/repo",
+        query="Prepare structured retrieval for NewModel direct consumption",
+        consumer="newmodel",
+        output_profile="patch",
+        target_context=6000,
+    )
+    monkeypatch.setattr(
+        "repograph.shared_retrieval.gateway.build_working_set",
+        lambda **_: make_working_set(symbol_count=10, token_budget=req.target_context),
+    )
+
+    response = prepare_task_context(req, fake_store)
+    payload = format_for_consumer(response, "newmodel")
+
+    assert payload["payload_mode"] == "structured_retrieval_pack"
+    assert payload["prompt_assembly_owner"] == "newmodel"
+    assert payload["consumer"] == "newmodel"
+    assert payload["retrieval_trace_id"] == response.retrieval_trace_id
+    assert payload["cache"] == response.cache.model_dump()
+    assert "prompt" not in payload
+
+
+def test_codex_consumer_contract_keeps_prompt_ready_messages(
+    fake_store,
+    fake_redis,
+    fake_tracer,
+    monkeypatch,
+) -> None:
+    req = SharedRetrievalRequest(
+        repo_path="/repo",
+        query="Prepare prompt-ready Codex payload",
+        consumer="codex",
+        output_profile="small",
+        target_context=4096,
+    )
+    monkeypatch.setattr(
+        "repograph.shared_retrieval.gateway.build_working_set",
+        lambda **_: make_working_set(symbol_count=8, token_budget=req.target_context),
+    )
+
+    response = prepare_task_context(req, fake_store)
+    payload = format_for_consumer(response, "codex")
+
+    assert payload["messages"][0]["role"] == "system"
+    assert payload["messages"][1]["role"] == "user"
+    assert payload["task_id"] == response.task_id
+    assert payload["token_estimate"] == response.prompt_pack.total_tokens
+
+
+def test_analyze_plan_shape_matches_contract(api_client) -> None:
+    response = api_client.post(
+        "/shared-retrieval/analyze-plan",
+        json={
+            "repo_path": "/repo",
+            "query": "analyze the codebase and understand the repo",
+            "output_profile": "review",
+            "target_context": 8192,
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    shape = _golden("analysis_plan_shape.json")
+
+    assert set(payload) == set(shape["top_level"])
+    assert payload["steps"]
+    assert set(payload["steps"][0]) == set(shape["step_keys"])
+    assert set(payload["steps"][0]["verification_plan"]) == set(shape["verification_plan_keys"])
+
+
+def test_prepare_broad_analysis_query_returns_step_envelope_and_analysis_plan_contract(
+    api_client,
+    monkeypatch,
+) -> None:
+    monkeypatch.setattr(
+        "repograph.shared_retrieval.gateway.build_working_set",
+        lambda **kwargs: make_working_set(
+            symbol_count=16,
+            token_budget=kwargs["token_budget"],
+            task_family=kwargs.get("task_hint") or "targeted_refactor",
+            query=kwargs["query"],
+        ),
+    )
+
+    response = api_client.post(
+        "/shared-retrieval/prepare",
+        json={
+            "repo_path": "/repo",
+            "query": "analyze the code and understand this repo",
+            "consumer": "generic",
+            "output_profile": "review",
+            "target_context": 8192,
+        },
+    )
+
+    assert response.status_code == 200
+    payload = response.json()
+    shape = _golden("analysis_step_envelope_shape.json")
+
+    assert set(payload) == set(shape["top_level"])
+    assert payload["analysis_plan"]["steps"]
+    assert payload["analysis_step_id"] == payload["analysis_plan"]["steps"][0]["step_id"]

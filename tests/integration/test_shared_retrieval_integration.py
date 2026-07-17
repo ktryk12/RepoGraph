@@ -141,3 +141,36 @@ def test_multiple_consumers_get_expected_shapes(
     assert "messages" in codex
     assert "working_set" in babyai
     assert "prompt_pack" in generic
+
+
+def test_broad_analyze_query_returns_multi_step_plan_and_budget_aware_first_step(
+    fake_store,
+    fake_redis,
+    fake_tracer,
+    monkeypatch,
+) -> None:
+    req = SharedRetrievalRequest(
+        repo_path="/repo",
+        query="analyze the code and understand this repo",
+        consumer="claude_code",
+        output_profile="review",
+        target_context=8192,
+    )
+    monkeypatch.setattr(
+        "repograph.shared_retrieval.gateway.build_working_set",
+        lambda **kwargs: make_working_set(
+            symbol_count=18,
+            token_budget=kwargs["token_budget"],
+            task_family=kwargs.get("task_hint") or "targeted_refactor",
+            query=kwargs["query"],
+        ),
+    )
+
+    response = prepare_task_context(req, fake_store)
+    claude = format_for_consumer(response, "claude_code")
+
+    assert response.analysis_plan is not None
+    assert len(response.analysis_plan.steps) >= 8
+    assert response.prompt_pack.total_tokens <= response.prompt_pack.target_context
+    assert claude["analysis_step_id"] == response.analysis_step_id
+    assert "analysis_plan" in claude

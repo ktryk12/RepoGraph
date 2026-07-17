@@ -1,0 +1,251 @@
+# Kafka Contract for provenance-service
+# ADR-0015: True Kafka-First Microservices - Phase 2: Database-per-Service
+
+contract_version: "1.0.0"
+service_name: "provenance-service"
+envelope_version: "v1"
+last_updated: "2026-04-27"
+
+# Core responsibility: Provenance tracking and audit trail management
+bounded_context: "provenance-platform"
+
+# Consumer Contracts - Events this service listens to
+consumers:
+  # Provenance edge creation requests
+  - topic: provenance.edge.create.v1
+    description: "Create provenance edge between entities"
+    schema_path: schemas/provenance/edge_create_v1.json
+    consumer_group: "provenance-service-workers"
+    dlq_topic: provenance.edge.create.v1.dlq
+    idempotency_strategy: "edge_hash"
+    phase: "2"
+    migration_notes: "Replaces direct ProvenanceStore.append_edge calls"
+
+  # Lineage query requests
+  - topic: provenance.lineage.query.v1
+    description: "Query artifact lineage and causality chain"
+    schema_path: schemas/provenance/lineage_query_v1.json
+    consumer_group: "provenance-service-workers"
+    dlq_topic: provenance.lineage.query.v1.dlq
+    idempotency_strategy: "correlation_id"
+    phase: "2"
+
+  # Decision provenance requests
+  - topic: provenance.decision.explain.v1
+    description: "Explain decision provenance and impact chain"
+    schema_path: schemas/provenance/decision_explain_v1.json
+    consumer_group: "provenance-service-workers"
+    dlq_topic: provenance.decision.explain.v1.dlq
+    idempotency_strategy: "correlation_id"
+    phase: "2"
+
+  # Bulk provenance import requests
+  - topic: provenance.import.bulk.v1
+    description: "Import provenance edges from JSONL files"
+    schema_path: schemas/provenance/import_bulk_v1.json
+    consumer_group: "provenance-service-workers"
+    dlq_topic: provenance.import.bulk.v1.dlq
+    idempotency_strategy: "import_batch_id"
+    phase: "2"
+
+  # Graph validation requests
+  - topic: provenance.validate.graph.v1
+    description: "Validate provenance graph integrity"
+    schema_path: schemas/provenance/validate_graph_v1.json
+    consumer_group: "provenance-service-workers"
+    dlq_topic: provenance.validate.graph.v1.dlq
+    idempotency_strategy: "correlation_id"
+    phase: "2"
+
+# Producer Contracts - Events this service publishes
+producers:
+  # Provenance edge creation responses
+  - topic: provenance.edge.created.v1
+    description: "Provenance edge successfully created"
+    schema_path: schemas/provenance/edge_created_v1.json
+    dlq_topic: provenance.edge.created.v1.dlq
+    phase: "2"
+    migration_notes: "Replaces direct ProvenanceStore return values"
+
+  # Lineage query responses
+  - topic: provenance.lineage.result.v1
+    description: "Artifact lineage analysis results"
+    schema_path: schemas/provenance/lineage_result_v1.json
+    dlq_topic: provenance.lineage.result.v1.dlq
+    phase: "2"
+
+  # Decision explanation responses
+  - topic: provenance.decision.explained.v1
+    description: "Decision provenance explanation results"
+    schema_path: schemas/provenance/decision_explained_v1.json
+    dlq_topic: provenance.decision.explained.v1.dlq
+    phase: "2"
+
+  # Bulk import completion events
+  - topic: provenance.import.completed.v1
+    description: "Bulk provenance import completed"
+    schema_path: schemas/provenance/import_completed_v1.json
+    dlq_topic: provenance.import.completed.v1.dlq
+    phase: "2"
+
+  # Graph validation results
+  - topic: provenance.validation.completed.v1
+    description: "Provenance graph validation results"
+    schema_path: schemas/provenance/validation_completed_v1.json
+    dlq_topic: provenance.validation.completed.v1.dlq
+    phase: "2"
+
+  # Provenance analytics events
+  - topic: provenance.analytics.v1
+    description: "Provenance graph analytics and insights"
+    schema_path: schemas/provenance/analytics_v1.json
+    dlq_topic: provenance.analytics.v1.dlq
+    phase: "2"
+    migration_notes: "New analytics capability not available in direct access"
+
+  # Audit trail events
+  - topic: provenance.audit.trail.v1
+    description: "Audit trail for provenance operations"
+    schema_path: schemas/provenance/audit_trail_v1.json
+    dlq_topic: provenance.audit.trail.v1.dlq
+    phase: "2"
+
+  # Graph integrity alerts
+  - topic: provenance.integrity.alert.v1
+    description: "Provenance graph integrity issues detected"
+    schema_path: schemas/provenance/integrity_alert_v1.json
+    dlq_topic: provenance.integrity.alert.v1.dlq
+    phase: "2"
+    migration_notes: "New integrity monitoring capability"
+
+# Legacy Support - During migration from shared provenance
+legacy_support:
+  # HTTP API for migration compatibility
+  http_endpoints:
+    - path: "/api/v1/edges"
+      methods: ["POST"]
+      phase_out: "Phase 3"
+      migration_target: "provenance.edge.create.v1 events"
+      notes: "Direct edge creation for services not yet using events"
+
+    - path: "/api/v1/lineage/{artifact_ref}"
+      methods: ["GET"]
+      phase_out: "Phase 3"
+      migration_target: "provenance.lineage.query.v1 events"
+      notes: "Direct lineage queries during migration"
+
+    - path: "/api/v1/decision/{decision_id}"
+      methods: ["GET"]
+      phase_out: "Phase 3"
+      migration_target: "provenance.decision.explain.v1 events"
+      notes: "Direct decision explanations during migration"
+
+  # Database migration from shared provenance
+  database_migration:
+    - source: "shared/babyai_shared/provenance/provenance.sqlite"
+      target: "services/provenance-service/database/provenance_graph.db"
+      migration_strategy: "sqlite_consolidation_with_enhancement"
+      phase_out: "End of Phase 2"
+      compatibility_layer: "dual_write_during_migration"
+
+# DLQ and Reliability Patterns
+dlq_patterns:
+  poison_message_topic: "system.dlq.poison.v1"
+  retry_topic: "system.retry.scheduled.v1"
+  max_retries: 5  # Provenance operations may need more retries
+  retry_backoff: "exponential"
+  dlq_retention_hours: 168  # 7 days
+
+# Idempotency and Reliability
+reliability:
+  idempotency_key_source: "edge_hash"
+  duplicate_detection_window_hours: 24
+  message_ordering: "partition_key_based"
+  partition_key_strategy: "src_id"
+  consistency_model: "strong"  # Audit trails require strong consistency
+
+# Phase 2 Migration Checklist
+migration_phase_2:
+  current_state:
+    - "⏳ SQLite database extraction in progress"
+    - "⏳ Service boundaries being defined"
+    - "⏳ Event schemas being created"
+    - "⏳ Migration service being implemented"
+
+  target_state:
+    - "⏳ Provenance graph database fully owned by provenance-service"
+    - "⏳ All provenance operations use provenance-service events"
+    - "⏳ Services no longer access shared provenance.sqlite"
+    - "⏳ Enhanced provenance analytics and integrity checking"
+    - "⏳ Audit trail validation and lineage optimization"
+
+# Schema Validation Requirements
+validation:
+  envelope_validation: true
+  payload_validation: true
+  schema_registry_integration: false  # Phase 3+
+  backward_compatibility: true
+  edge_validation: true
+
+# Database Migration Strategy
+database_migration:
+  strategy: "sqlite_consolidation_with_graph_enhancement"
+
+  migration_phases:
+    1. "Extract shared provenance.sqlite to provenance-service ownership"
+    2. "Add enhanced schema with analytics and validation"
+    3. "Implement event-driven API alongside direct access"
+    4. "Migrate services to use provenance events"
+    5. "Validate graph integrity and performance"
+    6. "Remove shared provenance access"
+    7. "Add graph analytics and monitoring capabilities"
+
+  data_validation:
+    - "Provenance edge count verification"
+    - "Graph connectivity validation"
+    - "Temporal ordering consistency"
+    - "Metadata integrity verification"
+    - "Lineage chain completeness"
+
+# Observability and Monitoring
+observability:
+  correlation_id_propagation: required
+  distributed_tracing: "enabled"
+  topic_metrics: ["message_rate", "error_rate", "latency_p95", "graph_size"]
+  dlq_alerting: "enabled"
+
+  provenance_specific_metrics:
+    - "edge_creation_duration"
+    - "lineage_query_depth"
+    - "graph_size_growth_rate"
+    - "validation_success_rate"
+    - "audit_trail_integrity"
+
+# Performance Requirements
+performance:
+  provenance_operations:
+    target_latency_p95: "200ms"
+    max_lineage_depth: 10
+    max_edges_per_query: 10000
+    concurrent_requests: 50
+
+  database:
+    connection_pool_size: 10
+    query_timeout: "30s"
+    max_result_size: "10MB"
+
+  analytics:
+    batch_size: 1000
+    analysis_interval_hours: 24
+    retention_cleanup_batch_size: 1000
+
+# Phase 2 Success Criteria
+success_criteria:
+  - "Provenance graph extracted from shared directory to provenance-service"
+  - "All provenance operations use provenance-service events or API"
+  - "Services no longer have direct provenance.sqlite access"
+  - "Graph integrity validation operational"
+  - "Lineage analysis performance optimized"
+  - "Zero provenance data loss during migration process"
+  - "Provenance operation latency remains under 200ms P95"
+  - "Audit trail integrity validation working"

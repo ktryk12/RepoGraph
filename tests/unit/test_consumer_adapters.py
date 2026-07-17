@@ -68,4 +68,4 @@ def test_generic_consumer_still_returns_full_model_dump() -> None:
 
     payload = format_for_consumer(response, "generic")
 
-    assert payload == response.model_dump()
+    assert payload == response.model_dump(exclude_none=True)

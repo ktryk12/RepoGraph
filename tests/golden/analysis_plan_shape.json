@@ -1,0 +1,27 @@
+{
+  "top_level": [
+    "plan_kind",
+    "query",
+    "rationale",
+    "steps"
+  ],
+  "step_keys": [
+    "depends_on",
+    "objective",
+    "priority",
+    "step_id",
+    "step_kind",
+    "step_query",
+    "suggested_output_profile",
+    "suggested_target_context",
+    "task_hint",
+    "verification_plan",
+    "working_set_hint"
+  ],
+  "verification_plan_keys": [
+    "lint",
+    "static_analysis",
+    "tests",
+    "typecheck"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "file_count": 1,
+  "task_count": 1,
+  "task_ids": [
+    "EVAL-949"
+  ],
+  "files": [
+    {
+      "task_id": "EVAL-949",
+      "path": "EVAL-949.json",
+      "sha256": "a08b4812931fc4c77c200835e1fc71dcf0aab58002bdd7eaf14f15fc9d9a5f04",
+      "size_bytes": 1729,
+      "line_count": 79
+    }
+  ]
+}

@@ -1,0 +1,84 @@
+{
+  "artifacts": [
+    {
+      "bytes": 20842,
+      "created_at_utc": "2026-03-21T16:50:21.347313Z",
+      "name": "benchmark_latest_json",
+      "path": "artifacts/benchmark/benchmark_latest.json",
+      "sha256": "2340f1974910050f6e195e343e410068b1b700c2ae5b7f668705c70677b1fbaf"
+    },
+    {
+      "bytes": 701,
+      "created_at_utc": "2026-03-21T16:50:21.347313Z",
+      "name": "benchmark_latest_md",
+      "path": "artifacts/benchmark/benchmark_latest.md",
+      "sha256": "4b26437087d9ea9cc52d03862d66392ba6deea14ef1bee31831e5df2432deb80"
+    },
+    {
+      "bytes": 648,
+      "created_at_utc": "2026-03-21T16:50:21.347313Z",
+      "name": "build_info_json",
+      "path": "artifacts/meta/build_info.json",
+      "sha256": "d328ffc9a735b5eb4bf4d3aab68e7488cc687573ecadbe29134df7cfef4e80c7"
+    },
+    {
+      "bytes": 20842,
+      "created_at_utc": "2026-03-21T16:50:21.347313Z",
+      "name": "compat_latest_scoreline_json",
+      "path": "artifacts/benchmark/latest_scoreline.json",
+      "sha256": "2340f1974910050f6e195e343e410068b1b700c2ae5b7f668705c70677b1fbaf"
+    },
+    {
+      "bytes": 322,
+      "created_at_utc": "2026-03-21T16:50:21.347313Z",
+      "name": "eval_manifest_json",
+      "path": "artifacts/benchmark/eval_set_manifest.json",
+      "sha256": "fdbc59ff39be1a8cdc6500bdb8badaf94c27cc0bb947c3df8b145f17f279745f"
+    },
+    {
+      "bytes": 8532,
+      "created_at_utc": "2026-03-21T16:50:21.347313Z",
+      "name": "fault_suite_json",
+      "path": "artifacts/benchmark/fault_suite_latest.json",
+      "sha256": "571e505d8eb8157b5c60b32de2b6339fd1d95c30c612c334d5fff22e9cad8634"
+    },
+    {
+      "bytes": 3220,
+      "created_at_utc": "2026-03-21T16:50:21.347313Z",
+      "name": "judge_quality_json",
+      "path": "artifacts/benchmark/judge_quality_latest.json",
+      "sha256": "ca2b6d3ac3929eb4deb2cf9d19b3e0ee464b6a916b0e2702a6ea11472703e83d"
+    },
+    {
+      "bytes": 20842,
+      "created_at_utc": "2026-03-21T16:50:21.347313Z",
+      "name": "latest_scoreline_json",
+      "path": "C:/Users/Admin/AppData/Local/Temp/pytest-of-Admin/pytest-688/test_benchmark_includes_tool_c0/scorecard.json",
+      "sha256": "2340f1974910050f6e195e343e410068b1b700c2ae5b7f668705c70677b1fbaf"
+    },
+    {
+      "bytes": 511,
+      "created_at_utc": "2026-03-21T16:50:21.347313Z",
+      "name": "per_task_jsonl",
+      "path": "artifacts/benchmark/per_task_latest.jsonl",
+      "sha256": "ec02b3fa1ad85d6ccb95890dac8b48d96311ba321cb587f7e27fcbc3e485ba92"
+    },
+    {
+      "bytes": 2993,
+      "created_at_utc": "2026-03-21T16:50:21.347313Z",
+      "name": "resolved_config_json",
+      "path": "artifacts/meta/resolved_config.json",
+      "sha256": "8491e1f988db36b55975d0c26b55e1ce3a72e91a12485aebcdcba971536aef43"
+    }
+  ],
+  "constitution": {
+    "constitution_effective_from": "2026-02-16T00:00:00Z",
+    "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+    "constitution_path": "E:/repos/babyAI/babyAI/policy/constitution.yaml",
+    "constitution_schema_version": 1,
+    "constitution_version": "v1"
+  },
+  "created_at_utc": "2026-03-21T16:50:21.347313Z",
+  "run_id": "local-2026-03-21T16:50",
+  "schema_version": 1
+}

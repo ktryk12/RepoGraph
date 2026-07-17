@@ -1,0 +1,246 @@
+{
+  "artifacts": {
+    "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+    "constitution_version": "v1",
+    "context_id": "selftest-ctx-22767b62df",
+    "log_path": "logs/episode_f7fc0de9-ba63-47ff-b153-3366bec00195.jsonl"
+  },
+  "decision": {
+    "bounded_contexts": [
+      {
+        "name": "Core",
+        "stability": "medium"
+      }
+    ],
+    "chosen_style": "modular_monolith",
+    "decision_id": "arch_EVAL-001",
+    "generated_output": {
+      "model_ref": "general",
+      "runner_ref": "llama.cpp",
+      "text": "-checking\n==================================\n\nDenne version af MVP er en meget enkelt version, der ikke indeholder nogen compliance-checking.\n\n```python\nimport random\nimport time\n\nclass MVP:\n    def __init__(self, n, m, s, t, p, q, r, seed):\n        self.n = n\n        self.m = m\n        self.s = s\n        self.t = t\n        self.p = p\n        self.q = q\n        self.r = r\n        self.seed = seed\n        self.a = None\n        self.b = None\n        self.c = None\n        self.d = None\n        self.e = None\n        self.f = None\n        self.g = None\n        self.h = None\n        self.i = None\n        self.j = None\n        self.k = None\n        self.l = None\n        self.m = None\n        self.n = None\n        self.o = None\n        self.p = None\n        self.q = None\n        self.r",
+      "trace": {
+        "n_predict": 256,
+        "prompt_hash": "1c001bf40921c0aee910fb3c22ea2a1d0d2cb7b0f5668564455cde4c9b0c7035",
+        "purpose": "default",
+        "seed": 2422704987
+      }
+    },
+    "ops_readiness": {
+      "observability": {
+        "present": true
+      }
+    },
+    "rationale": [
+      {
+        "evidence_path": "$.constraints.team_size",
+        "reason": "Small team + limited time -> minimize operational complexity",
+        "signal": "evidence used: limited delivery capacity",
+        "weight": 0.8
+      },
+      {
+        "evidence_path": "$.constraints.time_to_mvp_days",
+        "reason": "Fallback rationale (delivery horizon noted)",
+        "signal": "evidence used: delivery horizon noted",
+        "weight": 0.7
+      },
+      {
+        "evidence_path": "$.nfr.operability.observability_level",
+        "reason": "Fallback rationale (runtime visibility expected)",
+        "signal": "evidence used: runtime visibility expected",
+        "weight": 0.7
+      },
+      {
+        "evidence_path": "$.spec.id",
+        "reason": "chosen_style overridden by ML style classifier",
+        "signal": "evidence used: limited delivery capacity (value 2, probability 1 000)",
+        "weight": 0.2
+      }
+    ],
+    "risks": [
+      {
+        "mitigation": "Iterate generator + stronger checks",
+        "risk": "Baseline may be naive"
+      }
+    ],
+    "spec_id": "spec_2026_01_22_0001",
+    "stop_conditions": [
+      "If infra/ops overhead rises, simplify topology"
+    ],
+    "topology": {
+      "core": "modular_monolith",
+      "separated_services": []
+    },
+    "verification_plan": [
+      "must_include:basic_observability | basic observability: structured logs + health + metrics",
+      "perf smoke: p95 <= 800ms at target load (~10 rps)",
+      "Basic rollback strategy for deployments (fallback to last stable release)"
+    ]
+  },
+  "episode_id": "f7fc0de9-ba63-47ff-b153-3366bec00195",
+  "eval_result": {
+    "errors": [],
+    "evidence": {
+      "missing_paths": [],
+      "present_paths": []
+    },
+    "must_include": {
+      "missing": [],
+      "present": []
+    },
+    "passed": true,
+    "penalties": [],
+    "scores": {
+      "architecture_fit": 1.0,
+      "functional": 1.0,
+      "security": 1.0,
+      "total": 1.0
+    }
+  },
+  "knobs": {
+    "approval_required": false,
+    "context_id": "selftest-ctx-22767b62df",
+    "decision_id": "selftest-22767b62df",
+    "effective_policy": {
+      "constraints": {
+        "write_scope": {
+          "type": "none"
+        }
+      },
+      "policy_id": "dev",
+      "policy_version": 1,
+      "quality_profile": {
+        "preset": "balanced"
+      },
+      "safety_profile": "balanced",
+      "version": "effective_policy.v1",
+      "write_scope": {
+        "type": "none"
+      }
+    },
+    "event_fingerprint": "88015eb9375c3f6dfe50523ffcf21f4be3ec421b1f7d4d848300eadb62d5b573",
+    "intake_artifact": {
+      "classification": "low",
+      "content_hash": "7b2cd3e24749456b1033c85232d66d900da358279920b41fbda8fb1c20aac13c",
+      "content_size": 1729,
+      "detected_pii": false,
+      "id": "b5661f17d9648afff43c45d7e79c99e26116ab1daafce063d1ec890e81ecce29",
+      "source_type": "legacy_orchestrator"
+    },
+    "policy_constraints": {
+      "write_scope": {
+        "type": "none"
+      }
+    },
+    "policy_explanation": {
+      "allowed": true,
+      "if_you_change": [
+        {
+          "change": "NONE->REPO",
+          "effect": "Expands write permissions to repository paths.",
+          "field": "write_scope",
+          "requires": "approval",
+          "risk": "Higher blast radius for unintended writes."
+        },
+        {
+          "change": "strict->balanced",
+          "effect": "Allows broader execution latitude.",
+          "field": "safety_profile",
+          "requires": "approval",
+          "risk": "Reduced guard strictness."
+        }
+      ],
+      "policy_id": "dev",
+      "preset": "dev",
+      "reason_code": "",
+      "safety_profile": "balanced",
+      "what_it_means": {
+        "execution": "can_start_immediately",
+        "tools": "allowed_under_effective_policy",
+        "writes": "allowed_under_effective_policy"
+      },
+      "why": [
+        "Policy validator allowed this request.",
+        "Effective write scope is 'none'."
+      ],
+      "write_scope": {
+        "type": "none"
+      }
+    },
+    "policy_fingerprint": "226d814fec4d9420ee5d932359e698b5126550017c891db4cb042f418ba92c71",
+    "policy_preset": "dev",
+    "policy_validator": {
+      "allowed": true,
+      "reason_code": null
+    },
+    "request_fingerprint": "e63e4c53d6a5a67181dc70327cfa72726c134a96ef3dd966fb49c1b4656e2002",
+    "trace_id": "selftest-trace-22767b62df"
+  },
+  "task_id": "EVAL-001",
+  "telemetry": {
+    "failure_reasons": [],
+    "fixed_by_1": 0,
+    "gate_flip_count": 0,
+    "gate_flip_rate": 0.0,
+    "gate_snapshots": [],
+    "latency_ms": 46171.293,
+    "model_ref": "general",
+    "no_progress_stops": 0,
+    "passed": true,
+    "repairs_used": 0,
+    "runner_selected": "default",
+    "runner_used": "llama.cpp",
+    "selection_reason": "preferred",
+    "stop_reason": "success",
+    "tokens_used": 256,
+    "training_data": {
+      "completion": "-checking\n==================================\n\nDenne version af MVP er en meget enkelt version, der ikke indeholder nogen compliance-checking.\n\n```python\nimport random\nimport time\n\nclass MVP:\n    def __init__(self, n, m, s, t, p, q, r, seed):\n        self.n = n\n        self.m = m\n        self.s = s\n        self.t = t\n        self.p = p\n        self.q = q\n        self.r = r\n        self.seed = seed\n        self.a = None\n        self.b = None\n        self.c = None\n        self.d = None\n        self.e = None\n        self.f = None\n        self.g = None\n        self.h = None\n        self.i = None\n        self.j = None\n        self.k = None\n        self.l = None\n        self.m = None\n        self.n = None\n        self.o = None\n        self.p = None\n        self.q = None\n        self.r",
+      "model_profile": "general",
+      "model_ref": "general",
+      "prompt": "Tiny MVP uden compliance",
+      "seed": null,
+      "task_type": "general",
+      "temperature": null,
+      "tokens_used": 256
+    },
+    "truth_pack_hash": "491d2526bcf3162fd6aeec70f04d43904d7fae9f9144bb58fb07245c6839d304",
+    "wasted_repairs": 0
+  },
+  "tool_evidence_ref": null,
+  "truth_pack": {
+    "allowed_tools": [],
+    "budgets": {
+      "max_repairs": 2,
+      "max_steps": 200
+    },
+    "gates": {
+      "ci_mode": false
+    },
+    "generator": "ml.hybrid_generator:generate_decision",
+    "logging": {
+      "enabled": true,
+      "log_dir": "logs"
+    },
+    "models": {
+      "allowed": [
+        "default",
+        "mamba_gpt_7b_q2"
+      ],
+      "by_purpose": {
+        "bootstrap": "mamba_gpt_7b_q2"
+      },
+      "fallback_order": [
+        "default",
+        "mamba_gpt_7b_q2"
+      ]
+    },
+    "pack_hash": "491d2526bcf3162fd6aeec70f04d43904d7fae9f9144bb58fb07245c6839d304",
+    "policy": {
+      "rules_path": "policy/policy_rules.yaml"
+    },
+    "retries": {
+      "backoff_seconds": 5,
+      "max_attempts": 3
+    },
+    "version": "v1"
+  }
+}

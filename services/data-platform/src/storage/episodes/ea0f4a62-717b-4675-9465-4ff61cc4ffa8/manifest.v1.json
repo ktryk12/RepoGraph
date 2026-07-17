@@ -1,0 +1,35 @@
+{
+  "artifacts": [
+    {
+      "bytes": 6892,
+      "created_at_utc": "2026-03-21T15:48:59.648822Z",
+      "fingerprint_ref": "artifact:sha256:4741c4d494189c74e78f099477c2ee40403202618ffd822f39b7d1b94debcfc8",
+      "name": "episode_result",
+      "path": "episodes/ea0f4a62-717b-4675-9465-4ff61cc4ffa8/episode_result.v1.json",
+      "schema_version": 1,
+      "sha256": "4741c4d494189c74e78f099477c2ee40403202618ffd822f39b7d1b94debcfc8"
+    },
+    {
+      "bytes": 779,
+      "created_at_utc": "2026-03-21T15:48:59.648822Z",
+      "fingerprint_ref": "artifact:sha256:da65a46bc531f49436cfe711e0da32a9563be1811f7c9bde06a065a366fdab3b",
+      "name": "tools:tools/ea0f4a62-717b-4675-9465-4ff61cc4ffa8/repo_reader/result.json",
+      "path": "tools/ea0f4a62-717b-4675-9465-4ff61cc4ffa8/repo_reader/result.json",
+      "schema_version": 1,
+      "sha256": "da65a46bc531f49436cfe711e0da32a9563be1811f7c9bde06a065a366fdab3b"
+    },
+    {
+      "bytes": 1355,
+      "created_at_utc": "2026-03-21T15:48:59.648822Z",
+      "fingerprint_ref": "artifact:sha256:e9a148bdfae0e56f33314bdc6d1affd9331024a91bf8af8390de19da956b80ba",
+      "name": "tools:tools/ea0f4a62-717b-4675-9465-4ff61cc4ffa8/tool_evidence.json",
+      "path": "tools/ea0f4a62-717b-4675-9465-4ff61cc4ffa8/tool_evidence.json",
+      "schema_version": 1,
+      "sha256": "e9a148bdfae0e56f33314bdc6d1affd9331024a91bf8af8390de19da956b80ba"
+    }
+  ],
+  "created_at_utc": "2026-03-21T15:48:59.648822Z",
+  "episode_id": "ea0f4a62-717b-4675-9465-4ff61cc4ffa8",
+  "schema_version": 1,
+  "task_id": "EVAL-001"
+}

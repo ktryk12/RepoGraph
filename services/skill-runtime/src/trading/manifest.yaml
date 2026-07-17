@@ -1,0 +1,32 @@
+# Trading Skills Manifest
+# Local fallback implementations — paper trading only.
+# SkillSource: LOCAL — no external repo required.
+
+skills:
+  - skill_id: technical_analysis
+    description: "Technical indicators: RSI, MACD, SMA, Bollinger Bands — pure Python"
+    domains: [trading, finance]
+    dimensions: [technical]
+    entry_point: babyai.skills.trading.fallback.technical
+    install_requires: []
+
+  - skill_id: crypto_market_data
+    description: "OHLCV market data via CoinGecko REST API (no API key)"
+    domains: [trading, crypto]
+    dimensions: [market_data]
+    entry_point: babyai.skills.trading.fallback.market_data
+    install_requires: []
+
+  - skill_id: risk_management
+    description: "Position sizing and risk management: Kelly criterion, max drawdown"
+    domains: [trading, risk]
+    dimensions: [risk]
+    entry_point: babyai.skills.trading.fallback.risk
+    install_requires: []
+
+  - skill_id: sentiment_analysis
+    description: "Basic keyword-based sentiment scoring for trading signals"
+    domains: [trading, sentiment]
+    dimensions: [sentiment]
+    entry_point: babyai.skills.trading.fallback.sentiment
+    install_requires: []

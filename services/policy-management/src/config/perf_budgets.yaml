@@ -1,0 +1,16 @@
+schema_version: 1
+version: v1
+updated_at: "2026-02-16T00:00:00Z"
+
+defaults:
+  budget_ms: 1500
+  hard_mode: false
+  hard_mode_ci: false
+  telemetry_log_path: artifacts/telemetry/perf_budget_overruns.jsonl
+
+call_budgets:
+  judge.run_eval.single: 1200
+  judge.run_suite.single: 1400
+  court.run_redteam.single: 1600
+  context_plane.rag.retrieve: 800
+  context_plane.ingest.persist: 800

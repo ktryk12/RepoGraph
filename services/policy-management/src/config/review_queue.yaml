@@ -1,0 +1,6 @@
+schema_version: 1
+version: v1
+defaults:
+  sla_days: 7
+  expiry_days: 30
+

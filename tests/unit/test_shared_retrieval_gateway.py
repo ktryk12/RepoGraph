@@ -107,3 +107,61 @@ def test_verification_plan_identifies_tests_and_avoids_false_positives() -> None
     assert "tests/test_budget.py" in plan.tests
     assert "pkg/module_test.py" in plan.tests
     assert "src/contest.py" not in plan.tests
+
+
+def test_prepare_task_context_adds_analysis_plan_for_broad_analyze_queries(
+    sample_request,
+    fake_store,
+    fake_redis,
+    fake_tracer,
+    monkeypatch,
+) -> None:
+    sample_request.query = "analyze the code and understand this repo"
+    sample_request.output_profile = "review"
+    sample_request.target_context = 8192
+    monkeypatch.setattr(
+        "repograph.shared_retrieval.gateway.build_working_set",
+        lambda **kwargs: make_working_set(
+            symbol_count=18,
+            token_budget=kwargs["token_budget"],
+            task_family=kwargs.get("task_hint") or "targeted_refactor",
+            query=kwargs["query"],
+        ),
+    )
+
+    response = prepare_task_context(sample_request, fake_store)
+
+    assert response.analysis_plan is not None
+    assert len(response.analysis_plan.steps) >= 8
+    assert response.analysis_step_id == response.analysis_plan.steps[0].step_id
+    assert response.prompt_pack.total_tokens <= response.prompt_pack.target_context
+
+
+def test_prepare_task_context_can_materialize_one_analysis_step_at_a_time(
+    sample_request,
+    fake_store,
+    fake_redis,
+    fake_tracer,
+    monkeypatch,
+) -> None:
+    sample_request.query = "analyze the code and understand this repo"
+    sample_request.output_profile = "review"
+    sample_request.target_context = 8192
+    sample_request.analysis_step_id = "step_entrypoints"
+    monkeypatch.setattr(
+        "repograph.shared_retrieval.gateway.build_working_set",
+        lambda **kwargs: make_working_set(
+            symbol_count=14,
+            token_budget=kwargs["token_budget"],
+            task_family=kwargs.get("task_hint") or "targeted_refactor",
+            query=kwargs["query"],
+        ),
+    )
+
+    response = prepare_task_context(sample_request, fake_store)
+
+    assert response.analysis_plan is not None
+    assert response.analysis_step_id == "step_entrypoints"
+    assert response.analysis_step_kind == "entrypoints_execution_flow"
+    assert response.prompt_pack.total_tokens <= response.prompt_pack.target_context
+    assert response.prompt_pack.target_context <= sample_request.target_context

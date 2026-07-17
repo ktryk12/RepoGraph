@@ -1,0 +1,70 @@
+{
+  "schema_version": 1,
+  "run_id": "local-2026-02-16T11:10",
+  "created_at_utc": "2026-02-16T11:10:16.131317Z",
+  "constitution": {
+    "constitution_version": "v1",
+    "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+    "constitution_schema_version": 1,
+    "constitution_effective_from": "2026-02-16T00:00:00Z",
+    "constitution_path": "E:/repos/babyAI/babyAI/policy/constitution.yaml"
+  },
+  "artifacts": [
+    {
+      "name": "benchmark_latest_json",
+      "path": "artifacts/benchmark/benchmark_latest.json",
+      "sha256": "8ad6ee35df170b411585a2b0bc20fce4c5926188b9e5777d94c100fd177fe566",
+      "bytes": 5957,
+      "created_at_utc": "2026-02-16T11:10:16.131317Z"
+    },
+    {
+      "name": "benchmark_latest_md",
+      "path": "artifacts/benchmark/benchmark_latest.md",
+      "sha256": "ff784e5f3adf5d7445e5e81049180d64a51a3032737ef28c9de926ea34e2b795",
+      "bytes": 450,
+      "created_at_utc": "2026-02-16T11:10:16.131317Z"
+    },
+    {
+      "name": "build_info_json",
+      "path": "artifacts/meta/build_info.json",
+      "sha256": "85948d5f0067f768b28545fff0d88965658e1416a8a34e40215143260b789e8b",
+      "bytes": 661,
+      "created_at_utc": "2026-02-16T11:10:16.131317Z"
+    },
+    {
+      "name": "compat_latest_scoreline_json",
+      "path": "artifacts/benchmark/latest_scoreline.json",
+      "sha256": "8ad6ee35df170b411585a2b0bc20fce4c5926188b9e5777d94c100fd177fe566",
+      "bytes": 5957,
+      "created_at_utc": "2026-02-16T11:10:16.131317Z"
+    },
+    {
+      "name": "eval_manifest_json",
+      "path": "artifacts/benchmark/eval_set_manifest.json",
+      "sha256": "c0b34099c3e079afe3d894cd7d7bfc581e8e38e10f67c87244250fe3f94c8d9a",
+      "bytes": 338,
+      "created_at_utc": "2026-02-16T11:10:16.131317Z"
+    },
+    {
+      "name": "latest_scoreline_json",
+      "path": "C:/Users/Admin/AppData/Local/Temp/pytest-of-Admin/pytest-235/test_ci_benchmark_smoke0/scorecard.json",
+      "sha256": "8ad6ee35df170b411585a2b0bc20fce4c5926188b9e5777d94c100fd177fe566",
+      "bytes": 5957,
+      "created_at_utc": "2026-02-16T11:10:16.131317Z"
+    },
+    {
+      "name": "per_task_jsonl",
+      "path": "artifacts/benchmark/per_task_latest.jsonl",
+      "sha256": "d33f139ea31f3502a1e284a398896861a7803bdc23522a7ccfdc6f93cfddc405",
+      "bytes": 342,
+      "created_at_utc": "2026-02-16T11:10:16.131317Z"
+    },
+    {
+      "name": "resolved_config_json",
+      "path": "artifacts/meta/resolved_config.json",
+      "sha256": "3436900e8cb9b63ec9337b09baed546765dea5795e075bbc81debe43fb2038e3",
+      "bytes": 2805,
+      "created_at_utc": "2026-02-16T11:10:16.131317Z"
+    }
+  ]
+}

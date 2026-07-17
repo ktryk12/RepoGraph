@@ -1,0 +1,4 @@
+# verify service dependencies
+# babyai-shared installed via Dockerfile COPY + pip install /shared/
+
+# Add service-specific dependencies below:

@@ -1,0 +1,24 @@
+{
+  "context_pack:services/payments": {
+    "metadata": {
+      "case_id": "case-1",
+      "chunk_count": 1,
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "context_id": "ctx-1",
+      "context_plane_mode": "local",
+      "created_at": "2026-04-16T12:08:04.833881Z",
+      "doc_id": "ctx-1:services/payments",
+      "doc_version": "adf175b1de7f872dc902b51b3beeed0eaf44072147fe8818f922c74e45a83b8a",
+      "namespace": "services/payments",
+      "path_context_id": "ctx-1",
+      "raw_context_id": "ctx-1",
+      "request_id": "0dc2edde518bc709082944fd33187825e8c412d94b718e060376be65a411b604",
+      "run_id": "run-1",
+      "trace_id": "trace-1",
+      "type": "index"
+    },
+    "ref": "artifact:sha256:ea4dc4d855912224e4abcfd0e71dfc516aea2aa829aeeb4b1b55db959fd84056"
+  }
+}

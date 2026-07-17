@@ -1,0 +1,90 @@
+{
+  "run_id": "local-2026-02-15T18:29",
+  "git": {
+    "sha": "unknown",
+    "branch": "unknown"
+  },
+  "metrics": {
+    "pass_rate_no_repair": 0.0,
+    "pass_rate_with_repair": 0.0,
+    "pass_rate": 0.0,
+    "avg_repairs_used": 0.0,
+    "avg_repair_steps": 0.0,
+    "median_repairs_used": 0.0,
+    "gate_flip_rate": 0.0,
+    "overload_rate": 0.0,
+    "capacity_gap_avg": 0.0,
+    "latency_p50_s": 0.0,
+    "latency_p95_s": 0.0,
+    "top_failure_reasons": [],
+    "top_failures": [],
+    "stop_reason_counts": [],
+    "runner_metrics": [],
+    "runner_selection_trace": {
+      "selected_counts": [],
+      "reason_counts": [],
+      "preferred_counts": []
+    },
+    "truth_integrity": {
+      "total_facts": 0,
+      "valid_source_rate": 0.0,
+      "stale_rate": 0.0,
+      "conflict_count": 0,
+      "invalid_source_refs": 0
+    },
+    "coding_suite": {
+      "pass_rate": 0.0,
+      "avg_repairs_used": 0.0,
+      "scope_violation_rate": 0.0,
+      "tasks_executed": 0,
+      "tasks_total": 0
+    }
+  },
+  "scoreline": {
+    "pass_rate": 0.0,
+    "pass_no_repair": 0.0,
+    "pass_with_repair": 0.0,
+    "pass_rate_detail": {
+      "no_repair": 0.0,
+      "with_repair": 0.0
+    },
+    "avg_repair_steps": 0.0,
+    "median_repair_steps": 0.0,
+    "repair_effectiveness": {
+      "lift": 0.0,
+      "avg_steps": 0.0,
+      "median_steps": 0.0
+    },
+    "gate_flip_rate": 0.0,
+    "latency_p50_s": 0.0,
+    "latency_p95_s": 0.0,
+    "latency": {
+      "p50_s": 0.0,
+      "p95_s": 0.0
+    },
+    "top_failure_reasons": [],
+    "top_failures": [],
+    "runner_selection_trace": {
+      "selected_counts": [],
+      "reason_counts": [],
+      "preferred_counts": []
+    },
+    "coding_pass_rate": 0.0,
+    "coding_avg_repairs": 0.0,
+    "coding_scope_violation_rate": 0.0
+  },
+  "per_task_breakdown": [],
+  "artifacts": {
+    "scorecard": "artifacts\\benchmark\\smoke_scoreline.json",
+    "benchmark_latest_json": "artifacts\\benchmark\\benchmark_latest.json",
+    "benchmark_latest_md": "artifacts\\benchmark\\benchmark_latest.md",
+    "per_task_jsonl": "artifacts\\benchmark\\per_task_latest.jsonl"
+  },
+  "inputs": {
+    "split": "artifacts/benchmark/smoke_split.txt",
+    "generator": "ml.hybrid_generator:generate_decision",
+    "max_repairs": 2,
+    "coding_tasks": null,
+    "coding_max_tasks": null
+  }
+}

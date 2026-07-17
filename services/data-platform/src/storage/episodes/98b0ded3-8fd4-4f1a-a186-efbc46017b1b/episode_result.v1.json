@@ -1,0 +1,129 @@
+{
+  "artifacts": {
+    "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+    "constitution_version": "v1",
+    "context_id": "36b45c36-162c-4440-b139-3a02728dd715",
+    "log_path": "logs/episode_98b0ded3-8fd4-4f1a-a186-efbc46017b1b.jsonl"
+  },
+  "decision": {
+    "decision_id": "98b0ded3-8fd4-4f1a-a186-efbc46017b1b",
+    "generated_output": {
+      "model_ref": "mamba-gpt-7b-Q2_K.gguf",
+      "runner_ref": "llama.cpp",
+      "text": "Unterscheidung between the two is important for the following reasons:\n\n1. **Security:** Smoke testing is a security assessment that involves simulating a cyber attack on a system to identify potential vulnerabilities and weaknesses. Smoke testing, on the other hand, is not a security assessment, but rather a performance assessment.\n\n2. **Purpose:** Smoke testing is used to evaluate the performance of a system, while smoke testing is used to evaluate the security of a system.\n\n3. **Methodology:** Smoke testing is typically performed by a team of security professionals who simulate an attack on the system and evaluate its performance. Smoke testing, on the other hand, is typically performed by a team of performance professionals who evaluate the system's performance and identify areas for improvement.\n\n4. **Results:** Smoke testing typically provides a comprehensive view of the system's security posture, including vulnerabilities and weaknesses. Smoke testing, on the other hand, provides a comprehensive view of the system's performance, including areas for improvement.\n\nIn summary, smoke testing and smoke testing are two different types of assessments that serve different purposes.",
+      "trace": {
+        "n_predict": 256,
+        "prompt_hash": "130b176552f744fdcf3e20182b69da8b2a44c014e05766515d21185d8e84b435",
+        "purpose": "default",
+        "seed": 558191891
+      }
+    }
+  },
+  "episode_id": "98b0ded3-8fd4-4f1a-a186-efbc46017b1b",
+  "eval_result": {
+    "errors": [],
+    "evidence": {
+      "missing_paths": [],
+      "present_paths": []
+    },
+    "must_include": {
+      "missing": [],
+      "present": []
+    },
+    "passed": false,
+    "penalties": null,
+    "scores": null
+  },
+  "knobs": {
+    "effective_policy": {
+      "constraints": {
+        "safety_mode": "relaxed",
+        "visibility": "internal"
+      },
+      "policy_id": "dev",
+      "policy_version": 1,
+      "quality_profile": {
+        "preset": "balanced"
+      },
+      "safety_profile": "balanced",
+      "version": "effective_policy.v1",
+      "write_scope": {
+        "type": "policy_service"
+      }
+    },
+    "event_fingerprint": "59a12ff23fe782a8fbb324b8c3569b43b0a6824cdd97d308e3ab53d27ad99421",
+    "intake_artifact": {
+      "classification": "low",
+      "content_hash": "cc17f1b39639b4e2baf8a7912f408d3fb342e90b60a1fb9003f9f6310770834a",
+      "content_size": 1168,
+      "detected_pii": false,
+      "id": "ad9222c00241e22b94444c0c5376fce3c19cece0b82a15c3618ef322d65065d1",
+      "source_type": "legacy_orchestrator"
+    },
+    "override_hash": "2beb5f3f35062483337b5941b1c0eb8768c7e264fbe8b0fd4b1548e80a14584e",
+    "policy_preset": "dev",
+    "policy_validator": {
+      "allowed": true,
+      "reason_code": null
+    },
+    "request_fingerprint": "63206291fecfe74ed9efa5331916cf8265c6c339451819086315f3b5f9c8382e",
+    "truth_override_ref": "artifacts/truth_overrides/2beb5f3f35062483337b5941b1c0eb8768c7e264fbe8b0fd4b1548e80a14584e.yaml"
+  },
+  "task_id": "auto-bec7bd03d4fe",
+  "telemetry": {
+    "failure_reasons": [],
+    "fixed_by_1": 0,
+    "gate_flip_count": 0,
+    "gate_flip_rate": 0.0,
+    "gate_snapshots": [],
+    "latency_ms": 33629.406,
+    "model_ref": "mamba-gpt-7b-Q2_K.gguf",
+    "no_progress_stops": 0,
+    "passed": false,
+    "repairs_used": 0,
+    "runner_selected": "default",
+    "runner_used": "llama.cpp",
+    "selection_reason": "preferred",
+    "stop_reason": "spec_incomplete",
+    "tokens_used": 256,
+    "truth_pack_hash": "6ce108dc09459a9e2423cbe053950b897afbae18925507daddd8115c6de4fcdf",
+    "wasted_repairs": 0
+  },
+  "tool_evidence_ref": null,
+  "truth_pack": {
+    "allowed_tools": [],
+    "budgets": {
+      "max_repairs": 3,
+      "max_steps": 200
+    },
+    "gates": {
+      "ci_mode": false
+    },
+    "generator": "ml.hybrid_generator:generate_decision",
+    "logging": {
+      "enabled": true,
+      "log_dir": "logs"
+    },
+    "metadata": {
+      "generated_by": "truthpack_conversation",
+      "policy_preset": "dev"
+    },
+    "pack_hash": "6ce108dc09459a9e2423cbe053950b897afbae18925507daddd8115c6de4fcdf",
+    "policy": {
+      "rules_path": "policy/policy_rules.yaml"
+    },
+    "retries": {
+      "backoff_seconds": 5,
+      "max_attempts": 3
+    },
+    "task": {
+      "answers": {
+        "q_1025e7419834a8d7": "hello world",
+        "q_900bdde8f54a8fea": "hello world",
+        "q_d754a051bb7879c2": "hello world"
+      },
+      "intent": "hello world smoke test"
+    },
+    "version": 1
+  }
+}

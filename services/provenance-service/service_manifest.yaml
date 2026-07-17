@@ -1,0 +1,231 @@
+# Service Manifest for provenance-service
+# ADR-0015: True Kafka-First Microservices - Phase 2: Database-per-Service
+
+manifest_version: "1.0.0"
+service_name: "provenance-service"
+last_updated: "2026-04-27"
+
+# Service Identity
+metadata:
+  description: "Provenance tracking and audit trail management service"
+  owner_team: "babyai-core"
+  repository: "https://github.com/babyai/babyai"
+  service_tier: "tier_1"  # Critical audit service
+
+# Bounded Context Definition
+bounded_context:
+  name: "provenance-platform"
+  description: "Manages provenance graphs, audit trails, decision lineage, and artifact causality tracking"
+  domain: "provenance"
+
+  # Clear boundaries - what this service owns
+  responsibilities:
+    - "Provenance graph storage and management"
+    - "Decision-to-artifact causality tracking"
+    - "Tool run lineage and audit trails"
+    - "Evaluation result provenance"
+    - "File change attribution and history"
+    - "Provenance query and analysis operations"
+    - "Audit trail integrity and validation"
+
+  # What this service does NOT own
+  boundaries:
+    - "Actual artifact storage (artifact-writer responsibility)"
+    - "Decision making logic (orchestrator-worker responsibility)"
+    - "Tool execution (tool-runtime responsibility)"
+    - "Evaluation scoring (evaluation-service responsibility)"
+    - "User authentication and permissions (authentication service responsibility)"
+
+# Infrastructure Dependencies
+infrastructure:
+  database:
+    type: "sqlite"
+    database_file: "provenance_graph.db"
+    migrations_path: "migrations/"
+    private_state: true
+
+    # Migration from shared provenance
+    migration_source: "shared/babyai_shared/provenance/provenance.sqlite"
+    migration_target: "services/provenance-service/database/provenance_graph.db"
+
+  messaging:
+    kafka_contract: "kafka_contract.yaml"
+    primary_consumer_group: "provenance-service-workers"
+
+  external_dependencies:
+    - service: "orchestrator-worker"
+      interaction: "kafka_events"
+      topics: ["decision.completed.v1", "tool.executed.v1"]
+      description: "Decision and tool execution provenance"
+
+    - service: "artifact-writer"
+      interaction: "kafka_events"
+      topics: ["artifact.created.v1", "artifact.updated.v1"]
+      description: "Artifact creation and modification provenance"
+
+# Runtime Configuration
+runtime:
+  language: "python"
+  framework: "fastapi"
+  health_check: "/health"
+  metrics_endpoint: "/metrics"
+
+  deployment:
+    min_replicas: 2
+    max_replicas: 5
+    cpu_request: "500m"
+    memory_request: "1Gi"
+
+  environment_variables:
+    required:
+      - "DATABASE_FILE"
+      - "KAFKA_BOOTSTRAP_SERVERS"
+    optional:
+      - "MAX_GRAPH_DEPTH"
+      - "PROVENANCE_RETENTION_DAYS"
+      - "AUDIT_LEVEL"
+
+# API Contracts
+apis:
+  public:
+    - type: "kafka_events"
+      contract: "kafka_contract.yaml"
+      description: "Primary interface for provenance operations"
+
+    - type: "rest_api"
+      path: "/api/v1"
+      description: "HTTP API for direct provenance access"
+      endpoints:
+        - "POST /edges"
+        - "GET /lineage/{artifact_ref}"
+        - "GET /decision/{decision_id}"
+        - "GET /affected-by/{artifact_ref}"
+        - "POST /explain/change"
+        - "POST /validate"
+        - "GET /health"
+
+  private:
+    - type: "health_check"
+      path: "/health"
+      description: "Service health endpoint"
+
+    - type: "metrics"
+      path: "/metrics"
+      description: "Prometheus metrics endpoint"
+
+# Data Ownership
+data:
+  owned_entities:
+    - "provenance_edges"
+    - "lineage_cache"
+    - "provenance_metadata"
+    - "audit_summaries"
+    - "graph_validation_results"
+
+  migrated_from:
+    - source: "shared/babyai_shared/provenance/provenance.sqlite"
+      target: "provenance_graph.db"
+      migration_strategy: "sqlite_consolidation_with_enhancement"
+      migration_status: "phase_2_planned"
+
+  shared_readonly:
+    - "artifact_metadata"  # Read from artifact-writer service
+    - "user_permissions"   # Read from authentication service
+
+# Quality Attributes
+quality:
+  performance:
+    target_latency_p95: "200ms"  # Provenance queries
+    target_throughput: "200 requests/minute"
+    lineage_depth_limit: 10
+    graph_size_limit: "100MB"
+
+  reliability:
+    target_availability: "99.9%"
+    max_data_loss: "0%"
+    consistency: "strong"  # Audit trails require strict consistency
+
+  scalability:
+    horizontal_scaling: true
+    stateless_design: false  # Maintains provenance graph
+    read_replicas: "supported"
+
+# Compliance and Security
+compliance:
+  adr_0015_status: "phase_2_provenance_extraction"
+
+  checklist:
+    bounded_context: "✅ Provenance platform boundaries defined"
+    database_per_service: "⏳ Migrating shared provenance.sqlite to provenance-service"
+    kafka_communication: "⏳ Event contracts being created"
+    service_manifest: "✅ This file"
+    no_shared_state: "⏳ Extracting provenance ownership from shared directory"
+    explicit_contracts: "⏳ kafka_contract.yaml in progress"
+
+  security:
+    authentication: "kafka_ssl"
+    authorization: "kafka_acl"
+    data_encryption: "sqlite_encryption"
+    audit_integrity: "hash_chaining"
+
+# Development and Operations
+development:
+  build_tool: "docker"
+  test_framework: "pytest"
+  test_coverage_target: "95%"  # High coverage for audit service
+
+  ci_cd:
+    pipeline: ".github/workflows/provenance-service.yml"
+    deployment_strategy: "rolling_update"
+
+  monitoring:
+    logs: "structured_json"
+    metrics: "prometheus"
+    tracing: "jaeger"
+    alerting: "pagerduty"
+
+# Migration Status
+migration:
+  current_phase: "phase_2_provenance_graph_extraction"
+  migration_priority: "high"  # Critical audit capability
+
+  completed:
+    - "Bounded context analysis"
+    - "Service manifest definition"
+
+  in_progress:
+    - "Enhanced database schema design"
+    - "Migration service implementation"
+    - "Kafka contract definition"
+    - "Event-driven API design"
+
+  planned:
+    - "Provenance graph consolidation"
+    - "Replace direct provenance access with events"
+    - "Lineage analysis optimization"
+    - "Audit trail validation and integrity checking"
+
+# Performance Characteristics
+performance:
+  database:
+    connection_pool_size: 10
+    max_connections: 50
+    query_timeout_seconds: 30
+    max_query_depth: 10
+
+  provenance:
+    max_edges_per_query: 10000
+    lineage_cache_ttl_seconds: 600
+    graph_validation_interval_hours: 24
+
+  retention:
+    default_retention_days: 365
+    critical_retention_days: 2555  # 7 years
+    cleanup_batch_size: 1000
+
+# Documentation
+documentation:
+  architecture: "docs/services/provenance-service/README.md"
+  api_docs: "docs/services/provenance-service/api.md"
+  migration_guide: "docs/services/provenance-service/migration.md"
+  lineage_analysis: "docs/services/provenance-service/lineage.md"

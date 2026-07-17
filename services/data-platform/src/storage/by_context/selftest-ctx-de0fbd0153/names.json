@@ -1,0 +1,42 @@
+{
+  "decision:final": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-22T15:09:49.626150Z",
+      "path_context_id": "selftest-ctx-de0fbd0153",
+      "raw_context_id": "selftest-ctx-de0fbd0153",
+      "type": "decision"
+    },
+    "ref": "artifact:sha256:7367d7bfbdd0cb84746a623443b3d91a8e99b7f730ae4ce55bd9cd95b908b005"
+  },
+  "task:selftest": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-22T15:09:02.431787Z",
+      "path_context_id": "selftest-ctx-de0fbd0153",
+      "raw_context_id": "selftest-ctx-de0fbd0153",
+      "self_test_run_id": "de0fbd0153",
+      "type": "task"
+    },
+    "ref": "artifact:sha256:3959e7b4132d9e632b045591de1a17eb64de7486b98844f8a7f3390c219bef17"
+  },
+  "universal_plan_v1": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-03-22T15:09:02.887753Z",
+      "kind": "UniversalPlan",
+      "parent_version": null,
+      "path_context_id": "selftest-ctx-de0fbd0153",
+      "plan_id": "plan:sha256:0884817408851a2167c2e12c524813a33e40feee41f1f00c66b06c6dbad3fbdb",
+      "plan_version": 1,
+      "raw_context_id": "selftest-ctx-de0fbd0153"
+    },
+    "ref": "artifact:sha256:b22ab02fd2f55f0af9c8d89646151b793625854e29da5f0d53efe4162ed0aabb"
+  }
+}

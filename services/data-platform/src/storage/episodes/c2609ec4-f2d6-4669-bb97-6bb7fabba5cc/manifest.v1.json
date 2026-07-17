@@ -1,0 +1,35 @@
+{
+  "artifacts": [
+    {
+      "bytes": 6506,
+      "created_at_utc": "2026-02-23T19:56:37.388723Z",
+      "fingerprint_ref": "artifact:sha256:2262fcf4c8e0c01999d4808bc7c9b10986f733053a8ecaba98eb573b1c0e6204",
+      "name": "episode_result",
+      "path": "episodes/c2609ec4-f2d6-4669-bb97-6bb7fabba5cc/episode_result.v1.json",
+      "schema_version": 1,
+      "sha256": "2262fcf4c8e0c01999d4808bc7c9b10986f733053a8ecaba98eb573b1c0e6204"
+    },
+    {
+      "bytes": 795,
+      "created_at_utc": "2026-02-23T19:56:37.388723Z",
+      "fingerprint_ref": "artifact:sha256:1c1a990da622d12ea83d47f160c01aed221c19731612827b86227137cd69c97e",
+      "name": "tools:tools/c2609ec4-f2d6-4669-bb97-6bb7fabba5cc/repo_reader/result.json",
+      "path": "tools/c2609ec4-f2d6-4669-bb97-6bb7fabba5cc/repo_reader/result.json",
+      "schema_version": 1,
+      "sha256": "1c1a990da622d12ea83d47f160c01aed221c19731612827b86227137cd69c97e"
+    },
+    {
+      "bytes": 1377,
+      "created_at_utc": "2026-02-23T19:56:37.388723Z",
+      "fingerprint_ref": "artifact:sha256:9457734e5fa104aee01ef793dede3a63c05769000217c2261ea8e3845340b4e0",
+      "name": "tools:tools/c2609ec4-f2d6-4669-bb97-6bb7fabba5cc/tool_evidence.json",
+      "path": "tools/c2609ec4-f2d6-4669-bb97-6bb7fabba5cc/tool_evidence.json",
+      "schema_version": 1,
+      "sha256": "9457734e5fa104aee01ef793dede3a63c05769000217c2261ea8e3845340b4e0"
+    }
+  ],
+  "created_at_utc": "2026-02-23T19:56:37.388723Z",
+  "episode_id": "c2609ec4-f2d6-4669-bb97-6bb7fabba5cc",
+  "schema_version": 1,
+  "task_id": "EVAL-001"
+}

@@ -1,0 +1,70 @@
+{
+  "artifacts": [
+    {
+      "bytes": 6948,
+      "created_at_utc": "2026-02-16T13:26:33.453834Z",
+      "name": "benchmark_latest_json",
+      "path": "artifacts/benchmark/benchmark_latest.json",
+      "sha256": "cb8c6d3d8f931eab70e5e9c5b6037d9c2fb5f80d5c75b60a3f62c98baa8ba0eb"
+    },
+    {
+      "bytes": 562,
+      "created_at_utc": "2026-02-16T13:26:33.453834Z",
+      "name": "benchmark_latest_md",
+      "path": "artifacts/benchmark/benchmark_latest.md",
+      "sha256": "868b2ac8fe15bb8da63253d99157b2eae4f9a13319e91d24fc8714abe58348b8"
+    },
+    {
+      "bytes": 663,
+      "created_at_utc": "2026-02-16T13:26:33.453834Z",
+      "name": "build_info_json",
+      "path": "artifacts/meta/build_info.json",
+      "sha256": "c0d9ec9d08b2199f0a40046ad025b27d2e491cfc939938aabbbfa79c1eab226d"
+    },
+    {
+      "bytes": 6948,
+      "created_at_utc": "2026-02-16T13:26:33.453834Z",
+      "name": "compat_latest_scoreline_json",
+      "path": "artifacts/benchmark/latest_scoreline.json",
+      "sha256": "cb8c6d3d8f931eab70e5e9c5b6037d9c2fb5f80d5c75b60a3f62c98baa8ba0eb"
+    },
+    {
+      "bytes": 338,
+      "created_at_utc": "2026-02-16T13:26:33.453834Z",
+      "name": "eval_manifest_json",
+      "path": "artifacts/benchmark/eval_set_manifest.json",
+      "sha256": "50f0b7036b4042d27807caf4fd02183bd728b6c69e718c0c291431b48833e88b"
+    },
+    {
+      "bytes": 6948,
+      "created_at_utc": "2026-02-16T13:26:33.453834Z",
+      "name": "latest_scoreline_json",
+      "path": "C:/Users/Admin/AppData/Local/Temp/pytest-of-Admin/pytest-276/test_benchmark_includes_tool_c0/scorecard.json",
+      "sha256": "cb8c6d3d8f931eab70e5e9c5b6037d9c2fb5f80d5c75b60a3f62c98baa8ba0eb"
+    },
+    {
+      "bytes": 512,
+      "created_at_utc": "2026-02-16T13:26:33.453834Z",
+      "name": "per_task_jsonl",
+      "path": "artifacts/benchmark/per_task_latest.jsonl",
+      "sha256": "ea7497e3fe0c24e3380e6e32c81786a13442852603dd70e4daacc07845f69fbb"
+    },
+    {
+      "bytes": 2996,
+      "created_at_utc": "2026-02-16T13:26:33.453834Z",
+      "name": "resolved_config_json",
+      "path": "artifacts/meta/resolved_config.json",
+      "sha256": "a4ed83de7d1dca368e0400a576fbfa30e9cb274855b01814be7ce6589a52a90c"
+    }
+  ],
+  "constitution": {
+    "constitution_effective_from": "2026-02-16T00:00:00Z",
+    "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+    "constitution_path": "E:/repos/babyAI/babyAI/policy/constitution.yaml",
+    "constitution_schema_version": 1,
+    "constitution_version": "v1"
+  },
+  "created_at_utc": "2026-02-16T13:26:33.453834Z",
+  "run_id": "local-2026-02-16T13:26",
+  "schema_version": 1
+}

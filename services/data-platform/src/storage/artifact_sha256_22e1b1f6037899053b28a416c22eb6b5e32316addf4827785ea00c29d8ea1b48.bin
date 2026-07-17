@@ -1,0 +1,45 @@
+{
+  "classes": [
+    "add_test",
+    "apply_patch",
+    "reduce_scope"
+  ],
+  "code_version": "a577d3bd4ef60ee5c11d03448170550cd6f41e23",
+  "dataset_sha256": "ba0eb092268a7ea25c110af6bcc6f3d78f98fe96b1f6605e69cef6d62050df09",
+  "eval_dataset_sha256": "021f0ed604e1bc5241528fceb9a973d1479e91c8a7e76bc71586b97024d926dc",
+  "feature_keys_sha256": "c23c8115d0239045c86c573e521a3d39d18f96b7508e7e7255ec4da76ad1d514",
+  "model_family": "ssrn_action_selector_v1",
+  "model_sha256": "c3199541a5c2e0a910986e7e9980433d7e84e582e507babcc2520d0c34b7b4c0",
+  "num_classes": 3,
+  "num_features": 3,
+  "num_rows": 6,
+  "random_baseline_accuracy": [REDACTED:phone:91fea92c],
+  "seed": 23,
+  "seed_report": {
+    "pythonhashseed": "23",
+    "pythonhashseed_mismatch": false,
+    "pythonhashseed_previous": "23",
+    "seed": 23
+  },
+  "split_mode": "explicit_eval",
+  "train_dataset_sha256": "6869dcdee96675b8023c0e48daaf64c05d4835c2058dfd792bdc0b2896e64723",
+  "train_rows": 6,
+  "val_accuracy": 1.0,
+  "val_confidence_mean": [REDACTED:phone:6db4ee61],
+  "val_indices": [
+    0,
+    1,
+    2
+  ],
+  "val_predictions": [
+    "reduce_scope",
+    "add_test",
+    "apply_patch"
+  ],
+  "val_rows": 3,
+  "val_truth": [
+    "reduce_scope",
+    "add_test",
+    "apply_patch"
+  ]
+}

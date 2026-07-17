@@ -1,0 +1,17 @@
+# agent-platform Configuration
+service:
+  name: agent-platform
+  version: "1.0.0"
+  port: 8080
+
+kafka:
+  bootstrap_servers: "localhost:9092"
+  consumer_group: "agent-platform-group"
+
+logging:
+  level: INFO
+  format: json
+
+health:
+  check_interval: 30
+  timeout: 10

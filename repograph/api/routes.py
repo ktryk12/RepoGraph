@@ -1006,6 +1006,20 @@ def shared_retrieval_prepare(
     return format_for_consumer(response, consumer)
 
 
+@router.post("/shared-retrieval/analyze-plan")
+def shared_retrieval_analyze_plan(
+    body: dict,
+    x_tenant_id: Annotated[str | None, Header()] = None,
+) -> dict[str, Any]:
+    from repograph.shared_retrieval import SharedRetrievalRequest
+    from repograph.shared_retrieval.analysis import build_analysis_plan
+    if x_tenant_id:
+        body.setdefault("tenant_id", x_tenant_id)
+    req = SharedRetrievalRequest(**body)
+    plan = build_analysis_plan(req)
+    return plan.model_dump()
+
+
 @router.post("/shared-retrieval/working-set")
 def shared_retrieval_working_set(
     body: dict,

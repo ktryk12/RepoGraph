@@ -1,13 +1,20 @@
 {
   "top_level": [
     "cache",
+    "consumer",
     "debug",
     "duration_ms",
+    "payload_mode",
+    "prompt_assembly_owner",
     "prompt_pack",
     "retrieval_trace_id",
+    "retry_pack_available",
+    "source_mode",
     "task_family",
     "task_id",
+    "task_memory_refs",
     "verification_plan",
+    "verification_plan_available",
     "working_set",
     "working_set_id"
   ],

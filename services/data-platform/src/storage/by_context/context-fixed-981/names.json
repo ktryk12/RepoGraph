@@ -1,0 +1,17 @@
+{
+  "universal_plan_v1": {
+    "metadata": {
+      "constitution_effective_from": "2026-02-16T00:00:00Z",
+      "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+      "constitution_version": "v1",
+      "created_at": "2026-04-10T12:43:51.745677Z",
+      "kind": "UniversalPlan",
+      "parent_version": null,
+      "path_context_id": "context-fixed-981",
+      "plan_id": "plan:sha256:646b31e885280786208596a12db34519692f7f491bfaeb5f6d1f6c276211f7bf",
+      "plan_version": 1,
+      "raw_context_id": "context-fixed-981"
+    },
+    "ref": "artifact:sha256:975a3667564628973702a1703f1d2b3a3b69a498d5e8cd87777650c6e1bc8c05"
+  }
+}

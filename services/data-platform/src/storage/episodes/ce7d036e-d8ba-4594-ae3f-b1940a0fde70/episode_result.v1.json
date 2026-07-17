@@ -1,0 +1,192 @@
+{
+  "artifacts": {
+    "constitution_fingerprint": "6bd1fa6826f7cf27859c3e9b8ac05f752b780f23bccc0f518cb837529811f7db",
+    "constitution_version": "v1",
+    "context_id": "6eeef8a3-7488-4bda-81b7-6e1fcddfe3be",
+    "log_path": "logs/episode_ce7d036e-d8ba-4594-ae3f-b1940a0fde70.jsonl"
+  },
+  "decision": {
+    "bounded_contexts": [
+      {
+        "name": "Core",
+        "stability": "medium"
+      }
+    ],
+    "chosen_style": "modular_monolith",
+    "decision_id": "arch_EVAL-001",
+    "generated_output": {
+      "model_ref": "mamba-gpt-7b-Q2_K.gguf",
+      "runner_ref": "llama.cpp",
+      "text": "with the law\n Unterscheidung between the two concepts:\n\n1. Tiny MVP: This is a small, lightweight version of the MVP that is designed to be used in a variety of contexts, including but not limited to:\n\n- Developing and testing new features\n- Debugging and troubleshooting issues\n- Implementing new functionality\n- Conducting user testing\n- Conducting user feedback and surveys\n- Conducting market research\n- Conducting market analysis\n- Conducting competitive analysis\n- Conducting user research\n- Conducting user surveys\n- Conducting market research\n- Conducting market analysis\n- Conducting competitive analysis\n- Conducting user research\n- Conducting user surveys\n- Conducting market research\n- Conducting market analysis\n- Conducting competitive analysis\n- Conducting user research\n- Conducting user surveys\n- Conducting market research\n- Conducting market analysis\n- Conducting competitive analysis\n- Conducting user research\n- Conducting user surveys\n- Conducting market research\n- Conducting market analysis\n-",
+      "trace": {
+        "n_predict": 256,
+        "prompt_hash": "1c001bf40921c0aee910fb3c22ea2a1d0d2cb7b0f5668564455cde4c9b0c7035",
+        "purpose": "default",
+        "seed": 2501336592
+      }
+    },
+    "ops_readiness": {
+      "observability": {
+        "present": true
+      }
+    },
+    "rationale": [
+      {
+        "evidence_path": "$.constraints.team_size",
+        "reason": "Small team + limited time -> minimize operational complexity",
+        "signal": "evidence used: limited delivery capacity",
+        "weight": 0.8
+      },
+      {
+        "evidence_path": "$.constraints.time_to_mvp_days",
+        "reason": "Fallback rationale (delivery horizon noted)",
+        "signal": "evidence used: delivery horizon noted",
+        "weight": 0.7
+      },
+      {
+        "evidence_path": "$.nfr.operability.observability_level",
+        "reason": "Fallback rationale (runtime visibility expected)",
+        "signal": "evidence used: runtime visibility expected",
+        "weight": 0.7
+      },
+      {
+        "evidence_path": "$.spec.id",
+        "reason": "chosen_style overridden by ML style classifier",
+        "signal": "evidence used: limited delivery capacity (value 2, probability 1 000)",
+        "weight": 0.2
+      }
+    ],
+    "risks": [
+      {
+        "mitigation": "Iterate generator + stronger checks",
+        "risk": "Baseline may be naive"
+      }
+    ],
+    "spec_id": "spec_2026_01_22_0001",
+    "stop_conditions": [
+      "If infra/ops overhead rises, simplify topology"
+    ],
+    "topology": {
+      "core": "modular_monolith",
+      "separated_services": []
+    },
+    "verification_plan": [
+      "must_include:basic_observability | basic observability: structured logs + health + metrics",
+      "perf smoke: p95 <= 800ms at target load (~10 rps)",
+      "Basic rollback strategy for deployments (fallback to last stable release)"
+    ]
+  },
+  "episode_id": "ce7d036e-d8ba-4594-ae3f-b1940a0fde70",
+  "eval_result": {
+    "errors": [],
+    "evidence": {
+      "missing_paths": [],
+      "present_paths": []
+    },
+    "must_include": {
+      "missing": [],
+      "present": []
+    },
+    "passed": true,
+    "penalties": [],
+    "scores": {
+      "architecture_fit": 1.0,
+      "functional": 1.0,
+      "security": 1.0,
+      "total": 1.0
+    }
+  },
+  "knobs": {
+    "effective_policy": {
+      "constraints": {
+        "write_scope": {
+          "type": "none"
+        }
+      },
+      "policy_id": "dev",
+      "policy_version": 1,
+      "quality_profile": {
+        "preset": "balanced"
+      },
+      "safety_profile": "balanced",
+      "version": "effective_policy.v1",
+      "write_scope": {
+        "type": "none"
+      }
+    },
+    "event_fingerprint": "97503d08426b2753bdefefdc7cc877b203b106cb54b0a4553fe3cf43890ea081",
+    "intake_artifact": {
+      "classification": "low",
+      "content_hash": "7b2cd3e24749456b1033c85232d66d900da358279920b41fbda8fb1c20aac13c",
+      "content_size": 1729,
+      "detected_pii": false,
+      "id": "b5661f17d9648afff43c45d7e79c99e26116ab1daafce063d1ec890e81ecce29",
+      "source_type": "legacy_orchestrator"
+    },
+    "policy_preset": "dev",
+    "policy_validator": {
+      "allowed": true,
+      "reason_code": null
+    },
+    "request_fingerprint": "71f6c2fae06b1867dabd3db399664740ca96fdffda8c6fb13cb740e2b4aa8374",
+    "trace_id": "selftest-trace-adef161337"
+  },
+  "task_id": "EVAL-001",
+  "telemetry": {
+    "failure_reasons": [],
+    "fixed_by_1": 0,
+    "gate_flip_count": 0,
+    "gate_flip_rate": 0.0,
+    "gate_snapshots": [],
+    "latency_ms": 34838.289,
+    "model_ref": "mamba-gpt-7b-Q2_K.gguf",
+    "no_progress_stops": 0,
+    "passed": true,
+    "repairs_used": 0,
+    "runner_selected": "default",
+    "runner_used": "llama.cpp",
+    "selection_reason": "preferred",
+    "stop_reason": "success",
+    "tokens_used": 256,
+    "truth_pack_hash": "491d2526bcf3162fd6aeec70f04d43904d7fae9f9144bb58fb07245c6839d304",
+    "wasted_repairs": 0
+  },
+  "tool_evidence_ref": null,
+  "truth_pack": {
+    "allowed_tools": [],
+    "budgets": {
+      "max_repairs": 2,
+      "max_steps": 200
+    },
+    "gates": {
+      "ci_mode": false
+    },
+    "generator": "ml.hybrid_generator:generate_decision",
+    "logging": {
+      "enabled": true,
+      "log_dir": "logs"
+    },
+    "models": {
+      "allowed": [
+        "default",
+        "mamba_gpt_7b_q2"
+      ],
+      "by_purpose": {
+        "bootstrap": "mamba_gpt_7b_q2"
+      },
+      "fallback_order": [
+        "default",
+        "mamba_gpt_7b_q2"
+      ]
+    },
+    "pack_hash": "491d2526bcf3162fd6aeec70f04d43904d7fae9f9144bb58fb07245c6839d304",
+    "policy": {
+      "rules_path": "policy/policy_rules.yaml"
+    },
+    "retries": {
+      "backoff_seconds": 5,
+      "max_attempts": 3
+    },
+    "version": "v1"
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "schema_version": 1,
+  "run_id": "local-2026-02-15T21:21",
+  "created_at_utc": "2026-02-15T21:21:43.661598Z",
+  "artifacts": [
+    {
+      "name": "benchmark_latest_json",
+      "path": "artifacts/benchmark/benchmark_latest.json",
+      "sha256": "aa13f3940c91878adbbdc198b5e17e761e6bd5c1fa0456dcf83c8c22e2a7a0e9",
+      "bytes": 7554,
+      "created_at_utc": "2026-02-15T21:21:43.661598Z"
+    },
+    {
+      "name": "benchmark_latest_md",
+      "path": "artifacts/benchmark/benchmark_latest.md",
+      "sha256": "75099eb7bd24c1bedf3322ea49d021ed480d0131a9abe40981e7d3595d0840b6",
+      "bytes": 654,
+      "created_at_utc": "2026-02-15T21:21:43.661598Z"
+    },
+    {
+      "name": "build_info_json",
+      "path": "artifacts/meta/build_info.json",
+      "sha256": "b133ccff156c4fc8bbea21f7827c890a5538adacb4a52158b57979085d27549e",
+      "bytes": 323,
+      "created_at_utc": "2026-02-15T21:21:43.661598Z"
+    },
+    {
+      "name": "compat_latest_scoreline_json",
+      "path": "artifacts/benchmark/latest_scoreline.json",
+      "sha256": "aa13f3940c91878adbbdc198b5e17e761e6bd5c1fa0456dcf83c8c22e2a7a0e9",
+      "bytes": 7554,
+      "created_at_utc": "2026-02-15T21:21:43.661598Z"
+    },
+    {
+      "name": "eval_manifest_json",
+      "path": "artifacts/benchmark/eval_set_manifest.json",
+      "sha256": "231574d00ef78838e6aca875fc1d98749d90546ea4e09c7615b75375cb24b0b1",
+      "bytes": 336,
+      "created_at_utc": "2026-02-15T21:21:43.661598Z"
+    },
+    {
+      "name": "latest_scoreline_json",
+      "path": "C:/Users/Admin/AppData/Local/Temp/pytest-of-Admin/pytest-227/test_benchmark_scoreline_parse0/scorecard.json",
+      "sha256": "aa13f3940c91878adbbdc198b5e17e761e6bd5c1fa0456dcf83c8c22e2a7a0e9",
+      "bytes": 7554,
+      "created_at_utc": "2026-02-15T21:21:43.661598Z"
+    },
+    {
+      "name": "per_task_jsonl",
+      "path": "artifacts/benchmark/per_task_latest.jsonl",
+      "sha256": "81419645a87d49b64df8af6d10376baad23ba4930523c3ec7dbbb00dc60913d8",
+      "bytes": 560,
+      "created_at_utc": "2026-02-15T21:21:43.661598Z"
+    },
+    {
+      "name": "resolved_config_json",
+      "path": "artifacts/meta/resolved_config.json",
+      "sha256": "6a8af710ee868ff4c7baf0408477f32f3347c03ba31eea87f28e6b163ef1bdd1",
+      "bytes": 2330,
+      "created_at_utc": "2026-02-15T21:21:43.661598Z"
+    }
+  ]
+}
