@@ -1,0 +1,16 @@
+# RepoGraph local-mounts override (Podman)
+#
+# Mounts local source trees read-only into the API container so RepoGraph can
+# index repositories that live outside the build context. Adjust the host paths
+# to match your machine.
+#
+# Usage:
+#   podman-compose -f podman-compose.repograph.yml -f podman-compose.repograph.override.yml up -d
+#   # or via the helper:
+#   .\podman-repograph.ps1 up -Mounts -Detached
+services:
+  api:
+    volumes:
+      - repograph_data:/data
+      - E:/Llm/llm-server:/repos/llm-server:ro
+      - E:/repos:/repos/src:ro

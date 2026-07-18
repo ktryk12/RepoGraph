@@ -13,10 +13,10 @@ RepoGraph er nu konverteret fra Docker til **Podman** for bedre sikkerhed og per
 - `repograph-pod.yaml` — Kubernetes pod definition til `podman play kube`
 - `podman-repograph.ps1` — PowerShell helper script
 - `.containerignore` — erstatter .dockerignore
+- `podman-compose.repograph.override.yml` — lokale kilde-mounts (indeksér repos udenfor build-context)
 
-### Bevarede filer:
-- `docker-compose.repograph.yml` — til bagudkompatibilitet
-- `docker/postgres/init.sql` — bruges af både Docker og Podman
+### Delte filer:
+- `docker/postgres/init.sql` — Postgres init-script (mappenavnet er beholdt da det også bruges af øvrige monorepo-services)
 
 ---
 
@@ -130,13 +130,20 @@ curl http://localhost:8001/status
 
 ---
 
-## 🔄 **Bagudkompatibilitet**
+## 🔄 **Lokale repos (indeksering udenfor build-context)**
 
-Docker filer er bevaret som backup:
+For at indeksere repositories der ligger uden for RepoGraphs build-context,
+mountes de read-only via override-filen:
+
 ```powershell
-# Hvis Podman ikke virker, brug stadig Docker:
-docker compose -f docker-compose.repograph.yml up -d
+# Med helper:
+.\podman-repograph.ps1 up -Mounts -Detached
+
+# Eller direkte:
+podman-compose -f podman-compose.repograph.yml -f podman-compose.repograph.override.yml up -d
 ```
+
+Tilpas host-stierne i `podman-compose.repograph.override.yml` til din maskine.
 
 ---
 
