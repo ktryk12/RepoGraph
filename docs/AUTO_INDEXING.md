@@ -24,7 +24,31 @@ Pick the layer(s) that match how repos enter your workflow.
 
 ---
 
-## 1. Git hooks — activate on clone / checkout / pull / commit
+## 0. Lazy mode — index on use, ZERO cost elsewhere (recommended)
+
+Set `REPOGRAPH_AUTOINDEX=lazy` on the API/MCP server (the container images and
+compose/pod definitions already set it). RepoGraph then checks staleness and
+re-indexes **inside the retrieval call itself** — the first time a task actually
+asks for context (`prepare_task_context`, `/shared-retrieval/*`):
+
+- **No cost on git operations** — clone, pull, commit, and rebase stay untouched.
+- **No cost at session start** — no hooks, no extra processes, nothing to install
+  per repo or per machine.
+- **Throttled** — staleness is checked at most once per `REPOGRAPH_AUTOINDEX_INTERVAL`
+  seconds (default 30) per repo/tenant, so repeated retrievals in one task pay
+  a dictionary lookup, nothing more.
+- Best-effort: an indexing failure never breaks retrieval.
+
+With lazy mode on, the hook-based setups below are **optional** — use them only if
+you want the graph warmed *before* the first retrieval (e.g. huge repos where the
+first `prepare_task_context` would otherwise wait on a full index).
+
+---
+
+## 1. Git hooks — activate on clone / checkout / pull / commit (optional)
+
+> Cost note: these hooks add latency to every matching git operation (hook process
+> spawn + staleness check). Prefer lazy mode (§0) unless you need a pre-warmed graph.
 
 Installs `post-checkout`, `post-merge`, `post-commit`, and `post-rewrite` hooks.
 Together they cover: first checkout after `git clone`, branch switches, `git pull`,
@@ -54,7 +78,10 @@ use `install-git-hooks.sh` / `Install-GitHooks.ps1` for those.
 
 ---
 
-## 2. Claude Code — activate when an AI session starts
+## 2. Claude Code — activate when an AI session starts (optional)
+
+> Not needed with lazy mode (§0), which covers MCP retrievals automatically and
+> costs nothing at session start. Use this only to pre-warm the graph on open.
 
 Add a `SessionStart` hook so RepoGraph indexes the working repo the moment Claude
 Code opens it. Put this in the project's `.claude/settings.json` (or your user

@@ -12,8 +12,11 @@ COPY repograph/ repograph/
 RUN pip install --no-cache-dir --upgrade pip && \
     pip install --no-cache-dir --prefix=/install ".[cache,postgres]"
 
-# Stage 2: runtime — no build tools
+# Stage 2: runtime — no build tools (git kept for cheap HEAD-based autoindex signatures)
 FROM docker.io/python:3.13-slim AS runtime
+
+RUN apt-get update && apt-get install -y --no-install-recommends git \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY --from=builder /install /usr/local
 COPY --from=builder /app/repograph /app/repograph
@@ -30,6 +33,7 @@ ENV REPOGRAPH_PORT=8001
 ENV REPOGRAPH_DB_PATH=/data/repograph
 ENV REPOGRAPH_DB_BACKEND=cog
 ENV REPOGRAPH_TENANT_ID=default
+ENV REPOGRAPH_AUTOINDEX=lazy
 
 VOLUME ["/data"]
 EXPOSE 8001

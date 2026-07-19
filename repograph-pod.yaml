@@ -23,6 +23,8 @@ spec:
           value: "cog"
         - name: REPOGRAPH_TENANT_ID
           value: "default"
+        - name: REPOGRAPH_AUTOINDEX
+          value: "lazy"
         - name: REPOGRAPH_REDIS_URL
           value: "redis://localhost:6379/0"
         - name: REPOGRAPH_POSTGRES_DSN

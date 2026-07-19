@@ -106,6 +106,8 @@ Kun basispakken er påkrævet. Redis og Postgres er valgfrie og aktiveres via mi
 | `REPOGRAPH_CACHE_TTL_WS` | `600` | Working set TTL i sekunder |
 | `REPOGRAPH_ENABLE_WRITE_TOOLS` | — | Sæt til `1` for at eksponere de 6 filsystem-write MCP-tools (fra som standard) |
 | `REPOGRAPH_API_URL` | — | Bruges af `repograph-autoindex` til at indeksere via en kørende API i stedet for in-process |
+| `REPOGRAPH_AUTOINDEX` | — | `lazy` = indeksér automatisk ved brug (retrieval-kald); nul omkostning på git-operationer. Sat som default i container-images |
+| `REPOGRAPH_AUTOINDEX_INTERVAL` | `30` | Min. sekunder mellem staleness-tjek pr. repo/tenant i lazy mode |
 
 ---
 
@@ -276,7 +278,9 @@ Styrer token-budget og packing-strategi pr. consumer/opgave:
 
 ## Automatisk indeksering
 
-RepoGraph re-indekserer ikke selv ved filændringer, men `repograph-autoindex` wirer indeksering ind i de events der betyder "et repo dukkede op" eller "repoet skiftede tilstand" — clone, checkout, merge/pull, commit eller en AI-session der starter. Den beregner en billig signatur (git `HEAD`, ellers nyeste fil-mtime), sammenligner med sidste indekserede tilstand og re-indekserer **kun ved faktisk ændring** — så den er et hurtigt no-op når intet er ændret.
+**Lazy mode (anbefalet — nul omkostning):** Med `REPOGRAPH_AUTOINDEX=lazy` (sat som default i container-images) tjekker RepoGraph selv staleness og re-indekserer **inde i retrieval-kaldet** — første gang en task faktisk beder om kontekst. Ingen git-hooks, ingen session-hooks, nul omkostning på git-operationer. Staleness-tjekket er throttlet (default 30s pr. repo/tenant) og best-effort, så det aldrig bryder retrieval.
+
+**Hook-baseret (valgfrit — pre-warm):** `repograph-autoindex` kan desuden wires ind i events som clone, checkout, merge/pull, commit eller session-start, hvis grafen skal være varm *før* første retrieval. Den beregner en billig signatur (git `HEAD`, ellers nyeste fil-mtime), sammenligner med sidste indekserede tilstand og re-indekserer **kun ved faktisk ændring**. Bemærk: hooks koster et proces-spawn pr. git-operation — brug lazy mode medmindre du har brug for pre-warming.
 
 ```bash
 repograph-autoindex                 # indeksér cwd hvis den er ændret

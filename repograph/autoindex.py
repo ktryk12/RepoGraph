@@ -152,10 +152,15 @@ def _is_indexed(tenant: str | None, api_url: str | None) -> bool:
 # --------------------------------------------------------------------------- #
 # Public API
 # --------------------------------------------------------------------------- #
+# Sentinel: distinguishes "tenant not given" (fall back to env) from an explicit
+# tenant=None, which callers use to target the base, un-suffixed store.
+_TENANT_UNSET: Any = object()
+
+
 def ensure_indexed(
     repo_path: str | os.PathLike[str] | None = None,
     *,
-    tenant: str | None = None,
+    tenant: str | None = _TENANT_UNSET,
     force: bool = False,
     api_url: str | None = None,
     check_only: bool = False,
@@ -166,7 +171,8 @@ def ensure_indexed(
     the signatures involved and (when indexed) the raw index result.
     """
     repo_path = Path(repo_path or os.getcwd()).expanduser().resolve()
-    tenant = tenant or os.getenv("REPOGRAPH_TENANT_ID")
+    if tenant is _TENANT_UNSET:
+        tenant = os.getenv("REPOGRAPH_TENANT_ID")
     api_url = api_url or os.getenv("REPOGRAPH_API_URL")
 
     signature = compute_signature(repo_path)
@@ -232,7 +238,8 @@ def main(argv: list[str] | None = None) -> int:
     try:
         result = ensure_indexed(
             args.repo_path,
-            tenant=args.tenant,
+            # Only pass tenant when given on the CLI, so the env fallback applies.
+            **({} if args.tenant is None else {"tenant": args.tenant}),
             force=args.force,
             api_url=args.api_url,
             check_only=args.check,

@@ -91,6 +91,12 @@ def _summary_first(ws: WorkingSet, profile: OutputProfile) -> list[PromptBlock]:
                     why_included="symbol signature — L3 context",
                 ))
 
+    if not blocks:
+        # Fresh graphs have no consumer-written summaries yet (and tiny profiles
+        # exclude signatures) — fall back to a compact symbol map so the pack is
+        # never empty when the working set isn't.
+        return _symbol_first(ws, profile)
+
     return _trim_to_budget(blocks, profile.target_context)
 
 

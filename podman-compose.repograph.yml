@@ -16,6 +16,7 @@ services:
       REPOGRAPH_DB_PATH: "/data/repograph"
       REPOGRAPH_DB_BACKEND: "cog"
       REPOGRAPH_TENANT_ID: "default"
+      REPOGRAPH_AUTOINDEX: "lazy"
       REPOGRAPH_REDIS_URL: "redis://redis:6379/0"
       REPOGRAPH_POSTGRES_DSN: "postgresql://repograph:repograph@postgres:5432/repograph"
     depends_on:

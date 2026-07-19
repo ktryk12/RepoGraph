@@ -1000,7 +1000,9 @@ def shared_retrieval_prepare(
     if x_tenant_id:
         body.setdefault("tenant_id", x_tenant_id)
     req = SharedRetrievalRequest(**body)
-    store = _get_store(req.tenant_id if req.tenant_id != "default" else x_tenant_id)
+    _tenant = req.tenant_id if req.tenant_id != "default" else x_tenant_id
+    _maybe_lazy_index(req.repo_path, _tenant)
+    store = _get_store(_tenant)
     response = prepare_task_context(req, store)
     consumer = req.consumer
     return format_for_consumer(response, consumer)
@@ -1029,7 +1031,9 @@ def shared_retrieval_working_set(
     if x_tenant_id:
         body.setdefault("tenant_id", x_tenant_id)
     req = SharedRetrievalRequest(**body)
-    store = _get_store(req.tenant_id if req.tenant_id != "default" else x_tenant_id)
+    _tenant = req.tenant_id if req.tenant_id != "default" else x_tenant_id
+    _maybe_lazy_index(req.repo_path, _tenant)
+    store = _get_store(_tenant)
     response = prepare_task_context(req, store)
     return response.working_set
 
@@ -1043,7 +1047,9 @@ def shared_retrieval_prompt_pack(
     if x_tenant_id:
         body.setdefault("tenant_id", x_tenant_id)
     req = SharedRetrievalRequest(**body)
-    store = _get_store(req.tenant_id if req.tenant_id != "default" else x_tenant_id)
+    _tenant = req.tenant_id if req.tenant_id != "default" else x_tenant_id
+    _maybe_lazy_index(req.repo_path, _tenant)
+    store = _get_store(_tenant)
     response = prepare_task_context(req, store)
     return response.prompt_pack.model_dump()
 
@@ -1061,7 +1067,9 @@ def shared_retrieval_retry_pack(
     failure_reason = body.pop("failure_reason", "")
     previous_diff = body.pop("previous_diff", None)
     req = SharedRetrievalRequest(**body)
-    store = _get_store(req.tenant_id if req.tenant_id != "default" else x_tenant_id)
+    _tenant = req.tenant_id if req.tenant_id != "default" else x_tenant_id
+    _maybe_lazy_index(req.repo_path, _tenant)
+    store = _get_store(_tenant)
     response = prepare_task_context(req, store)
     profile = resolve_profile(req.output_profile, req.target_context)
     from repograph.working_set.builder import build as build_ws
@@ -1137,6 +1145,31 @@ def _get_store(tenant_id: str | None = None) -> GraphStore:
         backend=DEFAULT_DB_BACKEND,
         db_path=db_path,
     )
+
+
+# Lazy auto-indexing: index-on-use instead of via git hooks, so nothing is paid
+# on git operations. Enabled with REPOGRAPH_AUTOINDEX=lazy. A per-(tenant,repo)
+# throttle keeps repeated retrievals in one task from re-checking every call.
+_LAZY_MODES = {"lazy", "1", "true", "on", "yes"}
+_LAZY_INDEX_LAST: dict[str, float] = {}
+
+
+def _maybe_lazy_index(repo_path: str | None, tenant: str | None) -> None:
+    if not repo_path or os.getenv("REPOGRAPH_AUTOINDEX", "").lower() not in _LAZY_MODES:
+        return
+    interval = float(os.getenv("REPOGRAPH_AUTOINDEX_INTERVAL", "30"))
+    key = f"{tenant or 'default'}::{repo_path}"
+    now = time.monotonic()
+    if now - _LAZY_INDEX_LAST.get(key, 0.0) < interval:
+        return
+    _LAZY_INDEX_LAST[key] = now
+    try:
+        from repograph.autoindex import ensure_indexed
+
+        ensure_indexed(repo_path, tenant=tenant)
+    except Exception:
+        # Auto-indexing is best-effort — never let it break retrieval.
+        pass
 
 
 def _load_metadata(store: GraphStore) -> dict[str, str | None]:

@@ -1,14 +1,3 @@
 {
-  "hooks": {
-    "SessionStart": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "repograph-autoindex \"$CLAUDE_PROJECT_DIR\" --quiet"
-          }
-        ]
-      }
-    ]
-  }
+  "$comment": "RepoGraph auto-indexing is handled lazily by the API/MCP server itself (REPOGRAPH_AUTOINDEX=lazy) — no hooks needed, zero cost on git operations and session start. See docs/AUTO_INDEXING.md for optional hook-based setups."
 }

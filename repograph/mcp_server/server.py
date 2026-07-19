@@ -227,8 +227,9 @@ def prepare_task_context(
     """Full shared retrieval: classify → retrieve → pack. Returns consumer-ready prompt + working_set."""
     from repograph.shared_retrieval import SharedRetrievalRequest, prepare_task_context as _prepare
     from repograph.shared_retrieval.adapters import format_for_consumer
-    from repograph.graph import get_graph_store
-    store = get_graph_store(backend=os.getenv("REPOGRAPH_DB_BACKEND", "cog"), db_path=os.getenv("REPOGRAPH_DB_PATH", ".repograph"))
+    from repograph.api.routes import _get_store, _maybe_lazy_index
+    _maybe_lazy_index(repo_path, TENANT_ID)
+    store = _get_store(TENANT_ID)
     req = SharedRetrievalRequest(
         repo_path=repo_path, query=query, task_hint=task_hint,
         output_profile=output_profile, target_context=target_context,
@@ -269,8 +270,9 @@ def build_prompt_pack(
 ) -> dict[str, Any]:
     """Build a PromptPack from a query. Returns preamble, objective, context_blocks, and token estimate."""
     from repograph.shared_retrieval import SharedRetrievalRequest, prepare_task_context as _prepare
-    from repograph.graph import get_graph_store
-    store = get_graph_store(backend=os.getenv("REPOGRAPH_DB_BACKEND", "cog"), db_path=os.getenv("REPOGRAPH_DB_PATH", ".repograph"))
+    from repograph.api.routes import _get_store, _maybe_lazy_index
+    _maybe_lazy_index(repo_path, TENANT_ID)
+    store = _get_store(TENANT_ID)
     req = SharedRetrievalRequest(
         repo_path=repo_path, query=query,
         output_profile=output_profile, target_context=target_context,
@@ -293,8 +295,9 @@ def build_retry_pack(
     from repograph.shared_retrieval.profiles import resolve_profile
     from repograph.shared_retrieval.prompt_packer import pack
     from repograph.working_set.builder import build as build_ws
-    from repograph.graph import get_graph_store
-    store = get_graph_store(backend=os.getenv("REPOGRAPH_DB_BACKEND", "cog"), db_path=os.getenv("REPOGRAPH_DB_PATH", ".repograph"))
+    from repograph.api.routes import _get_store, _maybe_lazy_index
+    _maybe_lazy_index(repo_path, TENANT_ID)
+    store = _get_store(TENANT_ID)
     req = SharedRetrievalRequest(
         repo_path=repo_path, query=query, target_context=target_context,
         output_profile="patch", tenant_id=TENANT_ID or "default",
