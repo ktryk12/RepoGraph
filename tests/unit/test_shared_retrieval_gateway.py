@@ -3,6 +3,7 @@ from __future__ import annotations
 from unittest.mock import Mock
 
 from repograph.shared_retrieval.gateway import _build_verification_plan, prepare_task_context
+from repograph.token_budget import BudgetRequest, get_engine
 from repograph.working_set.models import WorkingSetFile
 
 from tests.fixtures.builders import make_working_set
@@ -89,6 +90,69 @@ def test_prepare_task_context_logs_trace_with_pre_and_post_compress_tokens(
     assert entry["token_budget"] == sample_request.target_context
     assert entry["pre_compress_tokens"] >= entry["post_compress_tokens"]
     assert entry["consumer"] == sample_request.consumer
+
+
+def test_prepare_task_context_uses_central_budget_and_logs_identity_dimensions(
+    sample_request,
+    fake_store,
+    fake_redis,
+    fake_tracer,
+    monkeypatch,
+) -> None:
+    sample_request.target_model = "claude-sonnet"
+    sample_request.session_id = "session-1"
+    sample_request.adapter_version = "v2"
+    sample_request.repo_revision = "abc123"
+    sample_request.content_hash = "content456"
+    sample_request.system_instructions = "Keep changes minimal"
+    sample_request.required_tool_schemas = [{"name": "pytest"}]
+    sample_request.reserved_output_tokens = 500
+    sample_request.safety_margin_tokens = 100
+    captured: dict = {}
+
+    def fake_build(**kwargs):
+        captured.update(kwargs)
+        return make_working_set(symbol_count=12, token_budget=kwargs["token_budget"])
+
+    monkeypatch.setattr("repograph.shared_retrieval.gateway.build_working_set", fake_build)
+
+    response = prepare_task_context(sample_request, fake_store)
+    expected = get_engine(sample_request.target_model).calculate(
+        BudgetRequest(
+            total_context=sample_request.target_context,
+            target_model=sample_request.target_model,
+            system_instructions=sample_request.system_instructions,
+            required_tool_schemas=sample_request.required_tool_schemas,
+            reserved_output_tokens=500,
+            safety_margin_tokens=100,
+        )
+    )
+
+    assert captured["token_budget"] == expected.available_retrieval_tokens
+    assert captured["target_model"] == "claude-sonnet"
+    assert response.prompt_pack.target_context == expected.available_retrieval_tokens
+    assert fake_tracer[0]["repo_revision"] == "abc123"
+    assert fake_tracer[0]["content_hash"] == "content456"
+    assert fake_tracer[0]["session_id"] == "session-1"
+    assert fake_tracer[0]["adapter_version"] == "v2"
+    assert fake_tracer[0]["tokenizer_profile"] == "anthropic"
+
+
+def test_cache_hit_logs_reused_and_cache_saved_tokens(
+    sample_request,
+    fake_store,
+    fake_redis,
+    fake_tracer,
+) -> None:
+    first = prepare_task_context(sample_request, fake_store)
+    second = prepare_task_context(sample_request, fake_store)
+
+    assert second.cache.used is True
+    assert len(fake_tracer) == 2
+    cache_trace = fake_tracer[-1]
+    assert cache_trace["cache_hit"] is True
+    assert cache_trace["reused_tokens"] == first.prompt_pack.total_tokens
+    assert cache_trace["cache_saved_tokens"] == first.prompt_pack.total_tokens
 
 
 def test_verification_plan_identifies_tests_and_avoids_false_positives() -> None:

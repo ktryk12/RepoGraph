@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import hashlib
+import json
 
 
 def _repo_prefix(tenant: str, repo_path: str) -> str:
@@ -44,5 +45,33 @@ def session_snapshot(tenant: str, session_id: str) -> str:
     return f"session:{tenant}:{session_id}:snapshot"
 
 
-def query_hash(query: str, profile: str, target_context: int) -> str:
-    return hashlib.sha1(f"{query}:{profile}:{target_context}".encode()).hexdigest()[:16]
+def query_hash(
+    query: str,
+    profile: str,
+    target_context: int,
+    *,
+    repo_revision: str | None = None,
+    content_hash: str | None = None,
+    session_id: str | None = None,
+    task_hint: str | None = None,
+    target_model: str | None = None,
+    consumer: str | None = None,
+    adapter_version: str | None = None,
+    analysis_step_id: str | None = None,
+) -> str:
+    """Hash every input that can change a retrieval/context representation."""
+    identity = {
+        "query": query,
+        "profile": profile,
+        "target_context": target_context,
+        "repo_revision": repo_revision or "",
+        "content_hash": content_hash or "",
+        "session_id": session_id or "",
+        "task_hint": task_hint or "",
+        "target_model": target_model or "generic",
+        "consumer": consumer or "generic",
+        "adapter_version": adapter_version or "v1",
+        "analysis_step_id": analysis_step_id or "",
+    }
+    serialized = json.dumps(identity, sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(serialized.encode()).hexdigest()[:24]

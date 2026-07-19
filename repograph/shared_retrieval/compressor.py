@@ -9,16 +9,16 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
+from repograph.token_budget import get_engine
 from repograph.working_set.models import WorkingSet, WorkingSetSymbol
 
-_CHARS_PER_TOKEN = 4
 
-
-def _tok(text: str) -> int:
-    return max(1, len(text) // _CHARS_PER_TOKEN)
-
-
-def _sym_tokens(sym: WorkingSetSymbol, *, include_calls: bool = True) -> int:
+def _sym_tokens(
+    sym: WorkingSetSymbol,
+    *,
+    include_calls: bool = True,
+    target_model: str | None = None,
+) -> int:
     parts = [sym.symbol]
     if sym.signature:
         parts.append(sym.signature)
@@ -26,7 +26,7 @@ def _sym_tokens(sym: WorkingSetSymbol, *, include_calls: bool = True) -> int:
         parts.append(sym.summary)
     if include_calls and sym.calls:
         parts.append(", ".join(sym.calls[:4]))
-    return sum(_tok(p) for p in parts)
+    return get_engine(target_model).count_text("\n".join(parts))
 
 
 _RISK_SCORE = {"high": 3, "medium": 2, "low": 1}
@@ -45,10 +45,14 @@ class CompressedContext:
     budget: int
 
 
-def compress(ws: WorkingSet, budget: int) -> CompressedContext:
+def compress(
+    ws: WorkingSet,
+    budget: int,
+    target_model: str | None = None,
+) -> CompressedContext:
     """Trim WorkingSet symbols to fit within budget using 3-pass structural compression."""
     symbols = list(ws.symbols)
-    pre = sum(_sym_tokens(s) for s in symbols)
+    pre = sum(_sym_tokens(s, target_model=target_model) for s in symbols)
 
     # Already fits — return as-is
     if pre <= budget:
@@ -65,7 +69,7 @@ def compress(ws: WorkingSet, budget: int) -> CompressedContext:
         s.model_copy(update={"calls": []}) if s.risk_level == "low" else s
         for s in symbols
     ]
-    current = sum(_sym_tokens(s) for s in pass1)
+    current = sum(_sym_tokens(s, target_model=target_model) for s in pass1)
     if current <= budget:
         return CompressedContext(
             symbols=pass1, pre_compress_tokens=pre,
@@ -77,7 +81,7 @@ def compress(ws: WorkingSet, budget: int) -> CompressedContext:
         s.model_copy(update={"summary": None, "calls": []}) if s.risk_level == "low" else s
         for s in pass1
     ]
-    current = sum(_sym_tokens(s) for s in pass2)
+    current = sum(_sym_tokens(s, target_model=target_model) for s in pass2)
     if current <= budget:
         return CompressedContext(
             symbols=pass2, pre_compress_tokens=pre,
@@ -89,7 +93,7 @@ def compress(ws: WorkingSet, budget: int) -> CompressedContext:
     kept: list[WorkingSetSymbol] = []
     used = 0
     for sym in ranked:
-        cost = _sym_tokens(sym)
+        cost = _sym_tokens(sym, target_model=target_model)
         if used + cost > budget:
             continue
         kept.append(sym)

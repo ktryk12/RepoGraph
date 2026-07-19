@@ -3,13 +3,8 @@ services:
   api:
     build:
       context: .
-      target: builder
-    command: >
-      python -m uvicorn repograph.api.routes:app
-      --host 0.0.0.0
-      --port 8001
-      --reload
-      --reload-dir /app/repograph
+      target: development
+    command: ["repograph-start"]
     volumes:
       - .:/app
       - repograph_data:/data
@@ -19,6 +14,9 @@ services:
       REPOGRAPH_DB_PATH: "/data/repograph"
       REPOGRAPH_DB_BACKEND: "cog"
       REPOGRAPH_TENANT_ID: "default"
+      REPOGRAPH_AUTOINDEX: "lazy"
+      REPOGRAPH_AUTO_MIGRATE: "1"
+      REPOGRAPH_DEV_RELOAD: "1"
       REPOGRAPH_REDIS_URL: "redis://redis:6379/0"
       REPOGRAPH_POSTGRES_DSN: "postgresql://repograph:repograph@postgres:5432/repograph"
     user: root

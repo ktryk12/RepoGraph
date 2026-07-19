@@ -21,6 +21,7 @@ def build(
     token_budget: int = 4096,
     coarse_limit: int = 40,
     expand_limit: int = 80,
+    target_model: str | None = None,
 ) -> WorkingSet:
     t0 = time.perf_counter()
 
@@ -32,6 +33,7 @@ def build(
         coarse_limit=coarse_limit,
         expand_limit=expand_limit,
         persist_trace=True,
+        target_model=target_model,
     )
 
     raw_symbols = [
@@ -48,8 +50,8 @@ def build(
         for item in result.working_set
     ]
 
-    compressed, compression = enforce_budget(raw_symbols, token_budget)
-    token_estimate = sum(token_cost(s, compression) for s in compressed)
+    compressed, compression = enforce_budget(raw_symbols, token_budget, target_model)
+    token_estimate = sum(token_cost(s, compression, target_model) for s in compressed)
 
     # Group symbols by file
     file_map: dict[str, list[WorkingSetSymbol]] = {}

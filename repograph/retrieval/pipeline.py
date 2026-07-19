@@ -8,7 +8,7 @@ from dataclasses import dataclass, field
 from repograph.graph.factory import GraphStore
 from repograph.task_families.registry import defaults_for
 
-from .code_span_selector import select
+from .code_span_selector import estimate_item_tokens, select
 from .coarse_retriever import coarse_retrieve
 from .structural_expander import expand
 from .task_planner import classify
@@ -34,6 +34,7 @@ def retrieve(
     coarse_limit: int = 40,
     expand_limit: int = 80,
     persist_trace: bool = True,
+    target_model: str | None = None,
 ) -> RetrievalResult:
     t0 = time.perf_counter()
 
@@ -56,12 +57,16 @@ def retrieve(
     expanded = expand(coarse, task_family, store, max_symbols=expand_limit)
 
     # Stage 4: token-budget selection
-    selected = select(expanded, query, task_family, store, token_budget=token_budget)
-
-    token_estimate = sum(
-        80 if s.get("summary") else 40 if s.get("signature") else 15
-        for s in selected
+    selected = select(
+        expanded,
+        query,
+        task_family,
+        store,
+        token_budget=token_budget,
+        target_model=target_model,
     )
+
+    token_estimate = sum(estimate_item_tokens(item, target_model) for item in selected)
     files = sorted({s["in_file"] for s in selected if s.get("in_file")})
     duration_ms = int((time.perf_counter() - t0) * 1000)
 

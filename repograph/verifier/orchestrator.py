@@ -101,6 +101,12 @@ def _log_to_postgres(result: VerificationResult, task_id: str | None) -> None:
             result_json=result.model_dump(exclude={"steps"}),
             duration_ms=result.duration_ms,
         )
+        if task_id:
+            from repograph.postgres.repositories.usage_logs import UsageRepository
+            UsageRepository().mark_verified(
+                task_id=task_id,
+                passed=result.overall_status == "pass",
+            )
     except Exception:
         pass
 

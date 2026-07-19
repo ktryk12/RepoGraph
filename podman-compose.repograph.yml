@@ -17,6 +17,9 @@ services:
       REPOGRAPH_DB_BACKEND: "cog"
       REPOGRAPH_TENANT_ID: "default"
       REPOGRAPH_AUTOINDEX: "lazy"
+      REPOGRAPH_AUTO_MIGRATE: "1"
+      REPOGRAPH_MIGRATE_ATTEMPTS: "30"
+      REPOGRAPH_MIGRATE_INTERVAL: "2"
       REPOGRAPH_REDIS_URL: "redis://redis:6379/0"
       REPOGRAPH_POSTGRES_DSN: "postgresql://repograph:repograph@postgres:5432/repograph"
     depends_on:
@@ -28,23 +31,9 @@ services:
       test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8001/status')"]
       interval: 10s
       timeout: 5s
-      retries: 5
-      start_period: 15s
+      retries: 10
+      start_period: 30s
     restart: unless-stopped
-
-  migrate:
-    build:
-      context: .
-      dockerfile: Containerfile
-      target: runtime
-    container_name: repograph-migrate
-    command: ["repograph-migrate"]
-    environment:
-      REPOGRAPH_POSTGRES_DSN: "postgresql://repograph:repograph@postgres:5432/repograph"
-    depends_on:
-      postgres:
-        condition: service_healthy
-    restart: "no"
 
   redis:
     image: docker.io/redis:7-alpine

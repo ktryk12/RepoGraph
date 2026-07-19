@@ -156,11 +156,23 @@ def find_relevant_symbols(query: str, task_family: str | None = None, limit: int
 
 
 @mcp.tool(name="build_working_set")
-def build_working_set(query: str, task_hint: str | None = None, token_budget: int = 4096, format: str = "compact") -> dict[str, Any]:
+def build_working_set(
+    query: str,
+    task_hint: str | None = None,
+    token_budget: int = 4096,
+    format: str = "compact",
+    target_model: str | None = None,
+) -> dict[str, Any]:
     """Full multi-stage retrieval → token-budget-aware WorkingSet. Use format='prompt' to get LLM-ready context."""
     return _handle_api_call(
         api_working_set,
-        WorkingSetRequest(query=query, task_hint=task_hint, token_budget=token_budget, format=format),
+        WorkingSetRequest(
+            query=query,
+            task_hint=task_hint,
+            token_budget=token_budget,
+            format=format,
+            target_model=target_model,
+        ),
         x_tenant_id=TENANT_ID,
     )
 
@@ -197,6 +209,7 @@ def multi_stage_retrieve(
     coarse_limit: int = 40,
     expand_limit: int = 80,
     persist_trace: bool = True,
+    target_model: str | None = None,
 ) -> dict[str, Any]:
     """Full multi-stage retrieval pipeline: classify → coarse → structural expansion → fine selection.
     Returns a ranked working set of symbols within the token budget."""
@@ -209,6 +222,7 @@ def multi_stage_retrieve(
             coarse_limit=coarse_limit,
             expand_limit=expand_limit,
             persist_trace=persist_trace,
+            target_model=target_model,
         ),
         x_tenant_id=TENANT_ID,
     )
@@ -223,6 +237,13 @@ def prepare_task_context(
     target_context: int = 4096,
     consumer: str = "generic",
     include_debug: bool = False,
+    session_id: str | None = None,
+    target_model: str | None = None,
+    adapter_version: str = "v1",
+    repo_revision: str | None = None,
+    content_hash: str | None = None,
+    reserved_output_tokens: int = 0,
+    safety_margin_tokens: int = 0,
 ) -> dict[str, Any]:
     """Full shared retrieval: classify → retrieve → pack. Returns consumer-ready prompt + working_set."""
     from repograph.shared_retrieval import SharedRetrievalRequest, prepare_task_context as _prepare
@@ -235,6 +256,10 @@ def prepare_task_context(
         output_profile=output_profile, target_context=target_context,
         consumer=consumer, include_debug=include_debug,
         tenant_id=TENANT_ID or "default",
+        session_id=session_id, target_model=target_model,
+        adapter_version=adapter_version, repo_revision=repo_revision,
+        content_hash=content_hash, reserved_output_tokens=reserved_output_tokens,
+        safety_margin_tokens=safety_margin_tokens,
     )
     response = _prepare(req, store)
     return format_for_consumer(response, consumer)
@@ -267,6 +292,7 @@ def build_prompt_pack(
     query: str,
     output_profile: str = "small",
     target_context: int = 4096,
+    target_model: str | None = None,
 ) -> dict[str, Any]:
     """Build a PromptPack from a query. Returns preamble, objective, context_blocks, and token estimate."""
     from repograph.shared_retrieval import SharedRetrievalRequest, prepare_task_context as _prepare
@@ -276,6 +302,7 @@ def build_prompt_pack(
     req = SharedRetrievalRequest(
         repo_path=repo_path, query=query,
         output_profile=output_profile, target_context=target_context,
+        target_model=target_model,
         tenant_id=TENANT_ID or "default",
     )
     response = _prepare(req, store)
@@ -289,6 +316,7 @@ def build_retry_pack(
     failure_reason: str,
     previous_diff: str | None = None,
     target_context: int = 4096,
+    target_model: str | None = None,
 ) -> dict[str, Any]:
     """Pack context for a retry after verification failure. Prepends failure reason + diff to patch_first context."""
     from repograph.shared_retrieval import SharedRetrievalRequest, prepare_task_context as _prepare
@@ -302,9 +330,20 @@ def build_retry_pack(
         repo_path=repo_path, query=query, target_context=target_context,
         output_profile="patch", tenant_id=TENANT_ID or "default",
     )
-    ws = build_ws(query=query, store=store, token_budget=target_context)
+    ws = build_ws(
+        query=query,
+        store=store,
+        token_budget=target_context,
+        target_model=target_model,
+    )
     profile = resolve_profile("patch", target_context)
-    retry_pack = pack(ws, profile, failure_reason=failure_reason, previous_diff=previous_diff)
+    retry_pack = pack(
+        ws,
+        profile,
+        failure_reason=failure_reason,
+        previous_diff=previous_diff,
+        target_model=target_model,
+    )
     return retry_pack.model_dump()
 
 

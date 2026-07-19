@@ -1,5 +1,6 @@
 -- RepoGraph Postgres init — køres automatisk ved første containeropstart.
--- Indeholder migration 001 + 002 + markerer dem som applied i _schema_migrations.
+-- Bootstrapper migration 001 + 002. Containerens repograph-start anvender
+-- derefter alle nyere migrationer, inklusive token-economy migration 003.
 
 -- Migrations tracking
 CREATE TABLE IF NOT EXISTS _schema_migrations (

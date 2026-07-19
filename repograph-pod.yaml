@@ -25,6 +25,12 @@ spec:
           value: "default"
         - name: REPOGRAPH_AUTOINDEX
           value: "lazy"
+        - name: REPOGRAPH_AUTO_MIGRATE
+          value: "1"
+        - name: REPOGRAPH_MIGRATE_ATTEMPTS
+          value: "30"
+        - name: REPOGRAPH_MIGRATE_INTERVAL
+          value: "2"
         - name: REPOGRAPH_REDIS_URL
           value: "redis://localhost:6379/0"
         - name: REPOGRAPH_POSTGRES_DSN
@@ -36,14 +42,18 @@ spec:
         httpGet:
           path: /status
           port: 8001
-        initialDelaySeconds: 15
+        initialDelaySeconds: 30
         periodSeconds: 10
+        timeoutSeconds: 5
+        failureThreshold: 6
       readinessProbe:
         httpGet:
           path: /status
           port: 8001
-        initialDelaySeconds: 5
+        initialDelaySeconds: 20
         periodSeconds: 5
+        timeoutSeconds: 5
+        failureThreshold: 12
 
     - name: redis
       image: docker.io/redis:7-alpine
@@ -141,7 +151,8 @@ metadata:
 data:
   init.sql: |
     -- RepoGraph Postgres init — køres automatisk ved første containeropstart.
-    -- Indeholder migration 001 + 002 + markerer dem som applied i _schema_migrations.
+    -- Bootstrapper migration 001 + 002. API-starten anvender derefter alle
+    -- nyere migrationer fra image'et, inklusive token-economy migration 003.
 
     -- Migrations tracking
     CREATE TABLE IF NOT EXISTS _schema_migrations (

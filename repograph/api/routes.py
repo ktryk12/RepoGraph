@@ -188,6 +188,23 @@ class UsageLogRequest(BaseModel):
     latency_s: float = 0.0
     input_tokens: int = 0
     output_tokens: int = 0
+    task_id: str | None = None
+    repo_revision: str | None = None
+    content_hash: str | None = None
+    session_id: str | None = None
+    task_hint: str | None = None
+    target_model: str | None = None
+    adapter_version: str = "v1"
+    analysis_step_id: str | None = None
+    tokenizer_profile: str = "generic"
+    baseline_input_tokens: int = 0
+    repograph_input_tokens: int | None = None
+    cache_hit: bool = False
+    cache_saved_tokens: int = 0
+    reused_tokens: int = 0
+    input_price_usd: float = 0.0
+    output_price_usd: float = 0.0
+    verified_success: bool | None = None
 
 
 @router.post("/usage/log")
@@ -203,6 +220,32 @@ def log_usage(req: UsageLogRequest) -> dict[str, str]:
         (rid, _PRED_TOKENS_OUT, str(req.output_tokens)),
         (rid, _PRED_ROUTED_AT, now),
     ])
+    from repograph.postgres.repositories.usage_logs import UsageRepository
+    UsageRepository().log(
+        tenant_id=_USAGE_TENANT,
+        model_id=req.model_id,
+        capability=req.capability,
+        input_tokens=req.input_tokens,
+        output_tokens=req.output_tokens,
+        latency_ms=int(req.latency_s * 1000),
+        task_id=req.task_id,
+        repo_revision=req.repo_revision,
+        content_hash=req.content_hash,
+        session_id=req.session_id,
+        task_hint=req.task_hint,
+        target_model=req.target_model,
+        adapter_version=req.adapter_version,
+        analysis_step_id=req.analysis_step_id,
+        tokenizer_profile=req.tokenizer_profile,
+        baseline_input_tokens=req.baseline_input_tokens,
+        repograph_input_tokens=req.repograph_input_tokens,
+        cache_hit=req.cache_hit,
+        cache_saved_tokens=req.cache_saved_tokens,
+        reused_tokens=req.reused_tokens,
+        input_price_usd=req.input_price_usd,
+        output_price_usd=req.output_price_usd,
+        verified_success=req.verified_success,
+    )
     return {"id": rid, "routed_at": now}
 
 
@@ -221,7 +264,9 @@ def usage_stats() -> dict[str, Any]:
         {"model_id": m, "requests": c, "share_pct": round(c / total * 100, 1) if total else 0}
         for m, c in sorted(model_counts.items(), key=lambda x: -x[1])
     ]
-    return {"total_requests": total, "models": stats}
+    from repograph.postgres.repositories.usage_logs import UsageRepository
+    token_economy = UsageRepository().summary(_USAGE_TENANT)
+    return {"total_requests": total, "models": stats, "token_economy": token_economy}
 
 
 @router.get("/health")
@@ -713,6 +758,7 @@ class WorkingSetRequest(BaseModel):
     token_budget: int = 4096
     coarse_limit: int = 40
     expand_limit: int = 80
+    target_model: str | None = None
     format: str = "full"   # full | compact | prompt
 
 
@@ -728,6 +774,7 @@ def build_working_set(req: WorkingSetRequest, x_tenant_id: Annotated[str | None,
         token_budget=req.token_budget,
         coarse_limit=req.coarse_limit,
         expand_limit=req.expand_limit,
+        target_model=req.target_model,
     )
     if req.format == "compact":
         return to_compact(ws)
@@ -941,6 +988,7 @@ class RetrieveRequest(BaseModel):
     coarse_limit: int = 40
     expand_limit: int = 80
     persist_trace: bool = True
+    target_model: str | None = None
 
 
 @router.post("/retrieve")
@@ -956,6 +1004,7 @@ def multi_stage_retrieve(req: RetrieveRequest, x_tenant_id: Annotated[str | None
         coarse_limit=req.coarse_limit,
         expand_limit=req.expand_limit,
         persist_trace=req.persist_trace,
+        target_model=req.target_model,
     )
     return {
         "retrieval_id": result.retrieval_id,

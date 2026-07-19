@@ -17,6 +17,9 @@ class SharedRetrievalRequest(BaseModel):
     session_id: str | None = None
     task_id: str | None = None
     target_model: str | None = None   # hint for model router (glm-5.1 | qwen | mixtral | ...)
+    adapter_version: str = "v1"
+    repo_revision: str | None = None
+    content_hash: str | None = None
     target_context: int = 4096        # token budget for the output
     output_profile: str = "small"     # tiny | small | medium | patch | review
     include_debug: bool = False
@@ -24,6 +27,14 @@ class SharedRetrievalRequest(BaseModel):
     force_refresh: bool = False       # bypass Redis cache
     analysis_step_id: str | None = None
     include_analysis_plan: bool = True
+    system_instructions: str = ""
+    required_tool_schemas: list[dict] = Field(default_factory=list)
+    active_task_memory: dict | list | str | None = None
+    tool_results: dict | list | str | None = None
+    reserved_output_tokens: int = 0
+    safety_margin_tokens: int = 0
+    safety_margin_ratio: float = 0.0
+    baseline_tokens: int | None = None
 
 
 # ---------------------------------------------------------------------------

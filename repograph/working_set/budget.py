@@ -2,29 +2,44 @@
 
 from __future__ import annotations
 
+from repograph.token_budget import get_engine
+
 from .models import WorkingSetSymbol
 
 _RISK_ORDER = {"low": 0, "medium": 1, "high": 2}
 
-# Token costs per compression level
-_COST_FULL = 80      # signature + summary + calls
-_COST_SIG = 40       # signature only
-_COST_BARE = 15      # name + file + line only
-
-
-def token_cost(sym: WorkingSetSymbol, compression: str) -> int:
+def token_cost(
+    sym: WorkingSetSymbol,
+    compression: str,
+    target_model: str | None = None,
+) -> int:
+    """Count the representation actually retained at a compression level."""
+    engine = get_engine(target_model)
+    parts = [sym.symbol]
+    if sym.in_file:
+        parts.append(sym.in_file)
+    if sym.at_line:
+        parts.append(str(sym.at_line))
     match compression:
         case "symbols_only":
-            return _COST_BARE
+            pass
         case "signatures_only":
-            return _COST_SIG
+            if sym.signature:
+                parts.append(sym.signature)
         case _:
-            return _COST_FULL if sym.summary else _COST_SIG if sym.signature else _COST_BARE
+            if sym.signature:
+                parts.append(sym.signature)
+            if sym.summary:
+                parts.append(sym.summary)
+            if sym.calls:
+                parts.extend(sym.calls[:8])
+    return engine.count_text("\n".join(parts))
 
 
 def enforce_budget(
     symbols: list[WorkingSetSymbol],
     token_budget: int,
+    target_model: str | None = None,
 ) -> tuple[list[WorkingSetSymbol], str]:
     """
     Apply the lightest compression that fits within token_budget.
@@ -32,7 +47,7 @@ def enforce_budget(
     """
     for strategy in ("none", "drop_low_risk", "signatures_only", "symbols_only"):
         candidates = _apply(symbols, strategy)
-        total = sum(token_cost(s, strategy) for s in candidates)
+        total = sum(token_cost(s, strategy, target_model) for s in candidates)
         if total <= token_budget:
             return candidates, strategy
 
@@ -40,10 +55,12 @@ def enforce_budget(
     result = []
     used = 0
     for sym in sorted(symbols, key=lambda s: _RISK_ORDER.get(s.risk_level, 1), reverse=True):
-        if used + _COST_BARE > token_budget:
-            break
-        result.append(_strip(sym))
-        used += _COST_BARE
+        stripped = _strip(sym)
+        cost = token_cost(stripped, "symbols_only", target_model)
+        if used + cost > token_budget:
+            continue
+        result.append(stripped)
+        used += cost
     return result, "symbols_only"
 
 

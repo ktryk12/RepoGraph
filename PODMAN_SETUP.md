@@ -25,6 +25,8 @@ RepoGraph er nu konverteret fra Docker til **Podman** for bedre sikkerhed og per
 ### 1. Installer podman-compose
 ```powershell
 pip install podman-compose
+# Hvis Scripts-mappen ikke er på PATH, virker helper-scriptet stadig via:
+py -3.13 -m podman_compose --version
 ```
 
 ### 2. Initialiser Podman Machine
@@ -46,10 +48,10 @@ podman machine list
 ### Metode 1: PowerShell Helper (anbefalet)
 ```powershell
 # Production
-.\podman-repograph.ps1 up -Detached
+.\podman-repograph.ps1 up -Build -Detached
 
 # Development med hot-reload
-.\podman-repograph.ps1 up -Dev
+.\podman-repograph.ps1 up -Dev -Build
 
 # Status og logs
 .\podman-repograph.ps1 status
@@ -71,15 +73,26 @@ podman-compose -f podman-compose.repograph.yml -f podman-compose.repograph.dev.y
 ### Metode 3: Kubernetes Pod
 ```powershell
 # Build først
-podman build -t localhost/repograph:latest -f Containerfile .
+podman build --target runtime -t localhost/repograph:latest -f Containerfile .
 
 # Start som pod
-podman play kube repograph-pod.yaml
+podman play kube --replace repograph-pod.yaml
 ```
 
 ---
 
 ## 🔧 **Fejlfinding**
+
+Ved hver containerstart venter `repograph-start` på Postgres, anvender alle
+manglende migrationer og starter derefter API'et. Det gør både nye og
+eksisterende Postgres-volumes kompatible med den aktuelle RepoGraph-version.
+
+Kontrollér migrationerne:
+
+```powershell
+.\podman-repograph.ps1 migrate
+podman exec repograph-postgres psql -U repograph -d repograph -c "SELECT * FROM _schema_migrations ORDER BY name;"
+```
 
 ### "Cannot connect to Podman"
 ```powershell

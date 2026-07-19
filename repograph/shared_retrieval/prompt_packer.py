@@ -3,18 +3,11 @@
 from __future__ import annotations
 
 from repograph.task_families.registry import get as get_family
+from repograph.token_budget import TokenBudgetEngine, get_engine
 from repograph.working_set.models import WorkingSet
 
 from .models import PromptBlock, PromptPack
 from .profiles import OutputProfile
-
-_WORDS_PER_TOKEN = 0.75
-_CHARS_PER_TOKEN = 4
-
-
-def _tok(text: str) -> int:
-    return max(1, len(text) // _CHARS_PER_TOKEN)
-
 
 # ---------------------------------------------------------------------------
 # Public entry point
@@ -25,28 +18,36 @@ def pack(
     profile: OutputProfile,
     failure_reason: str | None = None,
     previous_diff: str | None = None,
+    target_model: str | None = None,
 ) -> PromptPack:
+    engine = get_engine(target_model)
     strategy = profile.packing_strategy
     if failure_reason:
         strategy = "retry"
 
     match strategy:
         case "summary_first":
-            blocks = _summary_first(ws, profile)
+            blocks = _summary_first(ws, profile, engine)
         case "symbol_first":
-            blocks = _symbol_first(ws, profile)
+            blocks = _symbol_first(ws, profile, engine)
         case "patch_first":
-            blocks = _patch_first(ws, profile)
+            blocks = _patch_first(ws, profile, engine)
         case "test_first":
-            blocks = _test_first(ws, profile)
+            blocks = _test_first(ws, profile, engine)
         case "retry":
-            blocks = _retry_pack(ws, profile, failure_reason or "", previous_diff)
+            blocks = _retry_pack(ws, profile, engine, failure_reason or "", previous_diff)
         case _:
-            blocks = _summary_first(ws, profile)
+            blocks = _summary_first(ws, profile, engine)
 
     preamble = _get_preamble(ws.task_family)
     objective = _format_objective(ws.query, ws.task_family)
-    reserved_tokens = _tok(preamble) + _tok(objective)
+    if engine.count_text(preamble) > profile.target_context:
+        preamble = engine.truncate_text(preamble, profile.target_context)
+        objective = ""
+    else:
+        objective_budget = max(0, profile.target_context - engine.count_text(preamble))
+        objective = engine.truncate_text(objective, objective_budget)
+    reserved_tokens = engine.count_text(preamble) + engine.count_text(objective)
     blocks = _trim_to_budget(blocks, max(0, profile.target_context - reserved_tokens))
 
     total = reserved_tokens + sum(b.token_estimate for b in blocks)
@@ -65,7 +66,11 @@ def pack(
 # Strategies
 # ---------------------------------------------------------------------------
 
-def _summary_first(ws: WorkingSet, profile: OutputProfile) -> list[PromptBlock]:
+def _summary_first(
+    ws: WorkingSet,
+    profile: OutputProfile,
+    engine: TokenBudgetEngine,
+) -> list[PromptBlock]:
     blocks: list[PromptBlock] = []
 
     # L2 file summaries first
@@ -74,7 +79,7 @@ def _summary_first(ws: WorkingSet, profile: OutputProfile) -> list[PromptBlock]:
             content = f"File: {f.filepath}\n{f.file_summary}"
             blocks.append(PromptBlock(
                 role="context", label=f.filepath,
-                content=content, token_estimate=_tok(content),
+                content=content, token_estimate=engine.count_text(content),
                 why_included="file summary — L2 context",
             ))
 
@@ -87,7 +92,7 @@ def _summary_first(ws: WorkingSet, profile: OutputProfile) -> list[PromptBlock]:
                     content += f"\n{sym.summary}"
                 blocks.append(PromptBlock(
                     role="context", label=sym.symbol,
-                    content=content, token_estimate=_tok(content),
+                    content=content, token_estimate=engine.count_text(content),
                     why_included="symbol signature — L3 context",
                 ))
 
@@ -95,12 +100,16 @@ def _summary_first(ws: WorkingSet, profile: OutputProfile) -> list[PromptBlock]:
         # Fresh graphs have no consumer-written summaries yet (and tiny profiles
         # exclude signatures) — fall back to a compact symbol map so the pack is
         # never empty when the working set isn't.
-        return _symbol_first(ws, profile)
+        return _symbol_first(ws, profile, engine)
 
     return _trim_to_budget(blocks, profile.target_context)
 
 
-def _symbol_first(ws: WorkingSet, profile: OutputProfile) -> list[PromptBlock]:
+def _symbol_first(
+    ws: WorkingSet,
+    profile: OutputProfile,
+    engine: TokenBudgetEngine,
+) -> list[PromptBlock]:
     blocks: list[PromptBlock] = []
 
     # Symbols sorted by risk + caller count
@@ -123,14 +132,18 @@ def _symbol_first(ws: WorkingSet, profile: OutputProfile) -> list[PromptBlock]:
         content = "\n".join(lines)
         blocks.append(PromptBlock(
             role="context", label=sym.symbol,
-            content=content, token_estimate=_tok(content),
+            content=content, token_estimate=engine.count_text(content),
             why_included=f"risk={sym.risk_level} callers={sym.callers}",
         ))
 
     return _trim_to_budget(blocks, profile.target_context)
 
 
-def _patch_first(ws: WorkingSet, profile: OutputProfile) -> list[PromptBlock]:
+def _patch_first(
+    ws: WorkingSet,
+    profile: OutputProfile,
+    engine: TokenBudgetEngine,
+) -> list[PromptBlock]:
     """Pack focused on the specific symbols to change + their callers."""
     blocks: list[PromptBlock] = []
 
@@ -149,14 +162,18 @@ def _patch_first(ws: WorkingSet, profile: OutputProfile) -> list[PromptBlock]:
         content = "\n".join(lines)
         blocks.append(PromptBlock(
             role="context", label=sym.symbol,
-            content=content, token_estimate=_tok(content),
+            content=content, token_estimate=engine.count_text(content),
             why_included="patch target",
         ))
 
     return _trim_to_budget(blocks, profile.target_context)
 
 
-def _test_first(ws: WorkingSet, profile: OutputProfile) -> list[PromptBlock]:
+def _test_first(
+    ws: WorkingSet,
+    profile: OutputProfile,
+    engine: TokenBudgetEngine,
+) -> list[PromptBlock]:
     """Pack focused on test patterns and the symbol under test."""
     blocks: list[PromptBlock] = []
 
@@ -168,7 +185,7 @@ def _test_first(ws: WorkingSet, profile: OutputProfile) -> list[PromptBlock]:
         if sym.signature:
             content += f"\n```\n{sym.signature}\n```"
         blocks.append(PromptBlock(role="context", label=sym.symbol,
-                                  content=content, token_estimate=_tok(content),
+                                  content=content, token_estimate=engine.count_text(content),
                                   why_included="symbol under test"))
 
     for sym in test_syms[:profile.max_symbols]:
@@ -176,7 +193,7 @@ def _test_first(ws: WorkingSet, profile: OutputProfile) -> list[PromptBlock]:
         if sym.signature:
             content += f"\n```\n{sym.signature}\n```"
         blocks.append(PromptBlock(role="context", label=sym.symbol,
-                                  content=content, token_estimate=_tok(content),
+                                  content=content, token_estimate=engine.count_text(content),
                                   why_included="existing test pattern"))
 
     return _trim_to_budget(blocks, profile.target_context)
@@ -185,6 +202,7 @@ def _test_first(ws: WorkingSet, profile: OutputProfile) -> list[PromptBlock]:
 def _retry_pack(
     ws: WorkingSet,
     profile: OutputProfile,
+    engine: TokenBudgetEngine,
     failure_reason: str,
     previous_diff: str | None,
 ) -> list[PromptBlock]:
@@ -193,16 +211,16 @@ def _retry_pack(
 
     fail_content = f"PREVIOUS ATTEMPT FAILED:\n{failure_reason}"
     blocks.append(PromptBlock(role="retry", label="failure",
-                              content=fail_content, token_estimate=_tok(fail_content),
+                              content=fail_content, token_estimate=engine.count_text(fail_content),
                               why_included="failure context for retry"))
 
     if previous_diff:
         diff_content = f"Previous patch (failed):\n```diff\n{previous_diff[:1000]}\n```"
         blocks.append(PromptBlock(role="retry", label="previous_diff",
-                                  content=diff_content, token_estimate=_tok(diff_content),
+                                  content=diff_content, token_estimate=engine.count_text(diff_content),
                                   why_included="previous failed diff"))
 
-    blocks.extend(_patch_first(ws, profile))
+    blocks.extend(_patch_first(ws, profile, engine))
     return _trim_to_budget(blocks, profile.target_context)
 
 
