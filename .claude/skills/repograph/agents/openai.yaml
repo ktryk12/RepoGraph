@@ -1,0 +1,4 @@
+interface:
+  display_name: "RepoGraph"
+  short_description: "Token-efficient code context with RepoGraph"
+  default_prompt: "Use $repograph to retrieve minimal verified context for this coding task."

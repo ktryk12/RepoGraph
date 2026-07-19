@@ -1,73 +1,66 @@
 ---
 name: repograph
-description: Use RepoGraph (local code-intelligence graph via MCP) to gather precise, token-budgeted context for ANY coding task in an indexed repo — instead of blindly reading many files. Use when starting a bug fix, refactor, feature, or "understand this repo" task, before editing a symbol (blast radius), and after editing (verify + write back memory). Triggers: "fix", "refactor", "where is", "what calls", "understand the repo", "add feature".
+description: Use RepoGraph's local, LLM-free MCP/REST code graph to retrieve minimal token-budgeted context for coding tasks and to guide changes to RepoGraph or ContextOS internals. Trigger for repository understanding, symbol lookup, bug fixes, features, refactors, blast-radius analysis, WorkingSet/prompt/retry packing, token economy, capability graph, cache/metrics, verification, and RepoGraph architecture work. Prefer RepoGraph over broad file reads when its MCP tools are available.
 ---
 
-# Using RepoGraph for coding tasks
+# RepoGraph
 
-RepoGraph is a local, LLM-free code graph exposed over MCP. It answers structural
-questions and hands back **compressed, token-budgeted context** so you don't burn
-tokens reading whole files. Prefer its tools over ad-hoc `grep`/file-reads for
-understanding an indexed repo.
+Use RepoGraph as the structural context layer for coding work. Keep context small,
+grounded, and verifiable.
 
-## 0. Precondition — is the repo indexed?
-Call `repo_status`. If it reports not indexed (or a different repo), run
-`index_repo(repo_path)` once. With auto-indexing wired (session/git hooks) this is
-usually already done — but always check, and re-index with `index_repo(force=True)`
-if you need the graph to reflect **uncommitted** working-tree changes mid-task.
+## Route the task
 
-## 1. Start every task with `prepare_task_context`
-This is the primary entry point — one call runs classify → retrieve → compress → pack.
+- For work **in any indexed repository**, follow the MCP workflow below.
+- For changes to **RepoGraph/ContextOS internals**, first read
+  [`../RepoGraphSkill+.md`](../RepoGraphSkill+.md) completely and treat it as the
+  architecture/design specification.
+- Do not load the full design specification for unrelated projects.
 
-```
-prepare_task_context(
-  repo_path,
-  query="<the task in one sentence>",
-  output_profile="small",   # tiny|small|medium|patch|review
-  consumer="claude_code",
-)
-```
-Use the returned `prompt_pack` / `working_set` as your grounding. Pick the profile
-by task: `patch` for a targeted fix, `review` for code review, `medium` for deep
-analysis, `small` (default) otherwise. Keep the `retrieval_trace_id` and `task_id`.
+## MCP workflow for coding tasks
 
-## 2. Broad "understand the whole repo" asks → `build_analysis_plan`
-Don't force one giant prompt. `build_analysis_plan(repo_path, query)` returns an
-ordered set of steps (repo overview → services → high-risk files → entrypoints →
-tests → …). Work them one at a time.
+1. Call `repo_status`. If the target repository is missing or stale, call
+   `index_repo(repo_path)`; use `force=True` when uncommitted changes must be
+   reflected.
+2. Call `prepare_task_context` with the target repository, a one-sentence query,
+   an appropriate profile (`patch`, `review`, `medium`, or `small`), the target
+   model, and its context limit when known.
+3. Use the returned `prompt_pack`, `working_set`, `task_id`, and
+   `retrieval_trace_id` as the initial grounding. Do not reread broad portions of
+   the repository unless the pack shows a concrete gap.
+4. For broad analysis, call `build_analysis_plan` and execute one step at a time.
+5. Before a non-trivial symbol edit, call `search_symbols`/`get_symbol`, then
+   `blast_radius(symbol, depth=3)`.
+6. After editing, call `verify_task_context` with the changed files and task ID.
+   On failure, call `build_retry_pack` with the verifier failure and prior diff.
+7. Record the outcome with `update_task_memory`; refresh the index after accepted
+   structural changes.
 
-## 3. Navigate the graph for targeted questions
-- `search_symbols(query)` → candidate symbol IDs.
-- `get_symbol(symbol)` → file, line, callers, callees, ownership.
-- `find_relevant_symbols(query)` → coarse candidates for a task.
+Use REST equivalents only when MCP is unavailable. If neither interface is
+available, continue with normal repository tools and state that RepoGraph context
+was unavailable.
 
-## 4. BEFORE editing a symbol → `blast_radius`
-```
-blast_radius(symbol, depth=3)
-```
-See everything that transitively calls it, so you know what your change can break
-and what to test. Do this before any non-trivial edit.
+## RepoGraph/ContextOS implementation rules
 
-## 5. AFTER editing → verify, then close the loop
-- `verify_task_context(repo_path, files=[...], task_id=...)` — runs lint / type
-  check / tests on the changed files. Read the result before claiming success.
-- If it fails: `build_retry_pack(repo_path, query, failure_reason, previous_diff)`
-  gives fresh patch-first context with the failure up front. Iterate.
-- `update_task_memory(task_id, patch={...})` — record the attempt / outcome so the
-  next retrieval is sharper.
-- Optionally PUT summaries (file/symbol/service) so the graph accumulates knowledge
-  (RepoGraph is LLM-free and never writes these itself).
+After reading the full design specification:
 
-## Typical loop (bug fix)
-1. `prepare_task_context(repo_path, "fix token refresh bug", output_profile="patch")`
-2. `blast_radius("refresh_token")` → know the impact surface
-3. make the edit
-4. `verify_task_context(repo_path, ["auth.py"], task_id=...)`
-5. green → `update_task_memory(...)`; red → `build_retry_pack(...)` and retry
+1. Keep RepoGraph internally LLM-free and model-independent.
+2. Preserve existing MCP/REST response contracts unless the user explicitly
+   authorizes a breaking change.
+3. Reuse the central token-budget engine across retrieval, compression, prompt
+   packing, retries, and usage accounting; never add new `chars/4` estimates.
+4. Key caches and metrics by repository revision/content hash, session/task,
+   target model, tokenizer profile, and adapter version as applicable.
+5. Prefer focused changes over rewrites and keep CogDB, Redis, and Postgres roles
+   distinct.
+6. Add or update tests for token budgets, cache identity, prompt packing,
+   verification, and usage metrics.
+7. Verify the smallest relevant test set first, then the complete RepoGraph suite.
 
-## Notes
-- Read-only by default (24 tools). Filesystem write tools exist but are gated
-  behind `REPOGRAPH_ENABLE_WRITE_TOOLS=1` — don't rely on them.
-- Multi-tenant: each repo/project can use its own tenant (isolated graph).
-- If MCP tools aren't available, the same operations exist as REST endpoints on the
-  API (`POST /shared-retrieval/prepare`, `GET /blast-radius/{symbol}`, `POST /verify`).
+## Context discipline
+
+- Start with summaries, symbols, signatures, and relations; request code spans or
+  full files only when required.
+- Send deltas between steps instead of repeating the full WorkingSet.
+- Return only relevant tool/capability schemas for the next action.
+- When generating a prompt for another model, summarize only the relevant design
+  constraints; do not copy the complete design specification by default.
