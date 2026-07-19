@@ -22,3 +22,20 @@ Dockerfile*
 .dockerignore
 .containerignore
 repograph-pod.yaml
+
+# Heavy / irrelevant to the build context (only pyproject.toml + repograph/ are copied)
+.repograph/
+.repograph_*/
+.repograph_db/
+artifacts/
+.planning/
+.claude/
+.mcp.json
+babyai_shared/
+demo/
+docs/
+repograph-poc/
+services/
+node_modules/
+*_results.json
+*.log

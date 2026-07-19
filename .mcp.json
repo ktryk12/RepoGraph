@@ -2,7 +2,7 @@
   "mcpServers": {
     "repograph": {
       "command": "podman",
-      "args": ["exec", "-i", "repograph-api", "repograph-mcp"]
+      "args": ["exec", "-i", "repograph-pod-repograph-api", "repograph-mcp"]
     }
   }
 }

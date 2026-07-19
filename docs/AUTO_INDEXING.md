@@ -38,16 +38,19 @@ scripts/autoindex/install-git-hooks.sh /path/to/repo
 scripts\autoindex\Install-GitHooks.ps1 -Repo E:\repos\my-project
 ```
 
-To auto-install these hooks into **every** repo you clone, set a global template
-once:
+To auto-install these hooks into **every** repo you clone or init — so RepoGraph
+is created and kept up to date the moment any new repo lands — run the global
+setup once:
 
 ```bash
-git config --global init.templateDir ~/.git-templates
-mkdir -p ~/.git-templates/hooks
-# copy the four generated hooks into ~/.git-templates/hooks/
+scripts/autoindex/setup-global-autoindex.sh              # macOS / Linux / Git Bash
+scripts\autoindex\Setup-GlobalAutoindex.ps1              # Windows PowerShell
 ```
 
-New clones then inherit the auto-index hooks automatically.
+This installs the hooks into a git template dir and sets
+`git config --global init.templateDir`. Every future `git clone` / `git init`
+then inherits the auto-index hooks automatically. Existing repos are unaffected —
+use `install-git-hooks.sh` / `Install-GitHooks.ps1` for those.
 
 ---
 

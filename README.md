@@ -234,12 +234,18 @@ Lad dem være slået fra, medmindre du bevidst vil lade en consumer skrive til d
 
 ### MCP i Podman
 
+Container-navnet afhænger af hvordan du starter stakken:
+- `podman play kube repograph-pod.yaml` → `repograph-pod-repograph-api`
+- `podman-compose -f podman-compose.repograph.yml` → `repograph-api`
+
+Projektets `.mcp.json` bruger pod-navnet (den install-frie vej):
+
 ```json
 {
   "mcpServers": {
     "repograph": {
       "command": "podman",
-      "args": ["exec", "-i", "repograph-api", "repograph-mcp"]
+      "args": ["exec", "-i", "repograph-pod-repograph-api", "repograph-mcp"]
     }
   }
 }
