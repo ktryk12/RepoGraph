@@ -1,6 +1,0 @@
-promotion_gate:
-  stable:
-    max_errors: 0
-  canary:
-    max_errors: 1
-    allow_error_codes: []

@@ -1,1 +1,0 @@
-{"decision_id": "a0051de8-c18b-4af9-b3b6-747a4b9d0346", "generation_error": "expert_serving_http_error status=503 body={\"detail\":{\"error\":\"model_profile_unavailable\",\"message\":\"model_manager returned status=503 for model_profile=danish: {\\\"detail\\\":\\\"Model danish not ready after 180s\\\"}\",\"model_profile\":\"danish\"}}"}

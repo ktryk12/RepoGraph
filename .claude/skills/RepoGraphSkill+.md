@@ -4,11 +4,11 @@ You are refactoring and extending an existing local code intelligence platform c
 
 RepoGraph is a **local code intelligence platform for AI coding agents**.
 
-It analyzes a repository with Tree-sitter, builds a persistent knowledge graph, and exposes that graph via a REST API and MCP server. Consumers such as Claude Code, Codex, babyAI and NewModel fetch structural context from RepoGraph — RepoGraph itself **never calls any LLM**.
+It analyzes a repository with Tree-sitter, builds a persistent knowledge graph, and exposes that graph via a REST API and MCP server. Consumers such as Claude Code, Codex, ekstern agentplatform and NewModel fetch structural context from RepoGraph — RepoGraph itself **never calls any LLM**.
 
 Current architecture:
 
-- Consumer (Claude Code / Codex / babyAI / NewModel)
+- Consumer (Claude Code / Codex / ekstern agentplatform / NewModel)
   │
   ▼
 - RepoGraph MCP / REST API

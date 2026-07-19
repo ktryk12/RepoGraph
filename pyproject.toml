@@ -3,7 +3,7 @@ requires = ["setuptools>=68", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "babyai"
+name = "repograph"
 version = "0.1.0"
 requires-python = ">=3.13,<3.14"
 classifiers = [
@@ -12,24 +12,11 @@ classifiers = [
   "Programming Language :: Python :: Implementation :: CPython",
 ]
 dependencies = [
-  "jsonschema>=4.21",
-  "referencing>=0.35",
   "pyyaml>=6.0",
-  "scikit-learn>=1.4",
-  "confluent-kafka>=2.5",
-  "prometheus-client>=0.19",
   "fastapi>=0.115",
   "uvicorn>=0.30",
   "httpx>=0.27",
-  "redis>=5,<6",
-  "pdfplumber>=0.11",
-  "python-multipart>=0.0.9",
-  "aiokafka>=0.10",
-  "aiohttp>=3.9",
-  "playwright>=1.40",
-  "json-repair>=0.10",
   "pydantic>=2.0",
-  "langdetect>=1.0.9",
   "mcp>=1.2",
   "cogdb>=3.0",
   "tree-sitter-language-pack>=0.13",
@@ -54,6 +41,7 @@ tokenizers = [
 ]
 
 [tool.pytest.ini_options]
+testpaths = ["tests"]
 markers = [
   "integration: integration tests (may require external services)",
 ]
@@ -67,16 +55,11 @@ package-dir = {"" = "."}
 [tool.setuptools.packages.find]
 where = ["."]
 include = [
-  "aesa*", "bus*", "core*", "ops*", "services*",
-  "config*", "schemas*", "eval*", "verify*",
-  "policy*", "ml*", "repo*", "agents*", "repobrain*", "babyai*"
+  "repograph*"
 ]
 exclude = ["tests*", "artifacts*", "*.egg-info*"]
 
 [project.scripts]
-babyai-gold = "eval.generate_gold_decisions:main"
-babyai-redteam = "verify.run_redteam_suite:main"
-brainctl = "cli.brainctl:main"
 repograph = "repograph.api.app:main"
 repograph-mcp = "repograph.mcp_server.server:main"
 repograph-migrate = "repograph.postgres.migrate:main"

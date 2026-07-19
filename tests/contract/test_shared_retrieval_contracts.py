@@ -181,7 +181,7 @@ def test_claude_code_consumer_contract_preserves_flat_prompt_and_full_envelope(
     assert "cache" in api_payload
 
 
-def test_babyai_agent_consumer_contract_is_structured_first_and_marks_prompt_ownership(
+def test_agent_consumer_contract_is_structured_first_and_marks_prompt_ownership(
     api_client,
     fake_store,
     fake_redis,
@@ -190,8 +190,8 @@ def test_babyai_agent_consumer_contract_is_structured_first_and_marks_prompt_own
 ) -> None:
     req = SharedRetrievalRequest(
         repo_path="/repo",
-        query="Prepare structured retrieval for babyAI orchestration",
-        consumer="babyai_agent",
+        query="Prepare structured retrieval for agent orchestration",
+        consumer="agent",
         output_profile="patch",
         target_context=6000,
     )
@@ -201,11 +201,11 @@ def test_babyai_agent_consumer_contract_is_structured_first_and_marks_prompt_own
     )
 
     response = prepare_task_context(req, fake_store)
-    payload = format_for_consumer(response, "babyai_agent")
+    payload = format_for_consumer(response, "agent")
 
     assert payload["payload_mode"] == "structured_retrieval_pack"
-    assert payload["prompt_assembly_owner"] == "babyai"
-    assert payload["consumer"] == "babyai_agent"
+    assert payload["prompt_assembly_owner"] == "agent"
+    assert payload["consumer"] == "agent"
     assert payload["retrieval_trace_id"] == response.retrieval_trace_id
     assert payload["cache"] == response.cache.model_dump()
     assert "prompt" not in payload
@@ -216,8 +216,8 @@ def test_babyai_agent_consumer_contract_is_structured_first_and_marks_prompt_own
         "/shared-retrieval/prepare",
         json={
             "repo_path": "/repo",
-            "query": "Prepare structured retrieval for babyAI orchestration",
-            "consumer": "babyai_agent",
+            "query": "Prepare structured retrieval for agent orchestration",
+            "consumer": "agent",
             "output_profile": "patch",
             "target_context": 6000,
         },
@@ -226,12 +226,12 @@ def test_babyai_agent_consumer_contract_is_structured_first_and_marks_prompt_own
     assert api_response.status_code == 200
     api_payload = api_response.json()
     assert api_payload["payload_mode"] == "structured_retrieval_pack"
-    assert api_payload["prompt_assembly_owner"] == "babyai"
-    assert api_payload["consumer"] == "babyai_agent"
+    assert api_payload["prompt_assembly_owner"] == "agent"
+    assert api_payload["consumer"] == "agent"
     assert "prompt" not in api_payload
 
 
-def test_newmodel_consumer_contract_preserves_structured_pack_without_babyai_ownership(
+def test_newmodel_consumer_contract_preserves_structured_pack_with_own_assembly(
     fake_store,
     fake_redis,
     fake_tracer,

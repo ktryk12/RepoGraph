@@ -1,1 +1,0 @@
-{"decision_id": "1c960038-7917-4c21-841c-c24d85c4d3e5", "generated_output": {"text": "Unterscheidung mellem hovedstaden og hovedstaden i Tyskland.", "model_ref": "mamba-gpt-7b-Q2_K.gguf", "runner_ref": "llama.cpp", "trace": {"prompt_hash": "a1acade07fc98f4500597cb30fd56db4d472fe661c156cb688c927955fa14139", "purpose": "default", "seed": 880248612, "n_predict": 256}}}

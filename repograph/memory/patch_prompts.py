@@ -1,7 +1,7 @@
 """
 Minimal-patch specialist prompt templates.
 
-These are templates for consumers (babyAI, agents) — RepoGraph does not call LLMs.
+These are templates for external agents — RepoGraph does not call LLMs.
 Each template is returned as structured text so consumers can inject them into their prompts.
 """
 

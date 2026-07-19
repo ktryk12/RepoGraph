@@ -1,1 +1,0 @@
-# Mock babyai_shared package

@@ -1,1 +1,0 @@
-{"evidence": [{"excerpt": "fix timeout in payment retries", "path": "verbatim://prompt", "ref": "verbatim://prompt", "score": 0.0}], "facts": [], "metadata": {"degradation_mode": "verbatim_only"}, "namespace": "services/payments", "question": "fix timeout in payment retries"}
