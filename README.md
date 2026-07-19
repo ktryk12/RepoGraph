@@ -2,14 +2,14 @@
 
 RepoGraph er en lokal code intelligence-platform til AI-kodningsagenter.
 
-Den analyserer et repository med Tree-sitter, bygger en persistent vidensgraf og eksponerer grafen via REST API og MCP-server. Consumers som Claude Code, Codex, babyAI og NewModel henter strukturel kontekst fra RepoGraph — uden at RepoGraph nogensinde kalder en LLM selv.
+Den analyserer et repository med Tree-sitter, bygger en persistent vidensgraf og eksponerer grafen via REST API og MCP-server. Consumers som Claude Code, Codex, generiske agenter og NewModel henter strukturel kontekst fra RepoGraph — uden at RepoGraph nogensinde kalder en LLM selv.
 
 ---
 
 ## Arkitektur
 
 ```
-Consumer (Claude Code / Codex / babyAI / NewModel)
+Consumer (Claude Code / Codex / agent / NewModel)
   │
   ▼
 RepoGraph MCP / REST API
@@ -174,9 +174,9 @@ curl -X PUT http://localhost:8001/summary/file/src/auth.py \
 
 `consumer="claude_code"` returnerer stadig et fladt `prompt`, men response-envelope bevarer ogsÃ¥ `prompt_pack`, `working_set`, `verification_plan`, `retrieval_trace_id` og cache-metadata, sÃ¥ samme payload kan sendes videre til `llm-server` uden rekonstruktion. Det flade `prompt` er en convenience-view, ikke en erstatning for den strukturerede envelope.
 
-`consumer="babyai_agent"` returnerer et struktureret retrieval-pack med `payload_mode="structured_retrieval_pack"` og `prompt_assembly_owner="babyai"`. Payloadet indeholder bl.a. `task_id`, `task_family`, `preamble`, `objective`, `context_blocks`, `working_set`, `verification_plan`, `retrieval_trace_id`, cache-metadata og availability-flags som `retry_pack_available` / `verification_plan_available`. RepoGraph flatten'er ikke den endelige agent-prompt for babyAI.
+`consumer="agent"` returnerer et struktureret retrieval-pack med `payload_mode="structured_retrieval_pack"` og `prompt_assembly_owner="agent"`. Payloadet indeholder bl.a. `task_id`, `task_family`, `preamble`, `objective`, `context_blocks`, `working_set`, `verification_plan`, `retrieval_trace_id`, cache-metadata og availability-flags som `retry_pack_available` / `verification_plan_available`. RepoGraph flatten'er ikke den endelige agent-prompt.
 
-`consumer="newmodel"` forbliver en direkte structured consumer. Den bruger samme retrieval-pack-stil som babyAI, men markeres med `prompt_assembly_owner="newmodel"`, sÃ¥ NewModel kan konsumere RepoGraph direkte uden babyAI i loopet.
+`consumer="newmodel"` forbliver en direkte structured consumer. Den bruger samme retrieval-pack-stil som den generiske agent, men markeres med `prompt_assembly_owner="newmodel"`, sÃ¥ NewModel kan konsumere RepoGraph direkte.
 
 Brede forespørgsler som "analyze the code", "analyze our program" eller "understand this repo" bliver ikke pakket som én stor prompt. RepoGraph laver i stedet et retrieval-level `analysis_plan` med mindre steps som repo overview, entrypoints, high-risk files og follow-up deep dive. Planen er step-decomposition, ikke fuld autonom agent-planlægning, og RepoGraph forbliver LLM-fri strukturel retrieval.
 

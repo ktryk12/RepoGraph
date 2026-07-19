@@ -4,7 +4,7 @@ Dette dokument samler den eksisterende RepoGraph + Redis + Postgres‑implemente
 
 Målet er:
 
-at gøre RepoGraph til fælles retrieval‑ og kontekstplatform for Claude Code / Codex, babyAI, NewModel m.fl.,
+at gøre RepoGraph til fælles retrieval‑ og kontekstplatform for Claude Code / Codex, ekstern agentplatform, NewModel m.fl.,
 
 at placere Redis og Postgres rigtigt i arkitekturen (cache vs. operational store),
 
@@ -38,9 +38,9 @@ Claude Code / Codex
     -> Context compressor (LongCodeZip-inspireret)
     -> Prompt packer
   -> LLM-server(e) via nginx + model-manager
-babyAI / NewModel runtime
+ekstern agentplatform / NewModel runtime
 text
-babyAI / NewModel agent
+ekstern agentplatform / NewModel agent
   -> RepoGraph shared retrieval
     -> Redis
     -> Postgres
@@ -48,7 +48,7 @@ babyAI / NewModel agent
     -> Context compressor
     -> Prompt packer
   -> LLM-server(e) via nginx + model-manager
-Alle lag og services er tenant‑aware (f.eks. babyai, newmodel, llmserver).
+Alle lag og services er tenant‑aware (f.eks. agent, newmodel, llmserver).
 
 2. Arkitekturprincipper (uændret, men udvidet)
 2.1 Det der skal bevares

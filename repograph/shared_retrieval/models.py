@@ -13,7 +13,7 @@ class SharedRetrievalRequest(BaseModel):
     repo_path: str
     query: str
     task_hint: str | None = None
-    consumer: str = "generic"         # claude_code | codex | babyai_agent | newmodel | generic
+    consumer: str = "generic"         # claude_code | codex | agent | newmodel | generic
     session_id: str | None = None
     task_id: str | None = None
     target_model: str | None = None   # hint for model router (glm-5.1 | qwen | mixtral | ...)

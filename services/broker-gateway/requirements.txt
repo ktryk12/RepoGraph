@@ -1,2 +1,0 @@
-confluent-kafka>=2.3.0
-hvac>=2.1.0

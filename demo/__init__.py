@@ -1,1 +1,0 @@
-# BabyAI demo scripts

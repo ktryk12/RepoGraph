@@ -2,7 +2,7 @@
 
 > **Dette dokument kører fra RepoGraph-repoet.** Claude Code eksekverer via RepoGraph's egen orchestration (MCP-server + egen planner + indexer). Eksekvering sker fra working directory `e:/repos/RepoGraph/` eller tilsvarende.
 >
-> **RepoGraph er standalone.** Et selvstændigt infrastructure-værktøj der kan leveres til babyAI, NewModel, eller tredjepart. Konsumerer babyAI-events som empirisk input når tilgængeligt — aldrig som krav.
+> **RepoGraph er standalone.** Et selvstændigt infrastructure-værktøj der kan leveres til ekstern agentplatform, NewModel, eller tredjepart. Konsumerer ekstern agentplatform-events som empirisk input når tilgængeligt — aldrig som krav.
 
 ---
 
@@ -24,7 +24,7 @@ Opnås via:
 Designet til:
 - Små modeller (6K-32K kontekst)
 - Kæmpe repos (100K+ noder)
-- Agent-orchestrering (babyAI)
+- Agent-orchestrering (ekstern agentplatform)
 - Code-intelligence (NewModel inference)
 - Tredjeparts AI-coding-tools
 
@@ -100,10 +100,10 @@ RepoGraph kører uafhængigt. Konkret:
 
 | Integration | Tilgængelig | Ikke tilgængelig |
 |---|---|---|
-| babyAI skill-events | Bruges som empirisk input til retrieval-design | Design baseret på repo-topologi alene |
-| babyAI artifact-store | Ekstra context for summaries | Summaries genereres fra kode alene |
+| ekstern agentplatform skill-events | Bruges som empirisk input til retrieval-design | Design baseret på repo-topologi alene |
+| ekstern agentplatform artifact-store | Ekstra context for summaries | Summaries genereres fra kode alene |
 | NewModel for summary-generation | Lokal, billig summarization | Brug LLM-gateway (GLM 5.1, Qwen, Mixtral) |
-| NewModel for inference | Kode-intelligent retrieval-konsumer | Eksporter til andre konsumere (babyAI, tredjepart) |
+| NewModel for inference | Kode-intelligent retrieval-konsumer | Eksporter til andre konsumere (ekstern agentplatform, tredjepart) |
 | External consumers | Ekstra værdi-spor | Intern brug er tilstrækkelig |
 
 **Minimum viable RepoGraph:** Grafen + hierarkiske summaries + WorkingSet-builder + 3 task-familier. Nok til at levere værdi til én consumer.
@@ -179,7 +179,7 @@ Claude Code kører i RepoGraph's repo-kontekst. Emit til RepoGraph's eget orches
 |---|---|
 | `graph_store_accessible` | Verificer storage-backend (graphrepo.db, MSSQL eller tilsvarende) |
 | `mcp_server_running` | Genstart MCP-server |
-| `minimum_triples_count_10k` | Kør `python scripts/index_repo.py` eller tilsvarende indekser |
+| `minimum_triples_count_10k` | Kør `repograph-autoindex --force` eller brug API'ets `/index` endpoint |
 | `teacher_available_for_summary_generation` | Kræver mindst én LLM-gateway-endpoint (port 80 eller direkte til GLM 5.1/Qwen/Mixtral) |
 | `indexer_operational` | Fix indexer før opgradering |
 
@@ -191,7 +191,7 @@ Claude Code kører i RepoGraph's repo-kontekst. Emit til RepoGraph's eget orches
   "program": "REPOGRAPH",
   "active_phase": "<vælg: node_enrichment | summaries | multi_stage_retrieval | working_set | task_families | patch_memory | verifier | knowledge_graph | api_mcp>",
   "integration_mode": "opportunistic",
-  "empirical_input_source": "babyai_skill_events_if_available",
+  "empirical_input_source": "agent_skill_events_if_available",
   "degradation_policy": "full_functionality_without_external_deps",
   "hard_rules": [
     "small_models_never_get_whole_repo",
@@ -246,14 +246,14 @@ Ved relevante tasks:
 {
   "intent_type": "integration_discovery",
   "look_for": [
-    "babyai_skill_events_available",
-    "babyai_artifact_store_readable",
+    "agent_skill_events_available",
+    "agent_artifact_store_readable",
     "newmodel_hashlogmoe_endpoint_available"
   ]
 }
 ```
 
-**Hvis babyAI-events tilgængelig:** Brug som empirisk input til Fase 1 (hvilke noder tilgås mest) og Fase 3 (task-klassifikation).
+**Hvis ekstern agentplatform-events tilgængelig:** Brug som empirisk input til Fase 1 (hvilke noder tilgås mest) og Fase 3 (task-klassifikation).
 
 **Hvis NewModel tilgængelig:** Brug som billig summary-generator. Ellers brug LLM-gateway.
 
@@ -340,9 +340,9 @@ Hele programmet er "produktion-ready" når alle 9 faser complete + backward comp
 
 ---
 
-## 10. Integration points — se `INTEGRATION_POINTS.md`
+## 10. Consumer-integration
 
-Alt om hvordan RepoGraph samarbejder med babyAI og NewModel er i den delte kontrakt-fil.
+RepoGraph eksponerer generiske REST- og MCP-kontrakter. Consumers integrerer direkte uden platformspecifikke afhængigheder.
 
 ---
 

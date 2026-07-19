@@ -12,8 +12,8 @@ def format_for_consumer(response: SharedRetrievalResponse, consumer: str) -> dic
             return _claude_code(response)
         case "codex":
             return _codex(response)
-        case "babyai_agent":
-            return _babyai(response)
+        case "agent":
+            return _structured_agent(response)
         case "newmodel":
             return _newmodel(response)
         case _:
@@ -56,15 +56,15 @@ def _codex(r: SharedRetrievalResponse) -> dict:
     return _attach_analysis_metadata(payload, r)
 
 
-def _babyai(r: SharedRetrievalResponse) -> dict:
-    """babyAI agent: structured working_set + packed blocks separately."""
+def _structured_agent(r: SharedRetrievalResponse) -> dict:
+    """Generic agent: structured working set and packed blocks separately."""
     payload = {
         "task_id": r.task_id,
         "task_family": r.task_family,
-        "consumer": "babyai_agent",
+        "consumer": "agent",
         "source_mode": r.source_mode,
         "payload_mode": "structured_retrieval_pack",
-        "prompt_assembly_owner": "babyai",
+        "prompt_assembly_owner": "agent",
         "preamble": r.prompt_pack.preamble,
         "objective": r.prompt_pack.objective,
         "context_blocks": [b.model_dump() for b in r.prompt_pack.context_blocks],
@@ -81,8 +81,8 @@ def _babyai(r: SharedRetrievalResponse) -> dict:
 
 
 def _newmodel(r: SharedRetrievalResponse) -> dict:
-    """NewModel: same as babyAI but with retrieval_trace_id for attribution."""
-    base = _babyai(r)
+    """NewModel: structured pack with retrieval trace attribution."""
+    base = _structured_agent(r)
     base["consumer"] = "newmodel"
     base["prompt_assembly_owner"] = "newmodel"
     return base

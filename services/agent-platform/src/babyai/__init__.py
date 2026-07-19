@@ -1,2 +1,0 @@
-"""BabyAI package root."""
-

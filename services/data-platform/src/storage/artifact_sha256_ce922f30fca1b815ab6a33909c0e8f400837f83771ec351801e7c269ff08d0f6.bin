@@ -1,1 +1,0 @@
-{"commit": "HEAD", "manifest": [{"path": "auth.py", "sha256": "b1c306a1bcb8b38cd4103898d3567aa90435a563", "size": 52}, {"path": "payments.py", "sha256": "3aee3286240a92b198e870155c55bf7c73472346", "size": 50}, {"path": "readme.md", "sha256": "bd4dcfb940f40c33c73239fd76456bab5f8d2865", "size": 38}], "symbols": []}

@@ -31,11 +31,8 @@ artifacts/
 .planning/
 .claude/
 .mcp.json
-babyai_shared/
-demo/
 docs/
 repograph-poc/
-services/
 node_modules/
 *_results.json
 *.log
